@@ -10,7 +10,7 @@ Turning ideas into **clean**, **functional**, and **beautiful digital experience
 
 ### 🧠 About Me
 - 💻 Passionate about **Web Development**, **Android**, and **AI-powered apps**  
-- ⚙️ Skilled in **Java**, **Kotlin**, **Flutter**, **React**, **TailwindCSS**, **MongoDB**, **Firebase...**, and exploring **Machine Learning APIs**  
+- ⚙️ Skilled in **Java**, **Kotlin**, **Flutter**, **React**, **MongoDB**, **Firebase...**, and exploring **Machine Learning APIs**  
 - 🧩 I enjoy designing, debugging, and optimizing projects from UI to backend logic  
 - 📚 Constantly learning new tools and improving every line of my code  
 
