@@ -1,0 +1,32 @@
+<main class="main-content">
+  <div class="main-inner">
+    <slot />
+  </div>
+</main>
+
+<style>
+  .main-content {
+    min-width: 0;
+    background: var(--color-bg);
+  }
+
+  .main-inner {
+    width: min(100%, var(--content-max-width));
+
+    margin-inline: auto;
+
+    padding:
+      var(--space-8)
+      var(--page-padding)
+      var(--space-16);
+  }
+
+  @media (max-width: 767px) {
+    .main-inner {
+      padding:
+        var(--space-6)
+        var(--page-padding-mobile)
+        var(--space-12);
+    }
+  }
+</style>

@@ -1,17 +1,48 @@
 ---
+import BaseLayout from "../layouts/BaseLayout.astro";
 
+import PortfolioShell from "../components/layout/PortfolioShell.astro";
+import Sidebar from "../components/layout/Sidebar.astro";
+import MainContent from "../components/layout/MainContent.astro";
+
+import ProfileCard from "../components/profile/ProfileCard.astro";
+import Header from "../components/layout/Header.astro";
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout
+  title="Satpal — Developer"
+  description="Personal portfolio of Satpal, developer and builder."
+>
+  <PortfolioShell>
+    <Sidebar>
+      <ProfileCard />
+    </Sidebar>
+
+    <MainContent>
+      <Header />
+
+      <section class="placeholder">
+        <p>Projects, experience and more coming next.</p>
+      </section>
+    </MainContent>
+  </PortfolioShell>
+</BaseLayout>
+
+<style>
+  .placeholder {
+    min-height: 60vh;
+
+    display: grid;
+    place-items: center;
+
+    border: 1px dashed var(--color-border-strong);
+    border-radius: var(--radius-lg);
+
+    color: var(--color-text-muted);
+    text-align: center;
+  }
+
+  .placeholder p {
+    font-size: var(--text-sm);
+  }
+</style>

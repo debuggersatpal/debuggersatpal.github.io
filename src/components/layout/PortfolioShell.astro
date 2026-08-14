@@ -1,0 +1,25 @@
+<div class="portfolio-shell">
+  <slot />
+</div>
+
+<style>
+  .portfolio-shell {
+    width: min(100%, var(--shell-max-width));
+    min-height: 100vh;
+
+    margin-inline: auto;
+
+    display: grid;
+    grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+
+    background: var(--color-surface);
+  }
+
+  @media (max-width: 767px) {
+    .portfolio-shell {
+      display: block;
+      width: 100%;
+      min-height: 100vh;
+    }
+  }
+</style>

@@ -1,0 +1,72 @@
+<header class="header">
+  <div class="breadcrumb">
+    Portfolio
+  </div>
+
+  <nav class="desktop-nav" aria-label="Primary navigation">
+    <a href="#projects">Projects</a>
+    <a href="#experience">Experience</a>
+    <a href="#about">About</a>
+    <a href="#skills">Skills</a>
+  </nav>
+
+  <button
+    class="menu-button"
+    type="button"
+    aria-label="Open navigation menu"
+  >
+    Menu
+  </button>
+</header>
+
+<style>
+  .header {
+    min-height: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: var(--space-16);
+  }
+
+  .breadcrumb {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .desktop-nav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .desktop-nav a {
+    transition:
+      color var(--transition-fast);
+  }
+
+  .desktop-nav a:hover {
+    color: var(--color-text-primary);
+  }
+
+  .menu-button {
+    display: none;
+  }
+
+  @media (max-width: 767px) {
+    .desktop-nav {
+      display: none;
+    }
+
+    .menu-button {
+      display: block;
+
+      color: var(--color-text-secondary);
+      font-size: var(--text-sm);
+    }
+  }
+</style>
