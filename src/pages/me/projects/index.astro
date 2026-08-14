@@ -24,78 +24,39 @@ import MeLayout from '../../../layouts/MeLayout.astro';
 </MeLayout>
 
 <style>
-  .cms-container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 3rem 1.5rem;
-  }
-
-  .cms-header {
+  .loading-state, .empty-state {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-  }
-
-  .page-title {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin: 0 0 0.35rem 0;
-  }
-
-  .page-subtitle {
-    font-size: 0.95rem;
-    color: var(--text-secondary);
-    margin: 0;
-  }
-
-  .header-actions {
-    display: flex;
-    gap: 1rem;
-  }
-
-  .primary-btn {
-    background-color: var(--text-primary);
-    color: var(--bg-main);
-    padding: 0.6rem 1.25rem;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    text-decoration: none;
-    transition: opacity 0.2s ease;
-  }
-
-  .primary-btn:hover {
-    opacity: 0.9;
-  }
-
-  .secondary-btn {
-    background-color: transparent;
-    border: 1px solid var(--border-subtle);
-    color: var(--text-secondary);
-    padding: 0.6rem 1.25rem;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    text-decoration: none;
-    transition: all 0.2s ease;
-  }
-
-  .secondary-btn:hover {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    text-align: center;
     background-color: var(--bg-surface);
-    color: var(--text-primary);
-    border-color: var(--text-secondary);
+    border: 1px dashed var(--border-subtle);
+    border-radius: 12px;
   }
 
-  .section-divider {
-    border: none;
-    border-top: 1px solid var(--border-subtle);
-    margin: 1.5rem 0 2rem 0;
-  }
-
-  .loading-text, .empty-text {
+  .loading-state-text, .empty-state-text {
     color: var(--text-secondary);
-    font-size: 0.95rem;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .empty-state-sub {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+    opacity: 0.8;
+  }
+
+  .spinner {
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--border-subtle);
+    border-top-color: var(--text-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
   }
 
   /* List specific styles */
@@ -105,23 +66,36 @@ import MeLayout from '../../../layouts/MeLayout.astro';
     gap: 1rem;
   }
 
-  /* We use global styles for project-item so the JS-injected HTML can see it cleanly,
-     or we can use :global() */
   :global(.project-item) {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    flex-direction: column;
     background-color: var(--bg-surface);
     border: 1px solid var(--border-subtle);
     padding: 1.25rem 1.5rem;
     border-radius: 12px;
+    gap: 1rem;
+    transition: border-color 0.2s ease;
+  }
+
+  :global(.project-item:hover) {
+    border-color: var(--text-secondary);
+  }
+
+  @media (min-width: 640px) {
+    :global(.project-item) {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
   }
 
   :global(.project-info) {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.35rem;
     flex: 1;
+    min-width: 0; /* for text truncation if needed */
   }
 
   :global(.project-item-title) {
@@ -129,62 +103,72 @@ import MeLayout from '../../../layouts/MeLayout.astro';
     font-weight: 600;
     color: var(--text-primary);
     margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   :global(.project-meta) {
     font-size: 0.85rem;
     color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  :global(.meta-dot) {
+    opacity: 0.5;
   }
 
   :global(.project-status) {
-    width: 120px;
+    display: flex;
+    align-items: center;
   }
 
-  :global(.status-badge) {
+  @media (min-width: 640px) {
+    :global(.project-status) {
+      width: 100px;
+      justify-content: flex-end;
+    }
+  }
+
+  :global(.status-indicator) {
     font-size: 0.75rem;
     font-weight: 600;
-    padding: 0.25rem 0.6rem;
-    border-radius: 6px;
-    border: 1px solid var(--border-subtle);
-  }
-
-  :global(.status-badge.published) {
-    background-color: rgba(16, 185, 129, 0.1);
-    color: #10b981;
-    border-color: rgba(16, 185, 129, 0.2);
-  }
-
-  :global(.status-badge.draft) {
-    background-color: var(--bg-main);
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
     color: var(--text-secondary);
+  }
+
+  :global(.status-indicator::before) {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--text-secondary);
+  }
+
+  :global(.status-indicator.published) {
+    color: var(--text-primary);
+  }
+
+  :global(.status-indicator.published::before) {
+    background-color: #10b981;
   }
 
   :global(.project-actions) {
     display: flex;
-    gap: 0.75rem;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
   }
 
-  :global(.action-btn) {
-    background: transparent;
-    border: 1px solid var(--border-subtle);
-    color: var(--text-secondary);
-    padding: 0.4rem 0.8rem;
-    border-radius: 6px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    cursor: pointer;
-    text-decoration: none;
-    transition: all 0.2s ease;
-  }
-
-  :global(.action-btn:hover) {
-    color: var(--text-primary);
-    border-color: var(--text-secondary);
-  }
-
-  :global(.delete-btn:hover) {
-    color: #ef4444;
-    border-color: #ef4444;
+  @media (min-width: 640px) {
+    :global(.project-actions) {
+      margin-top: 0;
+    }
   }
 </style>
 
@@ -194,8 +178,6 @@ import { ref, onValue, remove } from 'firebase/database';
 
   document.addEventListener('astro:page-load', () => {
   
-  
-
   if ((window as any).__projectsUnsubscribe) {
     (window as any).__projectsUnsubscribe();
     (window as any).__projectsUnsubscribe = null;
@@ -203,13 +185,27 @@ import { ref, onValue, remove } from 'firebase/database';
 
   const listEl = document.getElementById('projects-list');
   if (!listEl) return;
+  
+  // Initial loading state
+  listEl.innerHTML = `
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <span class="loading-state-text">Loading workspace...</span>
+    </div>
+  `;
 
   const projectsRef = ref(db, 'projects');
 
-  (window as any).__projectsUnsubscribe = onValue(projectsRef, (snapshot) => {
+  const unsubscribe = onValue(projectsRef, (snapshot) => {
     
     if (!snapshot.exists()) {
-      listEl.innerHTML = '<p class="empty-text">No projects found.</p>';
+      listEl.innerHTML = `
+        <div class="empty-state">
+          <span class="empty-state-text">No projects found.</span>
+          <p class="empty-state-sub">Get started by creating your first portfolio project.</p>
+          <a href="/me/projects/edit" class="primary-btn">Create Project</a>
+        </div>
+      `;
       return;
     }
 
@@ -226,15 +222,21 @@ import { ref, onValue, remove } from 'firebase/database';
       html += `
         <div class="project-item">
           <div class="project-info">
-            <h3 class="project-item-title">${p.title || 'Untitled'}</h3>
-            <span class="project-meta">${p.category || 'Uncategorized'} • Order: ${p.order || 0}</span>
+            <h3 class="project-item-title" title="${p.title || 'Untitled'}">${p.title || 'Untitled'}</h3>
+            <div class="project-meta">
+              <span>${p.category || 'Uncategorized'}</span>
+              <span class="meta-dot">•</span>
+              <span>Order: ${p.order || 0}</span>
+            </div>
           </div>
           <div class="project-status">
-            <span class="status-badge ${p.published ? 'published' : 'draft'}">${p.published ? 'Published' : 'Draft'}</span>
+            <span class="status-indicator ${p.published ? 'published' : 'draft'}">
+              ${p.published ? 'Published' : 'Draft'}
+            </span>
           </div>
           <div class="project-actions">
             <a href="/me/projects/edit?id=${p.dbKey}" class="action-btn">Edit</a>
-            <button class="action-btn delete-btn" data-id="${p.dbKey}">Delete</button>
+            <button class="action-btn delete-btn" data-id="${p.dbKey}" aria-label="Delete ${p.title}">Delete</button>
           </div>
         </div>
       `;
@@ -245,7 +247,7 @@ import { ref, onValue, remove } from 'firebase/database';
     // Attach delete listeners
     document.querySelectorAll('.delete-btn').forEach(btn => {
       btn.addEventListener('click', async (e) => {
-        const id = (e.target as HTMLButtonElement).dataset.id;
+        const id = (e.currentTarget as HTMLButtonElement).dataset.id;
         if (id && confirm('Are you sure you want to delete this project? This action cannot be undone.')) {
           try {
             await remove(ref(db, `projects/${id}`));
@@ -257,5 +259,15 @@ import { ref, onValue, remove } from 'firebase/database';
       });
     });
   });
+
+  (window as any).__projectsUnsubscribe = unsubscribe;
+
+  document.addEventListener('astro:before-swap', () => {
+    if ((window as any).__projectsUnsubscribe) {
+      (window as any).__projectsUnsubscribe();
+      (window as any).__projectsUnsubscribe = null;
+    }
+  }, { once: true });
+  
   });
 </script>

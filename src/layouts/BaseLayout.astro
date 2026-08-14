@@ -4,12 +4,20 @@ import "../styles/global.css";
 interface Props {
   title?: string;
   description?: string;
+  image?: string;
+  type?: string;
+  noindex?: boolean;
 }
 
 const {
   title = "Satpal — Developer",
   description = "Personal portfolio of Satpal, developer and builder.",
+  image = "/images/profile/avatar.jpg",
+  type = "website",
+  noindex = false,
 } = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://debuggersatpal.github.io');
 ---
 
 <!doctype html>
@@ -32,6 +40,21 @@ const {
       name="theme-color"
       content="#f7f7f8"
     />
+
+    {noindex && <meta name="robots" content="noindex, follow" />}
+
+    <link rel="canonical" href={canonicalURL} />
+    
+    <meta property="og:title" content={title} id="og-title" />
+    <meta property="og:description" content={description} id="og-description" />
+    <meta property="og:type" content={type} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={new URL(image, Astro.site || 'https://debuggersatpal.github.io')} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} id="twitter-title" />
+    <meta name="twitter:description" content={description} id="twitter-description" />
+    <meta name="twitter:image" content={new URL(image, Astro.site || 'https://debuggersatpal.github.io')} />
 
     <link
       rel="icon"
@@ -64,6 +87,12 @@ const {
               const originalTitle = document.title;
               if (originalTitle.includes('SATPAL')) {
                 document.title = originalTitle.replace('SATPAL', settings.siteTitle);
+                
+                const ogTitle = document.getElementById('og-title');
+                if (ogTitle) ogTitle.setAttribute('content', document.title);
+                
+                const twTitle = document.getElementById('twitter-title');
+                if (twTitle) twTitle.setAttribute('content', document.title);
               }
             }
             if (settings.seoDescription) {
@@ -71,6 +100,10 @@ const {
               if (metaDesc) {
                 metaDesc.setAttribute('content', settings.seoDescription);
               }
+              const ogDesc = document.getElementById('og-description');
+              if (ogDesc) ogDesc.setAttribute('content', settings.seoDescription);
+              const twDesc = document.getElementById('twitter-description');
+              if (twDesc) twDesc.setAttribute('content', settings.seoDescription);
             }
           }
         } catch (e) {

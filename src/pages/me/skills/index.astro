@@ -98,90 +98,166 @@ import MeLayout from '../../../layouts/MeLayout.astro';
     font-size: 0.95rem;
   }
 
+<style>
   .list-container {
     display: flex;
     flex-direction: column;
     gap: 1rem;
   }
 
-  :global(.list-item) {
+  .loading-state, .empty-state {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
+    padding: 3rem 1.5rem;
+    text-align: center;
     background-color: var(--bg-surface);
-    border: 1px solid var(--border-subtle);
-    padding: 1.25rem 1.5rem;
+    border: 1px dashed var(--border-subtle);
     border-radius: 12px;
   }
 
-  :global(.item-info) {
+  .loading-state-text, .empty-state-text {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .empty-state-sub {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+    opacity: 0.8;
+  }
+
+  .spinner {
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--border-subtle);
+    border-top-color: var(--text-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  :global(.list-item) {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    padding: 1.5rem;
+    border-radius: 12px;
+    gap: 1.25rem;
+  }
+
+  :global(.item-content) {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+    min-width: 0;
+  }
+
+  :global(.item-header) {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
-    flex: 1;
   }
 
   :global(.item-title) {
-    font-size: 1.1rem;
-    font-weight: 600;
+    font-size: 1.15rem;
+    font-weight: 700;
     color: var(--text-primary);
     margin: 0;
   }
 
-  :global(.item-meta) {
+  :global(.item-meta-row) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
     font-size: 0.85rem;
     color: var(--text-secondary);
   }
 
-  :global(.item-status) {
-    width: 120px;
+  :global(.meta-dot) {
+    opacity: 0.5;
   }
 
-  :global(.status-badge) {
+  :global(.item-status) {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
     font-size: 0.75rem;
     font-weight: 600;
-    padding: 0.25rem 0.6rem;
-    border-radius: 6px;
-    border: 1px solid var(--border-subtle);
-  }
-
-  :global(.status-badge.published) {
-    background-color: rgba(16, 185, 129, 0.1);
-    color: #10b981;
-    border-color: rgba(16, 185, 129, 0.2);
-  }
-
-  :global(.status-badge.draft) {
-    background-color: var(--bg-main);
     color: var(--text-secondary);
+  }
+
+  :global(.item-status::before) {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--text-secondary);
+  }
+
+  :global(.item-status.published) {
+    color: var(--text-primary);
+  }
+
+  :global(.item-status.published::before) {
+    background-color: #10b981;
   }
 
   :global(.item-actions) {
     display: flex;
     gap: 0.75rem;
+    align-items: center;
   }
 
-  :global(.action-btn) {
-    background: transparent;
-    border: 1px solid var(--border-subtle);
+  :global(.order-badge) {
+    background-color: var(--bg-main);
     color: var(--text-secondary);
-    padding: 0.4rem 0.8rem;
-    border-radius: 6px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    cursor: pointer;
-    text-decoration: none;
-    transition: all 0.2s ease;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 600;
+    margin-right: auto;
   }
 
-  :global(.action-btn:hover) {
-    color: var(--text-primary);
-    border-color: var(--text-secondary);
+  @media (min-width: 640px) {
+    :global(.list-item) {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+    :global(.item-actions) {
+      flex-direction: column;
+      align-items: stretch;
+      width: 140px;
+    }
+    :global(.order-badge) {
+      margin-right: 0;
+      text-align: center;
+      margin-bottom: 0.25rem;
+    }
   }
 
-  :global(.delete-btn:hover) {
-    color: #ef4444;
-    border-color: #ef4444;
+  @media (min-width: 1024px) {
+    :global(.item-actions) {
+      flex-direction: row;
+      align-items: center;
+      width: auto;
+    }
+    :global(.order-badge) {
+      margin-right: 1rem;
+      margin-bottom: 0;
+    }
   }
 </style>
 
@@ -190,8 +266,6 @@ import { db } from '../../../lib/firebase';
 import { ref, onValue, remove } from 'firebase/database';
 
   document.addEventListener('astro:page-load', () => {
-  
-  
 
   if ((window as any).__skillsUnsubscribe) {
     (window as any).__skillsUnsubscribe();
@@ -203,10 +277,16 @@ import { ref, onValue, remove } from 'firebase/database';
 
   const skillsRef = ref(db, 'skills');
 
-  (window as any).__skillsUnsubscribe = onValue(skillsRef, (snapshot) => {
+  const unsubscribe = onValue(skillsRef, (snapshot) => {
     
     if (!snapshot.exists()) {
-      listEl.innerHTML = '<p class="empty-text">No skill categories found.</p>';
+      listEl.innerHTML = `
+        <div class="empty-state">
+          <h3 class="empty-state-text">No skill categories exist</h3>
+          <p class="empty-state-sub">Add your first category to showcase your expertise.</p>
+          <a href="/me/skills/edit" class="primary-btn">Add Skill Category</a>
+        </div>
+      `;
       return;
     }
 
@@ -221,16 +301,23 @@ import { ref, onValue, remove } from 'firebase/database';
     let html = '';
     categories.forEach(c => {
       const skillsCount = c.skills && Array.isArray(c.skills) ? c.skills.length : 0;
+      const statusClass = c.published ? 'published' : 'draft';
+      const statusText = c.published ? 'Published' : 'Draft';
+
       html += `
         <div class="list-item">
-          <div class="item-info">
-            <h3 class="item-title">${c.category || 'Untitled Category'}</h3>
-            <span class="item-meta">${skillsCount} skills • Order: ${c.order || 0}</span>
-          </div>
-          <div class="item-status">
-            <span class="status-badge ${c.published ? 'published' : 'draft'}">${c.published ? 'Published' : 'Draft'}</span>
+          <div class="item-content">
+            <div class="item-header">
+              <h3 class="item-title">${c.category || 'Untitled Category'}</h3>
+            </div>
+            <div class="item-meta-row">
+              <span class="item-status ${statusClass}">${statusText}</span>
+              <span class="meta-dot">&bull;</span>
+              <span>${skillsCount} skills</span>
+            </div>
           </div>
           <div class="item-actions">
+            <span class="order-badge">Order: ${c.order || 0}</span>
             <a href="/me/skills/edit?id=${c.dbKey}" class="action-btn">Edit</a>
             <button class="action-btn delete-btn" data-id="${c.dbKey}">Delete</button>
           </div>
@@ -255,5 +342,15 @@ import { ref, onValue, remove } from 'firebase/database';
       });
     });
   });
+
+  (window as any).__skillsUnsubscribe = unsubscribe;
+
+  document.addEventListener('astro:before-swap', () => {
+    if ((window as any).__skillsUnsubscribe) {
+      (window as any).__skillsUnsubscribe();
+      (window as any).__skillsUnsubscribe = null;
+    }
+  }, { once: true });
+
   });
 </script>

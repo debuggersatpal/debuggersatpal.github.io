@@ -64,10 +64,168 @@ const { title, activeNav } = Astro.props;
     background-color: var(--bg-main);
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 1024px) {
     .me-shell {
       flex-direction: row;
     }
+  }
+
+  /* Global CMS Shared Styles */
+  :global(.cms-container) {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1.25rem;
+  }
+
+  @media (min-width: 768px) {
+    :global(.cms-container) {
+      padding: 3rem 2rem;
+    }
+  }
+
+  :global(.cms-header) {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: flex-start;
+  }
+
+  @media (min-width: 600px) {
+    :global(.cms-header) {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+
+  :global(.page-title) {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 0.35rem 0;
+    line-height: 1.2;
+  }
+  
+  @media (min-width: 768px) {
+    :global(.page-title) {
+      font-size: 2.25rem;
+    }
+  }
+
+  :global(.page-subtitle) {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin: 0;
+  }
+
+  :global(.header-actions) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  /* Global Button Styles */
+  :global(.primary-btn), :global(.secondary-btn), :global(.action-btn) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    outline: none;
+  }
+
+  :global(.primary-btn:focus-visible),
+  :global(.secondary-btn:focus-visible),
+  :global(.action-btn:focus-visible) {
+    box-shadow: 0 0 0 2px var(--bg-main), 0 0 0 4px var(--accent-blue);
+  }
+
+  :global(.primary-btn) {
+    background-color: var(--text-primary);
+    color: var(--bg-main);
+    padding: 0.65rem 1.25rem;
+    border: 1px solid var(--text-primary);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  :global(.primary-btn:hover) {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  :global(.primary-btn:disabled) {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  :global(.secondary-btn) {
+    background-color: transparent;
+    border: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+    padding: 0.65rem 1.25rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  :global(.secondary-btn:hover) {
+    background-color: var(--bg-surface);
+    border-color: var(--text-secondary);
+  }
+
+  :global(.action-btn) {
+    background: transparent;
+    border: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+    padding: 0.4rem 0.85rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+
+  :global(.action-btn:hover) {
+    color: var(--text-primary);
+    border-color: var(--text-secondary);
+    background-color: var(--bg-surface);
+  }
+
+  :global(.delete-btn:hover) {
+    color: #ef4444 !important;
+    border-color: #ef4444 !important;
+    background-color: #fee2e2 !important;
+  }
+
+  :global(html.dark .delete-btn:hover) {
+    background-color: rgba(239, 68, 68, 0.15) !important;
+  }
+
+  :global(.section-divider) {
+    border: none;
+    border-top: 1px solid var(--border-subtle);
+    margin: 2rem 0;
+  }
+
+  /* Form Inputs Global */
+  :global(.input-group input), :global(.input-group textarea) {
+    background-color: var(--bg-main);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    outline: none;
+    transition: all 0.2s ease;
+  }
+
+  :global(.input-group input:focus), :global(.input-group textarea:focus) {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 3px var(--accent-blue-bg);
   }
 </style>
 

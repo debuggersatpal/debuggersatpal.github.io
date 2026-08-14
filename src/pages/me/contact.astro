@@ -17,24 +17,33 @@ import MeLayout from '../../layouts/MeLayout.astro';
     <hr class="section-divider" />
 
     <form id="contact-form" class="editor-form">
-      <div class="input-group">
-        <label for="email">Public Email Address *</label>
-        <input type="email" id="email" required placeholder="hello@example.com" />
+      <div class="form-section">
+        <h2 class="form-section-title">1. Primary Email</h2>
+        <div class="input-group">
+          <label for="email">Public Email Address <span class="required-asterisk">*</span></label>
+          <input type="email" id="email" required placeholder="hello@example.com" />
+          <span class="input-helper">This is the email address visitors will use to contact you.</span>
+        </div>
       </div>
 
-      <div class="socials-section">
+      <div class="form-section">
         <div class="socials-header">
-          <label>Social Links</label>
+          <h2 class="form-section-title">2. Social Links</h2>
           <button type="button" id="add-social-btn" class="action-btn add-btn">+ Add Link</button>
         </div>
         
         <div id="socials-container" class="socials-container">
           <!-- Social rows injected here -->
         </div>
+        <span class="input-helper" style="margin-top:-0.5rem">Empty or incomplete rows will be ignored when saving.</span>
       </div>
 
+      <div id="form-feedback" class="form-feedback"></div>
+
       <div class="form-actions">
-        <button type="submit" class="primary-btn submit-btn" id="save-btn">Save Changes</button>
+        <div class="primary-actions">
+          <button type="submit" class="primary-btn submit-btn" id="save-btn">Save Changes</button>
+        </div>
       </div>
     </form>
   </div>
@@ -42,113 +51,123 @@ import MeLayout from '../../layouts/MeLayout.astro';
 
 <template id="social-row-template">
   <div class="social-row">
-    <input type="text" class="social-platform" placeholder="Platform (e.g. GitHub)" required />
-    <input type="url" class="social-url" placeholder="https://..." required />
+    <div class="social-inputs">
+      <input type="text" class="social-platform" placeholder="Platform (e.g. GitHub)" required />
+      <input type="url" class="social-url" placeholder="https://..." required />
+    </div>
     <button type="button" class="action-btn delete-btn remove-social-btn">Remove</button>
   </div>
 </template>
 
 <style>
-  .cms-container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 3rem 1.5rem;
-  }
-
-  .cms-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-  }
-
-  .page-title {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin: 0 0 0.35rem 0;
-  }
-
-  .page-subtitle {
-    font-size: 0.95rem;
-    color: var(--text-secondary);
-    margin: 0;
-  }
-
-  .header-actions {
-    display: flex;
-    gap: 1rem;
-  }
-
-  .primary-btn {
-    background-color: var(--text-primary);
-    color: var(--bg-main);
-    padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    font-weight: 600;
-    cursor: pointer;
-    text-decoration: none;
-    transition: opacity 0.2s ease;
-  }
-
-  .primary-btn:hover {
-    opacity: 0.9;
-  }
-
-  .primary-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
-  .secondary-btn {
-    background-color: transparent;
-    border: 1px solid var(--border-subtle);
-    color: var(--text-secondary);
-    padding: 0.6rem 1.25rem;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    text-decoration: none;
-    transition: all 0.2s ease;
-  }
-
-  .secondary-btn:hover {
-    background-color: var(--bg-surface);
-    color: var(--text-primary);
-    border-color: var(--text-secondary);
-  }
-
-  .section-divider {
-    border: none;
-    border-top: 1px solid var(--border-subtle);
-    margin: 1.5rem 0 2.5rem 0;
-  }
-
-  /* Form Styles */
   .editor-form {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 2.5rem;
+  }
+
+  .form-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
     background-color: var(--bg-surface);
-    padding: 2rem;
+    padding: 1.5rem;
     border-radius: 12px;
     border: 1px solid var(--border-subtle);
+  }
+
+  @media (min-width: 640px) {
+    .form-section {
+      padding: 2rem;
+    }
+  }
+
+  .form-section-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .socials-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 1px solid var(--border-subtle);
+    margin-bottom: -0.5rem;
+  }
+
+  .socials-header .form-section-title {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .socials-header .add-btn {
+    margin-bottom: 0.75rem;
   }
 
   .input-group {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.4rem;
   }
 
-  .input-group label, .socials-header label {
-    font-size: 0.85rem;
+  .input-group label {
+    font-size: 0.9rem;
     font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .required-asterisk {
+    color: #ef4444;
+  }
+
+  .input-helper {
+    font-size: 0.75rem;
     color: var(--text-secondary);
   }
 
-  .input-group input {
+  .socials-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  :global(.social-row) {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-end;
+    padding: 1.25rem;
+    background-color: var(--bg-main);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+  }
+
+  :global(.social-inputs) {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+  }
+
+  @media (min-width: 640px) {
+    :global(.social-row) {
+      flex-direction: row;
+      align-items: center;
+      padding: 0;
+      background-color: transparent;
+      border: none;
+    }
+    :global(.social-inputs) {
+      flex-direction: row;
+      flex: 1;
+    }
+  }
+
+  :global(.social-inputs input) {
     background-color: var(--bg-main);
     border: 1px solid var(--border-subtle);
     color: var(--text-primary);
@@ -158,81 +177,69 @@ import MeLayout from '../../layouts/MeLayout.astro';
     font-family: inherit;
     outline: none;
     transition: border-color 0.2s ease;
+    width: 100%;
   }
 
-  .input-group input:focus {
+  :global(.social-inputs input.social-platform) {
+    flex: 0.5;
+  }
+
+  :global(.social-inputs input.social-url) {
+    flex: 1;
+  }
+
+  :global(.social-inputs input:focus) {
     border-color: var(--accent-blue);
   }
 
-  .socials-section {
+  .form-actions {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 1rem;
+    margin-top: 1rem;
+    align-items: stretch;
+  }
+
+  @media (min-width: 640px) {
+    .form-actions {
+      flex-direction: row;
+      justify-content: flex-end;
+      align-items: center;
+    }
+  }
+
+  .primary-actions {
     display: flex;
     flex-direction: column;
     gap: 1rem;
   }
 
-  .socials-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  @media (min-width: 640px) {
+    .primary-actions {
+      flex-direction: row;
+    }
   }
 
-  .socials-container {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  :global(.social-row) {
-    display: flex;
-    gap: 0.75rem;
-    align-items: center;
-  }
-
-  :global(.social-row input) {
-    background-color: var(--bg-main);
-    border: 1px solid var(--border-subtle);
-    color: var(--text-primary);
-    padding: 0.6rem 0.8rem;
+  .form-feedback {
+    padding: 1rem;
     border-radius: 8px;
     font-size: 0.9rem;
-    outline: none;
-    flex: 1;
-  }
-
-  :global(.social-row input.social-platform) {
-    flex: 0.5;
-  }
-
-  :global(.social-row input:focus) {
-    border-color: var(--accent-blue);
-  }
-
-  .action-btn {
-    background: transparent;
-    border: 1px solid var(--border-subtle);
-    color: var(--text-secondary);
-    padding: 0.4rem 0.8rem;
-    border-radius: 6px;
-    font-size: 0.85rem;
     font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
+    display: none;
   }
 
-  .action-btn:hover {
-    color: var(--text-primary);
-    border-color: var(--text-secondary);
+  .form-feedback.success {
+    display: block;
+    background-color: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.2);
   }
 
-  :global(.delete-btn:hover) {
+  .form-feedback.error {
+    display: block;
+    background-color: rgba(239, 68, 68, 0.1);
     color: #ef4444;
-    border-color: #ef4444;
-  }
-
-  .form-actions {
-    margin-top: 1rem;
-    display: flex;
-    justify-content: flex-end;
+    border: 1px solid rgba(239, 68, 68, 0.2);
   }
 </style>
 
@@ -241,16 +248,24 @@ import { db } from '../../lib/firebase';
 import { ref as dbRef, get, set } from 'firebase/database';
 
   document.addEventListener('astro:page-load', () => {
-  
-  
 
   const form = document.getElementById('contact-form') as HTMLFormElement;
-    if (!form) return;
+  if (!form) return;
   const saveBtn = document.getElementById('save-btn') as HTMLButtonElement;
   const emailInput = document.getElementById('email') as HTMLInputElement;
   const socialsContainer = document.getElementById('socials-container') as HTMLDivElement;
   const addSocialBtn = document.getElementById('add-social-btn') as HTMLButtonElement;
   const template = document.getElementById('social-row-template') as HTMLTemplateElement;
+  const feedbackEl = document.getElementById('form-feedback') as HTMLDivElement;
+  
+  function showFeedback(msg: string, type: 'success' | 'error') {
+    feedbackEl.textContent = msg;
+    feedbackEl.className = `form-feedback ${type}`;
+    feedbackEl.style.display = 'block';
+    setTimeout(() => {
+      feedbackEl.style.display = 'none';
+    }, 5000);
+  }
 
   function createSocialRow(platform = '', url = '') {
     const clone = template.content.cloneNode(true) as DocumentFragment;
@@ -290,6 +305,7 @@ import { ref as dbRef, get, set } from 'firebase/database';
     }
   }).catch(err => {
     console.error("Failed to load contact data:", err);
+    showFeedback("Failed to load contact data.", "error");
   });
 
   // Handle Form Submission
@@ -299,7 +315,7 @@ import { ref as dbRef, get, set } from 'firebase/database';
     const emailVal = emailInput.value.trim();
 
     if (!emailVal) {
-      alert("Email is required.");
+      showFeedback("Email is required.", "error");
       return;
     }
 
@@ -329,15 +345,13 @@ import { ref as dbRef, get, set } from 'firebase/database';
     try {
       await set(dbRef(db, 'contact'), contactData);
       
-      saveBtn.textContent = 'Saved!';
-      setTimeout(() => {
-        saveBtn.disabled = false;
-        saveBtn.textContent = 'Save Changes';
-      }, 2000);
+      showFeedback("Contact information saved successfully!", "success");
+      saveBtn.textContent = 'Save Changes';
+      saveBtn.disabled = false;
       
     } catch (error) {
       console.error("Save error:", error);
-      alert('Error saving contact data. Check permissions.');
+      showFeedback("Error saving contact data. Check permissions.", "error");
       saveBtn.disabled = false;
       saveBtn.textContent = 'Save Changes';
     }

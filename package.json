@@ -12,6 +12,7 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/sitemap": "^3.7.3",
     "astro": "^7.2.2",
     "firebase": "^12.17.1",
     "firebase-tools": "^15.27.0"

@@ -7,12 +7,16 @@ import MobileMenu from '../components/layout/MobileMenu.astro';
 
 interface Props {
   title: string;
+  description?: string;
+  image?: string;
+  type?: string;
+  noindex?: boolean;
   activeNav?: string;
 }
 
-const { title, activeNav = 'projects' } = Astro.props;
+const { title, description, image, type, noindex = false, activeNav = 'projects' } = Astro.props;
 ---
-<BaseLayout title={title}>
+<BaseLayout title={title} description={description} image={image} type={type} noindex={noindex}>
 	<div class="app-layout">
 		<Header />
 		<Sidebar />
