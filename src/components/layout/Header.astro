@@ -1,72 +1,53 @@
-<header class="header">
-  <div class="breadcrumb">
-    Portfolio
-  </div>
+---
+// src/components/layout/Header.astro
+import ThemeToggle from "../ui/ThemeToggle.astro";
+---
 
-  <nav class="desktop-nav" aria-label="Primary navigation">
-    <a href="#projects">Projects</a>
-    <a href="#experience">Experience</a>
-    <a href="#about">About</a>
-    <a href="#skills">Skills</a>
-  </nav>
+<header class="mobile-header">
+    <button class="hamburger-menu" aria-label="Open menu">
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+        >
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+    </button>
 
-  <button
-    class="menu-button"
-    type="button"
-    aria-label="Open navigation menu"
-  >
-    Menu
-  </button>
+    <ThemeToggle />
 </header>
 
 <style>
-  .header {
-    min-height: 48px;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    margin-bottom: var(--space-16);
-  }
-
-  .breadcrumb {
-    color: var(--color-text-muted);
-    font-size: var(--text-sm);
-  }
-
-  .desktop-nav {
-    display: flex;
-    align-items: center;
-    gap: var(--space-6);
-
-    font-size: var(--text-sm);
-    color: var(--color-text-secondary);
-  }
-
-  .desktop-nav a {
-    transition:
-      color var(--transition-fast);
-  }
-
-  .desktop-nav a:hover {
-    color: var(--color-text-primary);
-  }
-
-  .menu-button {
-    display: none;
-  }
-
-  @media (max-width: 767px) {
-    .desktop-nav {
-      display: none;
+    .mobile-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.5rem;
+        background-color: var(--bg-surface);
+        width: 100%;
     }
 
-    .menu-button {
-      display: block;
-
-      color: var(--color-text-secondary);
-      font-size: var(--text-sm);
+    .hamburger-menu {
+        background: transparent;
+        border: none;
+        color: var(--text-primary);
+        cursor: pointer;
+        padding: 0.5rem;
+        margin-left: -0.5rem; /* Optical alignment */
     }
-  }
+
+    /* Hide on Tablet and Desktop */
+    @media (min-width: 768px) {
+        .mobile-header {
+            display: none;
+        }
+    }
 </style>

@@ -1,0 +1,203 @@
+---
+interface Props {
+  activeNav?: string;
+}
+
+const { activeNav = 'dashboard' } = Astro.props;
+
+const navItems = [
+  { label: 'Dashboard', href: '/me', id: 'dashboard' },
+  { label: 'Projects', href: '/me/projects', id: 'projects' },
+  { label: 'Experience', href: '/me/experience', id: 'experience' },
+  { label: 'Skills', href: '/me/skills', id: 'skills' },
+  { label: 'About', href: '/me/about', id: 'about' },
+  { label: 'Contact', href: '/me/contact', id: 'contact' },
+  { label: 'Settings', href: '/me/settings', id: 'settings' },
+];
+---
+<nav class="me-sidebar">
+  <div class="sidebar-header">
+    <a href="/" class="site-title" target="_blank" title="View Public Site">
+      Portfolio CMS
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+    </a>
+  </div>
+  
+  <ul class="nav-links">
+    {navItems.map(item => (
+      <li>
+        <a href={item.href} class={activeNav === item.id ? 'active' : ''}>
+          {item.label}
+        </a>
+      </li>
+    ))}
+  </ul>
+  
+  <div class="sidebar-footer">
+    <button id="logout-btn" class="logout-btn">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+      Sign Out
+    </button>
+  </div>
+</nav>
+
+<style>
+  .me-sidebar {
+    background-color: var(--bg-surface);
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    flex-direction: row;
+    padding: 1rem;
+    overflow-x: auto;
+    /* Hide scrollbar for mobile */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .me-sidebar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .sidebar-header {
+    margin-bottom: 2rem;
+    display: none;
+  }
+
+  .site-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .nav-links {
+    list-style: none;
+    display: flex;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-links a {
+    display: block;
+    padding: 0.5rem 0.8rem;
+    border-radius: 8px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .nav-links a:hover {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+  }
+
+  .nav-links a.active {
+    background-color: var(--accent-blue-bg);
+    color: var(--accent-blue);
+    font-weight: 600;
+  }
+
+  .sidebar-footer {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    padding-left: 1rem;
+  }
+
+  .logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.5rem 0.8rem;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .logout-btn:hover {
+    background-color: #fee2e2;
+    color: #ef4444;
+  }
+
+  :global(html.dark) .logout-btn:hover {
+    background-color: rgba(239, 68, 68, 0.15);
+  }
+
+  @media (min-width: 768px) {
+    .me-sidebar {
+      width: 240px;
+      min-width: 240px;
+      min-height: 100vh;
+      position: sticky;
+      top: 0;
+      flex-direction: column;
+      border-bottom: none;
+      border-right: 1px solid var(--border-subtle);
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 2rem 1.5rem;
+    }
+
+    .sidebar-header {
+      display: block;
+    }
+
+    .nav-links {
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      margin-left: 0;
+      padding-top: 2rem;
+      padding-left: 0;
+    }
+
+    .logout-btn {
+      width: 100%;
+      justify-content: flex-start;
+    }
+  }
+</style>
+
+<script>
+  import { auth } from '../../lib/firebase';
+  import { signOut } from 'firebase/auth';
+
+  // Handle initialization on every page load for View Transitions
+  document.addEventListener('astro:page-load', () => {
+    const logoutBtn = document.getElementById('logout-btn');
+
+    if (logoutBtn) {
+      // Remove existing listener if any to prevent duplicates (though Astro cleans up detached DOM nodes)
+      // Actually, since the node is newly created, we just attach it once.
+      // We can use an inline onclick to be safer, or just attach the listener.
+      // To be strictly idempotent, check a data attribute
+      if (logoutBtn.dataset.listenerAttached) return;
+      logoutBtn.dataset.listenerAttached = 'true';
+
+      logoutBtn.addEventListener('click', async () => {
+        try {
+          await signOut(auth);
+          // Auth guard handles redirect
+        } catch (error) {
+          console.error("Error signing out:", error);
+        }
+      });
+    }
+  });
+</script>

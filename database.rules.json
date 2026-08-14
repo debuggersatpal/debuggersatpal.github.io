@@ -1,0 +1,35 @@
+{
+  "rules": {
+    ".write": "auth != null",
+    "projects": {
+      ".read": "auth != null || (query.orderByChild == 'published' && query.equalTo == true)",
+      ".indexOn": ["published", "order"],
+      "$projectId": {
+        ".read": "auth != null || data.child('published').val() == true"
+      }
+    },
+    "experience": {
+      ".read": "auth != null || (query.orderByChild == 'published' && query.equalTo == true)",
+      ".indexOn": ["published", "order"],
+      "$expId": {
+        ".read": "auth != null || data.child('published').val() == true"
+      }
+    },
+    "skills": {
+      ".read": "auth != null || (query.orderByChild == 'published' && query.equalTo == true)",
+      ".indexOn": ["published", "order"],
+      "$skillId": {
+        ".read": "auth != null || data.child('published').val() == true"
+      }
+    },
+    "about": {
+      ".read": true
+    },
+    "contact": {
+      ".read": true
+    },
+    "settings": {
+      ".read": true
+    }
+  }
+}

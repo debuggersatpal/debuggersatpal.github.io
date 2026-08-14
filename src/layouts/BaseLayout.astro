@@ -25,6 +25,7 @@ const {
     <meta
       name="description"
       content={description}
+      id="meta-description"
     />
 
     <meta
@@ -38,10 +39,60 @@ const {
       href="/favicon.svg"
     />
 
-    <title>{title}</title>
+    <title id="page-title">{title}</title>
+    
+    <!-- Inline script to apply theme before paint -->
+    <script is:inline>
+      const theme = localStorage.getItem('theme');
+      if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      }
+    </script>
   </head>
 
   <body>
     <slot />
+    
+    <script>
+      import { getSettings } from '../lib/portfolio-data';
+      
+      async function loadSettings() {
+        try {
+          const settings = await getSettings();
+          if (settings) {
+            if (settings.siteTitle) {
+              const originalTitle = document.title;
+              if (originalTitle.includes('SATPAL')) {
+                document.title = originalTitle.replace('SATPAL', settings.siteTitle);
+              }
+            }
+            if (settings.seoDescription) {
+              const metaDesc = document.querySelector('meta[name="description"]');
+              if (metaDesc) {
+                metaDesc.setAttribute('content', settings.seoDescription);
+              }
+            }
+          }
+        } catch (e) {
+          console.error("Failed to load settings", e);
+        }
+      }
+
+      loadSettings();
+
+      // Intercept Astro ClientRouter to handle dynamic Firebase projects seamlessly
+      document.addEventListener('astro:before-preparation', event => {
+        const url = new URL(event.to);
+        if (url.pathname.startsWith('/projects/') && url.pathname.length > 10 && !url.pathname.includes('[id]')) {
+          event.loader = async () => {
+            let response = await fetch(url.pathname);
+            if (!response.ok) {
+              response = await fetch('/projects/[id]/index.html');
+            }
+            return response.text(); // Astro 4+ loader returns a string of HTML
+          };
+        }
+      });
+    </script>
   </body>
 </html>

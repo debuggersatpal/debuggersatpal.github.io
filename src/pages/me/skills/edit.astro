@@ -1,0 +1,293 @@
+---
+import MeLayout from '../../../layouts/MeLayout.astro';
+---
+
+<MeLayout title="Skills Editor | Portfolio Management" activeNav="skills">
+  <div class="cms-container">
+    <header class="cms-header">
+      <div>
+        <h1 class="page-title" id="form-title">Add Skill Category</h1>
+      </div>
+      <div class="header-actions">
+        <a href="/me/skills" class="secondary-btn">Cancel</a>
+      </div>
+    </header>
+
+    <hr class="section-divider" />
+
+    <form id="skills-form" class="editor-form">
+      
+      <div class="form-row">
+        <div class="input-group">
+          <label for="category">Category Name *</label>
+          <input type="text" id="category" required placeholder="e.g. Frontend" />
+        </div>
+        <div class="input-group">
+          <label for="order">Display Order</label>
+          <input type="number" id="order" value="0" />
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="skills">Skills * (One per line)</label>
+        <textarea id="skills" rows="8" required placeholder="React&#10;TypeScript&#10;Astro&#10;Node.js"></textarea>
+      </div>
+
+      <div class="checkbox-group">
+        <input type="checkbox" id="published" />
+        <label for="published">Published (Visible on public portfolio)</label>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="primary-btn submit-btn" id="save-btn">Save Category</button>
+      </div>
+    </form>
+  </div>
+</MeLayout>
+
+<style>
+  .cms-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem;
+  }
+
+  .cms-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .primary-btn {
+    background-color: var(--text-primary);
+    color: var(--bg-main);
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .primary-btn:hover {
+    opacity: 0.9;
+  }
+
+  .primary-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .secondary-btn {
+    background-color: transparent;
+    border: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+    padding: 0.6rem 1.25rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .secondary-btn:hover {
+    background-color: var(--bg-surface);
+    color: var(--text-primary);
+    border-color: var(--text-secondary);
+  }
+
+  .section-divider {
+    border: none;
+    border-top: 1px solid var(--border-subtle);
+    margin: 1.5rem 0 2.5rem 0;
+  }
+
+  /* Form Styles */
+  .editor-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    background-color: var(--bg-surface);
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid var(--border-subtle);
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 600px) {
+    .form-row {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .input-group label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+  }
+
+  .input-group input, .input-group textarea {
+    background-color: var(--bg-main);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s ease;
+  }
+
+  .input-group input:focus, .input-group textarea:focus {
+    border-color: var(--accent-blue);
+  }
+
+  .checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+  }
+
+  .checkbox-group input {
+    width: 1.25rem;
+    height: 1.25rem;
+    accent-color: var(--text-primary);
+  }
+
+  .checkbox-group label {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    cursor: pointer;
+  }
+
+  .form-actions {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: flex-end;
+  }
+</style>
+
+<script>
+import { db } from '../../../lib/firebase';
+import { ref as dbRef, get, update, push, set } from 'firebase/database';
+
+  document.addEventListener('astro:page-load', () => {
+  
+  
+
+  const params = new URLSearchParams(window.location.search);
+  const entryId = params.get('id');
+
+  const form = document.getElementById('skills-form') as HTMLFormElement;
+    if (!form) return;
+  const formTitle = document.getElementById('form-title') as HTMLHeadingElement;
+  const saveBtn = document.getElementById('save-btn') as HTMLButtonElement;
+  
+  // Inputs
+  const categoryInput = document.getElementById('category') as HTMLInputElement;
+  const skillsInput = document.getElementById('skills') as HTMLTextAreaElement;
+  const orderInput = document.getElementById('order') as HTMLInputElement;
+  const publishedInput = document.getElementById('published') as HTMLInputElement;
+
+  if (entryId) {
+    formTitle.textContent = 'Edit Skill Category';
+    
+    // Load existing data
+    get(dbRef(db, `skills/${entryId}`)).then(snapshot => {
+      if (snapshot.exists()) {
+        const s = snapshot.val();
+        categoryInput.value = s.category || '';
+        orderInput.value = s.order || '0';
+        publishedInput.checked = !!s.published;
+        
+        if (s.skills && Array.isArray(s.skills)) {
+          skillsInput.value = s.skills.join('\n');
+        }
+      } else {
+        alert("Skill category not found.");
+        window.location.assign('/me/skills');
+      }
+    }).catch(err => {
+      console.error("Failed to load category:", err);
+      alert("Failed to load skill data.");
+    });
+  }
+
+  // Handle Form Submission
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const categoryVal = categoryInput.value.trim();
+    const skillsArray = skillsInput.value
+      .split('\n')
+      .map(s => s.trim())
+      .filter(Boolean); // removes empty lines and whitespace-only lines
+
+    // Validation
+    if (!categoryVal) {
+      alert("Category name is required.");
+      return;
+    }
+
+    if (skillsArray.length === 0) {
+      alert("At least one valid skill is required.");
+      return;
+    }
+
+    saveBtn.disabled = true;
+    saveBtn.textContent = 'Saving...';
+
+    const skillData = {
+      category: categoryVal,
+      skills: skillsArray,
+      order: parseInt(orderInput.value) || 0,
+      published: publishedInput.checked
+    };
+
+    try {
+      if (entryId) {
+        // Update existing
+        await update(dbRef(db, `skills/${entryId}`), skillData);
+      } else {
+        // Create new using push() to generate a unique ID
+        const newRef = push(dbRef(db, 'skills'));
+        await set(newRef, { ...skillData, id: newRef.key });
+      }
+      // Redirect back to list
+      window.location.assign('/me/skills');
+    } catch (error) {
+      console.error("Save error:", error);
+      alert('Error saving skill category. Check permissions.');
+      saveBtn.disabled = false;
+      saveBtn.textContent = 'Save Category';
+    }
+  });
+  });
+</script>

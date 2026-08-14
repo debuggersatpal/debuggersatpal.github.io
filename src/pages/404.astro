@@ -1,0 +1,83 @@
+---
+import AppLayout from '../layouts/AppLayout.astro';
+---
+<AppLayout title="Not Found | SATPAL">
+  <div class="error-container">
+    <div class="error-content" id="error-content" style="display: none;">
+      <h1 class="error-title">404</h1>
+      <p class="error-desc">The page you're looking for doesn't exist.</p>
+      <a href="/" class="home-btn">Return Home</a>
+    </div>
+  </div>
+</AppLayout>
+
+<script>
+  async function handleRouting() {
+    const path = window.location.pathname;
+    
+    // Dynamic project detail routing fallback
+    if (path.startsWith('/projects/') && path.length > 10 && path !== '/projects/[id]') {
+      try {
+        const response = await fetch('/projects/[id]/index.html');
+        if (response.ok) {
+          const html = await response.text();
+          document.open();
+          document.write(html);
+          document.close();
+          return;
+        }
+      } catch (e) {
+        console.error('Failed to load fallback route', e);
+      }
+    }
+    
+    // Show normal 404 if not a dynamic route or fallback failed
+    const errContent = document.getElementById('error-content');
+    if (errContent) errContent.style.display = 'flex';
+  }
+
+  handleRouting();
+</script>
+
+<style>
+  .error-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 50vh;
+    text-align: center;
+  }
+  .error-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  .error-title {
+    font-size: 6rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 0;
+    line-height: 1;
+  }
+  .error-desc {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    margin: 0;
+  }
+  .home-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    background-color: var(--text-primary);
+    color: var(--bg-surface);
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+  .home-btn:hover {
+    opacity: 0.9;
+  }
+</style>

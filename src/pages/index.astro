@@ -1,48 +1,8 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
-
-import PortfolioShell from "../components/layout/PortfolioShell.astro";
-import Sidebar from "../components/layout/Sidebar.astro";
-import MainContent from "../components/layout/MainContent.astro";
-
-import ProfileCard from "../components/profile/ProfileCard.astro";
-import Header from "../components/layout/Header.astro";
+import AppLayout from "../layouts/AppLayout.astro";
+import ProjectsSection from "../components/projects/ProjectsSection.astro";
 ---
 
-<BaseLayout
-  title="Satpal — Developer"
-  description="Personal portfolio of Satpal, developer and builder."
->
-  <PortfolioShell>
-    <Sidebar>
-      <ProfileCard />
-    </Sidebar>
-
-    <MainContent>
-      <Header />
-
-      <section class="placeholder">
-        <p>Projects, experience and more coming next.</p>
-      </section>
-    </MainContent>
-  </PortfolioShell>
-</BaseLayout>
-
-<style>
-  .placeholder {
-    min-height: 60vh;
-
-    display: grid;
-    place-items: center;
-
-    border: 1px dashed var(--color-border-strong);
-    border-radius: var(--radius-lg);
-
-    color: var(--color-text-muted);
-    text-align: center;
-  }
-
-  .placeholder p {
-    font-size: var(--text-sm);
-  }
-</style>
+<AppLayout title="SATPAL | Developer" activeNav="projects">
+	<ProjectsSection />
+</AppLayout>

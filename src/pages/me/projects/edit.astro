@@ -1,0 +1,421 @@
+---
+import MeLayout from '../../../layouts/MeLayout.astro';
+---
+
+<MeLayout title="Project Editor | Portfolio Management" activeNav="projects">
+  <div class="cms-container">
+    <header class="cms-header">
+      <div>
+        <h1 class="page-title" id="form-title">Add Project</h1>
+      </div>
+      <div class="header-actions">
+        <a href="/me/projects" class="secondary-btn">Cancel</a>
+      </div>
+    </header>
+
+    <hr class="section-divider" />
+
+    <form id="project-form" class="editor-form">
+      <div class="form-row">
+        <div class="input-group">
+          <label for="id">Project ID (URL Slug)</label>
+          <input type="text" id="id" required placeholder="e.g. moviebase" />
+        </div>
+        <div class="input-group">
+          <label for="order">Display Order</label>
+          <input type="number" id="order" value="0" />
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="title">Title</label>
+        <input type="text" id="title" required placeholder="Project Title" />
+      </div>
+
+      <div class="input-group">
+        <label for="description">Description</label>
+        <textarea id="description" rows="3" required placeholder="Short description..."></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="input-group">
+          <label for="category">Category</label>
+          <input type="text" id="category" required placeholder="e.g. Web Apps" />
+        </div>
+        <div class="input-group">
+          <label for="techStack">Tech Stack (comma separated)</label>
+          <input type="text" id="techStack" placeholder="e.g. Next.js, Tailwind, TypeScript" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="input-group">
+          <label for="demoUrl">Live Demo URL</label>
+          <input type="url" id="demoUrl" placeholder="https://..." />
+        </div>
+        <div class="input-group">
+          <label for="githubUrl">GitHub URL</label>
+          <input type="url" id="githubUrl" placeholder="https://github.com/..." />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="input-group">
+          <label for="brandColor">Brand Color</label>
+          <input type="text" id="brandColor" placeholder="e.g. #111827" />
+        </div>
+        <div class="input-group">
+          <label for="fallbackText">Fallback Text (Icon initials)</label>
+          <input type="text" id="fallbackText" placeholder="e.g. M" />
+        </div>
+      </div>
+
+      <div class="image-upload-section">
+        <label>Project Icon Image</label>
+        <input type="file" id="iconFile" accept="image/*" class="file-input" />
+        <input type="hidden" id="iconImage" />
+        <div id="image-preview" class="image-preview"></div>
+        <p class="upload-status" id="upload-status"></p>
+      </div>
+
+      <div class="checkbox-group">
+        <input type="checkbox" id="published" />
+        <label for="published">Published (Visible on public portfolio)</label>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="primary-btn submit-btn" id="save-btn">Save Project</button>
+      </div>
+    </form>
+  </div>
+</MeLayout>
+
+<style>
+  .cms-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem;
+  }
+
+  .cms-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .primary-btn {
+    background-color: var(--text-primary);
+    color: var(--bg-main);
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+
+  .primary-btn:hover {
+    opacity: 0.9;
+  }
+
+  .primary-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .secondary-btn {
+    background-color: transparent;
+    border: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+    padding: 0.6rem 1.25rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .secondary-btn:hover {
+    background-color: var(--bg-surface);
+    color: var(--text-primary);
+    border-color: var(--text-secondary);
+  }
+
+  .section-divider {
+    border: none;
+    border-top: 1px solid var(--border-subtle);
+    margin: 1.5rem 0 2.5rem 0;
+  }
+
+  /* Form Styles */
+  .editor-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    background-color: var(--bg-surface);
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid var(--border-subtle);
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 600px) {
+    .form-row {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .input-group label, .image-upload-section label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+  }
+
+  .input-group input, .input-group textarea {
+    background-color: var(--bg-main);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s ease;
+  }
+
+  .input-group input:focus, .input-group textarea:focus {
+    border-color: var(--accent-blue);
+  }
+  
+  .input-group input:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .image-upload-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+    border: 1px dashed var(--border-subtle);
+    border-radius: 8px;
+    background-color: var(--bg-main);
+  }
+
+  .file-input {
+    color: var(--text-primary);
+    font-size: 0.85rem;
+  }
+
+  .upload-status {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin: 0;
+  }
+
+  .image-preview {
+    margin-top: 0.5rem;
+  }
+
+  .checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+  }
+
+  .checkbox-group input {
+    width: 1.25rem;
+    height: 1.25rem;
+    accent-color: var(--text-primary);
+  }
+
+  .checkbox-group label {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    cursor: pointer;
+  }
+
+  .form-actions {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: flex-end;
+  }
+</style>
+
+<script>
+import { db, storage } from '../../../lib/firebase';
+import { ref as dbRef, get, set, update } from 'firebase/database';
+import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
+
+  document.addEventListener('astro:page-load', () => {
+  
+  
+  
+
+  const params = new URLSearchParams(window.location.search);
+  const projectId = params.get('id');
+
+  const form = document.getElementById('project-form') as HTMLFormElement;
+    if (!form) return;
+  const formTitle = document.getElementById('form-title') as HTMLHeadingElement;
+  const saveBtn = document.getElementById('save-btn') as HTMLButtonElement;
+  
+  // Inputs
+  const idInput = document.getElementById('id') as HTMLInputElement;
+  const orderInput = document.getElementById('order') as HTMLInputElement;
+  const titleInput = document.getElementById('title') as HTMLInputElement;
+  const descInput = document.getElementById('description') as HTMLTextAreaElement;
+  const categoryInput = document.getElementById('category') as HTMLInputElement;
+  const techStackInput = document.getElementById('techStack') as HTMLInputElement;
+  const demoInput = document.getElementById('demoUrl') as HTMLInputElement;
+  const githubInput = document.getElementById('githubUrl') as HTMLInputElement;
+  const brandColorInput = document.getElementById('brandColor') as HTMLInputElement;
+  const fallbackInput = document.getElementById('fallbackText') as HTMLInputElement;
+  const publishedInput = document.getElementById('published') as HTMLInputElement;
+  
+  // Image Upload
+  const iconImageHidden = document.getElementById('iconImage') as HTMLInputElement;
+  const iconFileInput = document.getElementById('iconFile') as HTMLInputElement;
+  const uploadStatus = document.getElementById('upload-status') as HTMLParagraphElement;
+  const imagePreview = document.getElementById('image-preview') as HTMLDivElement;
+
+  if (projectId) {
+    formTitle.textContent = 'Edit Project';
+    idInput.value = projectId;
+    idInput.disabled = true; // DB Key shouldn't change once created
+    
+    // Load existing data
+    get(dbRef(db, `projects/${projectId}`)).then(snapshot => {
+      if (snapshot.exists()) {
+        const p = snapshot.val();
+        orderInput.value = p.order || '0';
+        titleInput.value = p.title || '';
+        descInput.value = p.description || '';
+        categoryInput.value = p.category || '';
+        techStackInput.value = (p.techStack || []).join(', ');
+        demoInput.value = p.demoUrl || '';
+        githubInput.value = p.githubUrl || '';
+        brandColorInput.value = p.brandColor || '';
+        fallbackInput.value = p.fallbackText || '';
+        publishedInput.checked = !!p.published;
+        iconImageHidden.value = p.iconImage || '';
+
+        if (p.iconImage) {
+          imagePreview.innerHTML = `<img src="${p.iconImage}" alt="Icon" style="max-width: 64px; max-height: 64px; border-radius: 12px; object-fit: cover;" />`;
+        }
+      } else {
+        alert("Project not found.");
+        window.location.assign('/me/projects');
+      }
+    }).catch(err => {
+      console.error("Failed to load project:", err);
+      alert("Failed to load project data.");
+    });
+  }
+
+  // Handle Image Upload automatically on file selection
+  iconFileInput.addEventListener('change', async (e) => {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+
+    // Use idInput value for folder if provided, else use generic
+    const folderId = idInput.value || 'new-project';
+    // Remove spaces/special chars from filename for safety
+    const safeFileName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, '_');
+    const sRef = storageRef(storage, `projects/${folderId}/${Date.now()}_${safeFileName}`);
+    
+    uploadStatus.textContent = 'Uploading image...';
+    try {
+      await uploadBytes(sRef, file);
+      const url = await getDownloadURL(sRef);
+      iconImageHidden.value = url;
+      uploadStatus.textContent = 'Upload successful!';
+      imagePreview.innerHTML = `<img src="${url}" alt="Preview" style="max-width: 64px; max-height: 64px; border-radius: 12px; object-fit: cover;" />`;
+    } catch (err) {
+      console.error("Upload error:", err);
+      uploadStatus.textContent = 'Upload failed. Check console.';
+    }
+  });
+
+  // Handle Form Submission
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    saveBtn.disabled = true;
+    saveBtn.textContent = 'Saving...';
+
+    const dbKey = idInput.value.trim();
+    if (!dbKey) {
+      alert("Project ID is required.");
+      saveBtn.disabled = false;
+      saveBtn.textContent = 'Save Project';
+      return;
+    }
+    
+    const projectData = {
+      id: dbKey,
+      order: parseInt(orderInput.value) || 0,
+      title: titleInput.value.trim(),
+      description: descInput.value.trim(),
+      category: categoryInput.value.trim(),
+      techStack: techStackInput.value.split(',').map(s => s.trim()).filter(Boolean),
+      demoUrl: demoInput.value.trim(),
+      githubUrl: githubInput.value.trim(),
+      brandColor: brandColorInput.value.trim(),
+      fallbackText: fallbackInput.value.trim(),
+      published: publishedInput.checked,
+      iconImage: iconImageHidden.value
+    };
+
+    // Remove empty strings so Firebase stores clean data
+    Object.keys(projectData).forEach(k => {
+      if ((projectData as any)[k] === '') {
+        delete (projectData as any)[k];
+      }
+    });
+
+    try {
+      if (projectId) {
+        // Update existing
+        await update(dbRef(db, `projects/${projectId}`), projectData);
+      } else {
+        // Create new
+        await set(dbRef(db, `projects/${dbKey}`), projectData);
+      }
+      // Redirect back to list
+      window.location.assign('/me/projects');
+    } catch (error) {
+      console.error("Save error:", error);
+      alert('Error saving project. Do you have correct permissions?');
+      saveBtn.disabled = false;
+      saveBtn.textContent = 'Save Project';
+    }
+  });
+  });
+</script>

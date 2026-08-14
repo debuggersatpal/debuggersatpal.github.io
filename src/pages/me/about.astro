@@ -1,0 +1,244 @@
+---
+import MeLayout from '../../layouts/MeLayout.astro';
+---
+
+<MeLayout title="About Editor | Portfolio Management" activeNav="about">
+  <div class="cms-container">
+    <header class="cms-header">
+      <div>
+        <h1 class="page-title">About</h1>
+        <p class="page-subtitle">Manage your biography and focus areas</p>
+      </div>
+      <div class="header-actions">
+        <a href="/me" class="secondary-btn">Dashboard</a>
+      </div>
+    </header>
+
+    <hr class="section-divider" />
+
+    <form id="about-form" class="editor-form">
+      <div class="input-group">
+        <label for="introduction">Introduction *</label>
+        <textarea id="introduction" rows="3" required placeholder="A short, impactful introductory paragraph..."></textarea>
+      </div>
+
+      <div class="input-group">
+        <label for="biography">Biography *</label>
+        <textarea id="biography" rows="10" required placeholder="Full biographical content. You can write multiple paragraphs here..."></textarea>
+      </div>
+
+      <div class="input-group">
+        <label for="focusAreas">Focus Areas (One per line)</label>
+        <textarea id="focusAreas" rows="6" placeholder="UI/UX Engineering&#10;Design Systems&#10;Performance Optimization"></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="primary-btn submit-btn" id="save-btn">Save Changes</button>
+      </div>
+    </form>
+  </div>
+</MeLayout>
+
+<style>
+  .cms-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem;
+  }
+
+  .cms-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 0.35rem 0;
+  }
+
+  .page-subtitle {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin: 0;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .primary-btn {
+    background-color: var(--text-primary);
+    color: var(--bg-main);
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .primary-btn:hover {
+    opacity: 0.9;
+  }
+
+  .primary-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .secondary-btn {
+    background-color: transparent;
+    border: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+    padding: 0.6rem 1.25rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .secondary-btn:hover {
+    background-color: var(--bg-surface);
+    color: var(--text-primary);
+    border-color: var(--text-secondary);
+  }
+
+  .section-divider {
+    border: none;
+    border-top: 1px solid var(--border-subtle);
+    margin: 1.5rem 0 2.5rem 0;
+  }
+
+  /* Form Styles */
+  .editor-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    background-color: var(--bg-surface);
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid var(--border-subtle);
+  }
+
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .input-group label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+  }
+
+  .input-group textarea {
+    background-color: var(--bg-main);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    outline: none;
+    resize: vertical;
+    transition: border-color 0.2s ease;
+  }
+
+  .input-group textarea:focus {
+    border-color: var(--accent-blue);
+  }
+
+  .form-actions {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: flex-end;
+  }
+</style>
+
+<script>
+import { db } from '../../lib/firebase';
+import { ref as dbRef, get, set } from 'firebase/database';
+
+  document.addEventListener('astro:page-load', () => {
+  
+  
+
+  const form = document.getElementById('about-form') as HTMLFormElement;
+    if (!form) return;
+  const saveBtn = document.getElementById('save-btn') as HTMLButtonElement;
+  
+  const introInput = document.getElementById('introduction') as HTMLTextAreaElement;
+  const bioInput = document.getElementById('biography') as HTMLTextAreaElement;
+  const focusAreasInput = document.getElementById('focusAreas') as HTMLTextAreaElement;
+
+  // On page load, fetch existing /about
+  get(dbRef(db, 'about')).then(snapshot => {
+    if (snapshot.exists()) {
+      const data = snapshot.val();
+      introInput.value = data.introduction || '';
+      bioInput.value = data.biography || '';
+      if (data.focusAreas && Array.isArray(data.focusAreas)) {
+        focusAreasInput.value = data.focusAreas.join('\n');
+      }
+    }
+  }).catch(err => {
+    console.error("Failed to load about data:", err);
+  });
+
+  // Handle Form Submission
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const introVal = introInput.value.trim();
+    const bioVal = bioInput.value.trim();
+    const focusAreasArray = focusAreasInput.value
+      .split('\n')
+      .map(s => s.trim())
+      .filter(Boolean); // removes empty lines
+
+    // Validation
+    if (!introVal) {
+      alert("Introduction is required.");
+      return;
+    }
+    if (!bioVal) {
+      alert("Biography is required.");
+      return;
+    }
+
+    saveBtn.disabled = true;
+    saveBtn.textContent = 'Saving...';
+
+    const aboutData = {
+      introduction: introVal,
+      biography: bioVal,
+      focusAreas: focusAreasArray.length > 0 ? focusAreasArray : null
+    };
+
+    try {
+      // Use set() directly on the single 'about' node
+      await set(dbRef(db, 'about'), aboutData);
+      
+      saveBtn.textContent = 'Saved!';
+      setTimeout(() => {
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Save Changes';
+      }, 2000);
+      
+    } catch (error) {
+      console.error("Save error:", error);
+      alert('Error saving about data. Check permissions.');
+      saveBtn.disabled = false;
+      saveBtn.textContent = 'Save Changes';
+    }
+  });
+  });
+</script>

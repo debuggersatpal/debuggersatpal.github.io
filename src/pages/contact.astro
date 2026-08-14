@@ -1,0 +1,207 @@
+---
+import AppLayout from "../layouts/AppLayout.astro";
+
+// TEMPORARY STRUCTURAL DEMO DATA
+// To be replaced with actual contact information later.
+const demoLinks = [
+    { platform: "[Platform Placeholder 1]", url: "#", display: "[@username or handle placeholder]" },
+    { platform: "[Platform Placeholder 2]", url: "#", display: "[@username or handle placeholder]" },
+    { platform: "[Platform Placeholder 3]", url: "#", display: "[@username or handle placeholder]" }
+];
+---
+
+<AppLayout title="Contact | SATPAL" activeNav="contact">
+	<div class="contact-container">
+        <header class="page-header">
+            <h1 class="page-title">Contact</h1>
+            <p class="page-subtitle">Get in touch.</p>
+        </header>
+
+        <hr class="section-divider" />
+
+        <section class="contact-content">
+            <p class="intro-text">
+                I'm always open to discussing new projects, creative ideas, or opportunities to be part of your visions.
+            </p>
+
+            <div class="primary-contact" id="primary-contact">
+                <h2 class="section-title">Email</h2>
+                <a href="#" class="contact-link email-link" id="contact-email">
+                    <span id="contact-email-text">email@example.com</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </a>
+            </div>
+
+            <div class="social-contact" id="social-contact">
+                <h2 class="section-title">Elsewhere</h2>
+                <ul class="social-list" id="social-list">
+                    {demoLinks.map((link) => (
+                        <li>
+                            <span class="platform-name">{link.platform}</span>
+                            <a href={link.url} class="contact-link">{link.display}</a>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </section>
+    </div>
+</AppLayout>
+
+<script>
+  import { getContact } from "../lib/portfolio-data";
+
+  async function loadContact() {
+    try {
+      const data = await getContact();
+      if (!data) return;
+
+      if (data.email) {
+        const pContact = document.getElementById('primary-contact');
+        const emailLink = document.getElementById('contact-email') as HTMLAnchorElement;
+        const emailText = document.getElementById('contact-email-text');
+        
+        if (emailLink && emailText && pContact) {
+          emailLink.href = `mailto:${data.email}`;
+          emailText.textContent = data.email;
+          pContact.style.display = 'block';
+        }
+      }
+
+      if (data.socials && Array.isArray(data.socials) && data.socials.length > 0) {
+        const sContact = document.getElementById('social-contact');
+        const sList = document.getElementById('social-list');
+        
+        if (sList && sContact) {
+          sList.innerHTML = data.socials.map((s: any) => `
+            <li>
+                <span class="platform-name">${s.platform}</span>
+                <a href="${s.url}" class="contact-link" target="_blank" rel="noopener noreferrer">
+                  ${s.url.replace(/^https?:\/\/(www\.)?/, '')}
+                </a>
+            </li>
+          `).join('');
+          sContact.style.display = 'block';
+        }
+      }
+    } catch (err) {
+      console.error("Failed to load Firebase contact data", err);
+    }
+  }
+
+  loadContact();
+</script>
+
+<style>
+    .contact-container {
+        max-width: 750px;
+    }
+
+    /* ───────── Page Header ───────── */
+    .page-header {
+        margin-bottom: 1.25rem;
+    }
+    
+    .page-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0 0 0.35rem 0;
+        line-height: 1.1;
+    }
+    
+    .page-subtitle {
+        font-size: 0.95rem;
+        color: var(--text-secondary);
+        margin: 0;
+    }
+
+    /* ───────── Divider ───────── */
+    .section-divider {
+        border: none;
+        border-top: 1px solid var(--border-subtle);
+        margin: 2rem 0;
+    }
+
+    /* ───────── Content ───────── */
+    .contact-content {
+        display: flex;
+        flex-direction: column;
+        gap: 3.5rem;
+    }
+
+    .intro-text {
+        font-size: 1.1rem;
+        line-height: 1.65;
+        color: var(--text-secondary);
+        margin: 0;
+    }
+
+    .section-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0 0 1rem 0;
+    }
+
+    /* ───────── Links ───────── */
+    .contact-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 1.05rem;
+        font-weight: 500;
+        transition: color 0.2s ease;
+    }
+
+    .contact-link:hover {
+        color: var(--accent-blue);
+    }
+
+    .email-link {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+
+    /* ───────── Social List ───────── */
+    .social-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+    }
+
+    .social-list li {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .platform-name {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+    }
+
+    /* ───────── Tablet/Desktop (768px+) ───────── */
+    @media (min-width: 768px) {
+        .social-list li {
+            flex-direction: row;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .platform-name {
+            min-width: 140px;
+        }
+    }
+</style>

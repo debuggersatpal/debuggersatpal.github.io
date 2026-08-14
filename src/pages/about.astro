@@ -1,0 +1,168 @@
+---
+import AppLayout from "../layouts/AppLayout.astro";
+---
+
+<AppLayout title="About | SATPAL" activeNav="about">
+	<div class="about-container">
+        <header class="page-header">
+            <h1 class="page-title">About</h1>
+            <p class="page-subtitle">Background and philosophy.</p>
+        </header>
+
+        <hr class="section-divider" />
+
+        <p class="intro-text" id="about-intro">
+            [Introduction placeholder: A strong opening paragraph summarizing your current professional state.]
+        </p>
+
+        <section class="content-section">
+            <h2 class="section-title">Background</h2>
+            <div class="prose-block" id="about-bio">
+                <p>[Biography placeholder: Paragraph 1 of your main body content.]</p>
+                <p>[Biography placeholder: Paragraph 2 of your main body content.]</p>
+            </div>
+        </section>
+
+        <section class="content-section" id="focus-section">
+            <h2 class="section-title">Current Focus</h2>
+            <ul class="focus-list" id="focus-list">
+                <li>[Focus placeholder 1]</li>
+                <li>[Focus placeholder 2]</li>
+                <li>[Focus placeholder 3]</li>
+            </ul>
+        </section>
+    </div>
+</AppLayout>
+
+<script>
+  import { getAbout } from "../lib/portfolio-data";
+
+  async function loadAbout() {
+    try {
+      const data = await getAbout();
+      if (!data) return;
+
+      if (data.introduction) {
+        const introEl = document.getElementById('about-intro');
+        if (introEl) introEl.textContent = data.introduction;
+      }
+
+      if (data.biography) {
+        const bioEl = document.getElementById('about-bio');
+        if (bioEl) {
+          // split by double newlines for paragraphs, or single if preferred
+          // CMS uses textarea, so splitting by \n\n is good for <p> tags
+          const paragraphs = data.biography.split(/\n\n+/);
+          bioEl.innerHTML = paragraphs.map((p: string) => `<p>${p.trim()}</p>`).join('');
+        }
+      }
+
+      const focusSection = document.getElementById('focus-section');
+      const focusList = document.getElementById('focus-list');
+      
+      if (data.focusAreas && Array.isArray(data.focusAreas) && data.focusAreas.length > 0) {
+        if (focusList) {
+          focusList.innerHTML = data.focusAreas.map((f: string) => `<li>${f}</li>`).join('');
+        }
+        if (focusSection) focusSection.style.display = 'block';
+      } else {
+        if (focusSection) focusSection.style.display = 'none';
+      }
+    } catch (err) {
+      console.error("Failed to load Firebase about data", err);
+    }
+  }
+
+  loadAbout();
+</script>
+
+<style>
+    .about-container {
+        max-width: 750px;
+    }
+
+    /* ───────── Page Header ───────── */
+    .page-header {
+        margin-bottom: 1.25rem;
+    }
+    
+    .page-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0 0 0.35rem 0;
+        line-height: 1.1;
+    }
+    
+    .page-subtitle {
+        font-size: 0.95rem;
+        color: var(--text-secondary);
+        margin: 0;
+    }
+
+    /* ───────── Divider ───────── */
+    .section-divider {
+        border: none;
+        border-top: 1px solid var(--border-subtle);
+        margin: 2rem 0;
+    }
+
+    /* ───────── Typography & Sections ───────── */
+    .intro-text {
+        font-size: 1.1rem;
+        line-height: 1.65;
+        color: var(--text-secondary);
+        margin: 0 0 3rem 0;
+    }
+
+    .content-section {
+        margin-bottom: 3rem;
+    }
+    
+    .content-section:last-child {
+        margin-bottom: 0;
+    }
+
+    .section-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0 0 1.25rem 0;
+    }
+
+    .prose-block p {
+        font-size: 1rem;
+        line-height: 1.65;
+        color: var(--text-secondary);
+        margin: 0 0 1.25rem 0;
+    }
+    
+    .prose-block p:last-child {
+        margin-bottom: 0;
+    }
+
+    /* ───────── Focus List ───────── */
+    .focus-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .focus-list li {
+        font-size: 1rem;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        line-height: 1.5;
+    }
+    
+    .focus-list li::before {
+        content: "—";
+        color: var(--text-secondary);
+        font-weight: 600;
+    }
+</style>

@@ -1,0 +1,124 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Header from '../components/layout/Header.astro';
+import Sidebar from '../components/layout/Sidebar.astro';
+import ThemeToggle from '../components/ui/ThemeToggle.astro';
+import MobileMenu from '../components/layout/MobileMenu.astro';
+
+interface Props {
+  title: string;
+  activeNav?: string;
+}
+
+const { title, activeNav = 'projects' } = Astro.props;
+---
+<BaseLayout title={title}>
+	<div class="app-layout">
+		<Header />
+		<Sidebar />
+		<main class="main-content">
+			<nav class="top-nav">
+				<div class="nav-left">
+					<button class="tablet-hamburger" aria-label="Open menu">
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<line x1="3" y1="12" x2="21" y2="12"></line>
+							<line x1="3" y1="6" x2="21" y2="6"></line>
+							<line x1="3" y1="18" x2="21" y2="18"></line>
+						</svg>
+					</button>
+					<ul class="desktop-links">
+						<li><a href="/projects" class={activeNav === 'projects' ? 'active' : ''}>Projects</a></li>
+						<li><a href="/experience" class={activeNav === 'experience' ? 'active' : ''}>Experience</a></li>
+						<li><a href="/about" class={activeNav === 'about' ? 'active' : ''}>About</a></li>
+						<li><a href="/skills" class={activeNav === 'skills' ? 'active' : ''}>Skills</a></li>
+						<li><a href="/contact" class={activeNav === 'contact' ? 'active' : ''}>Contact</a></li>
+					</ul>
+				</div>
+				<ThemeToggle />
+			</nav>
+
+			<slot />
+		</main>
+	</div>
+	<MobileMenu activeNav={activeNav} />
+</BaseLayout>
+
+<style>
+    .main-content {
+        min-width: 0;
+    }
+
+    /* ───────── Navigation ───────── */
+    .top-nav {
+        display: none; /* Hidden on mobile */
+    }
+
+    /* ───────── Tablet (768px+) ───────── */
+    @media (min-width: 768px) {
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .tablet-hamburger {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            padding-left: 0;
+        }
+
+        .desktop-links {
+            display: none;
+        }
+    }
+
+    /* ───────── Desktop (1024px+) ───────── */
+    @media (min-width: 1024px) {
+        .tablet-hamburger {
+            display: none;
+        }
+
+        .top-nav {
+            justify-content: flex-end;
+            gap: 2rem;
+        }
+
+        .nav-left {
+            display: flex;
+            flex: 1;
+            justify-content: flex-end;
+            margin-right: 2rem;
+        }
+
+        .desktop-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .desktop-links a {
+            text-decoration: none;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid transparent;
+            transition: color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .desktop-links a:hover {
+            color: var(--accent-blue);
+        }
+
+        .desktop-links a.active {
+            color: var(--accent-blue);
+            border-bottom-color: var(--accent-blue);
+        }
+    }
+</style>
