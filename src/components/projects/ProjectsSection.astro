@@ -2,6 +2,9 @@
 import ProjectFilters from "./ProjectFilters.astro";
 import ProjectCard from "./ProjectCard.astro";
 import { projects } from "../../data/projects";
+
+const pathname = Astro.url.pathname;
+const isProjectsRoute = pathname === '/projects' || pathname === '/projects/';
 ---
 <section id="projects">
     <header class="page-header">
@@ -23,15 +26,17 @@ import { projects } from "../../data/projects";
         <p>No projects found in this category.</p>
     </div>
 
-    <div class="view-more-wrapper">
-        <a href="/projects" class="view-more-btn">
-            View More Projects
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-                <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
-        </a>
-    </div>
+    {!isProjectsRoute && (
+        <div class="view-more-wrapper">
+            <a href="/projects" class="view-more-btn">
+                View More Projects
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+            </a>
+        </div>
+    )}
 </section>
 
 <script>
@@ -96,11 +101,23 @@ import { projects } from "../../data/projects";
 
       grid.innerHTML = html;
       
-      // Re-trigger filtering logic if it exists globally
+      // Apply saved filter instead of simulating a click
       if (typeof window !== 'undefined') {
-        const activeFilter = document.querySelector('.filter-btn.active') as HTMLElement;
-        if (activeFilter) {
-          activeFilter.click(); 
+        const savedFilter = sessionStorage.getItem('activeProjectFilter') || 'All';
+        let visibleCount = 0;
+        const dynamicCards = document.querySelectorAll('.project-card');
+        dynamicCards.forEach(card => {
+          const cardCategory = card.getAttribute('data-category');
+          if (savedFilter === 'All' || savedFilter === cardCategory) {
+            (card as HTMLElement).style.display = '';
+            visibleCount++;
+          } else {
+            (card as HTMLElement).style.display = 'none';
+          }
+        });
+        const emptyState = document.getElementById('projects-empty-state');
+        if (emptyState) {
+          emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
         }
       }
     } catch (err) {
@@ -108,7 +125,9 @@ import { projects } from "../../data/projects";
     }
   }
 
-  loadProjects();
+  document.addEventListener('astro:page-load', () => {
+    loadProjects();
+  });
 </script>
 
 <style>

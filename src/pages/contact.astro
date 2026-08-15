@@ -2,11 +2,11 @@
 import AppLayout from "../layouts/AppLayout.astro";
 
 // TEMPORARY STRUCTURAL DEMO DATA
-// To be replaced with actual contact information later.
+// Provides a visual skeleton while Firebase loads.
 const demoLinks = [
-    { platform: "[Platform Placeholder 1]", url: "#", display: "[@username or handle placeholder]" },
-    { platform: "[Platform Placeholder 2]", url: "#", display: "[@username or handle placeholder]" },
-    { platform: "[Platform Placeholder 3]", url: "#", display: "[@username or handle placeholder]" }
+    { platform: "skeleton", url: "#" },
+    { platform: "skeleton", url: "#" },
+    { platform: "skeleton", url: "#" }
 ];
 ---
 
@@ -16,39 +16,48 @@ const demoLinks = [
   activeNav="contact"
 >
 	<div class="contact-container">
-        <header class="page-header">
-            <h1 class="page-title">Contact</h1>
-            <p class="page-subtitle">Get in touch.</p>
-        </header>
-
-        <hr class="section-divider" />
-
-        <section class="contact-content">
+        <!-- HEADER / INTRO -->
+        <header class="contact-header">
+            <h1 class="page-title hidden-visually">Contact</h1>
             <p class="intro-text">
                 I'm always open to discussing new projects, creative ideas, or opportunities to be part of your visions.
             </p>
+        </header>
 
+        <section class="contact-content">
+            <!-- EMAIL CARD -->
             <div class="primary-contact" id="primary-contact">
-                <h2 class="section-title">Email</h2>
-                <a href="#" class="contact-link email-link" id="contact-email">
-                    <span id="contact-email-text">email@example.com</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                        <polyline points="12 5 19 12 12 19"></polyline>
-                    </svg>
-                </a>
+                <button class="email-interaction-card" id="copy-email-btn" aria-label="Copy email address" aria-live="polite">
+                    <div class="email-card-content">
+                        <span class="email-label">Email me at</span>
+                        <span class="email-address" id="contact-email-text">
+                            <span class="skeleton" style="width: 250px; display: inline-block;">&nbsp;</span>
+                        </span>
+                    </div>
+                    <div class="email-card-action">
+                        <span class="copy-feedback" id="copy-feedback">Copy</span>
+                        <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                    </div>
+                </button>
             </div>
 
+            <!-- SOCIAL LINKS -->
             <div class="social-contact" id="social-contact">
                 <h2 class="section-title">Elsewhere</h2>
-                <ul class="social-list" id="social-list">
-                    {demoLinks.map((link) => (
-                        <li>
-                            <span class="platform-name">{link.platform}</span>
-                            <a href={link.url} class="contact-link">{link.display}</a>
-                        </li>
+                <div class="social-grid" id="social-grid">
+                    {demoLinks.map(() => (
+                        <div class="social-pill skeleton-pill" style="border-color: transparent;">
+                            <span class="skeleton" style="width: 80px;"></span>
+                        </div>
                     ))}
-                </ul>
+                </div>
+            </div>
+            
+            <div id="contact-empty-state" class="empty-state" style="display: none;">
+                <p>Contact information coming soon.</p>
             </div>
         </section>
     </div>
@@ -58,154 +67,291 @@ const demoLinks = [
   import { getContact } from "../lib/portfolio-data";
 
   async function loadContact() {
+    const pContact = document.getElementById('primary-contact');
+    const copyBtn = document.getElementById('copy-email-btn');
+    const emailText = document.getElementById('contact-email-text');
+    const copyFeedback = document.getElementById('copy-feedback');
+    const sContact = document.getElementById('social-contact');
+    const sGrid = document.getElementById('social-grid');
+    const emptyState = document.getElementById('contact-empty-state');
+
     try {
       const data = await getContact();
-      if (!data) return;
-
-      if (data.email) {
-        const pContact = document.getElementById('primary-contact');
-        const emailLink = document.getElementById('contact-email') as HTMLAnchorElement;
-        const emailText = document.getElementById('contact-email-text');
-        
-        if (emailLink && emailText && pContact) {
-          emailLink.href = `mailto:${data.email}`;
-          emailText.textContent = data.email;
-          pContact.style.display = 'block';
+      
+      if (!data) {
+        if (pContact) pContact.style.display = 'none';
+        if (sContact) sContact.style.display = 'none';
+        if (emptyState) {
+          emptyState.style.display = 'block';
+          emptyState.innerHTML = '<p>Contact information coming soon.</p>';
         }
+        return;
       }
 
-      if (data.socials && Array.isArray(data.socials) && data.socials.length > 0) {
-        const sContact = document.getElementById('social-contact');
-        const sList = document.getElementById('social-list');
+      let hasContent = false;
+
+      // Handle Email
+      if (data.email && emailText && pContact && copyBtn) {
+        emailText.textContent = data.email;
+        emailText.classList.remove('skeleton');
+        pContact.style.display = 'block';
+        hasContent = true;
         
-        if (sList && sContact) {
-          sList.innerHTML = data.socials.map((s: any) => `
-            <li>
-                <span class="platform-name">${s.platform}</span>
-                <a href="${s.url}" class="contact-link" target="_blank" rel="noopener noreferrer">
-                  ${s.url.replace(/^https?:\/\/(www\.)?/, '')}
-                </a>
-            </li>
+        // Clean up listeners
+        const newCopyBtn = copyBtn.cloneNode(true) as HTMLElement;
+        if (copyBtn.parentNode) {
+          copyBtn.parentNode.replaceChild(newCopyBtn, copyBtn);
+        }
+        
+        const newFeedback = newCopyBtn.querySelector('.copy-feedback');
+
+        newCopyBtn.addEventListener('click', async () => {
+          try {
+            await navigator.clipboard.writeText(data.email);
+            newCopyBtn.classList.add('copied');
+            if (newFeedback) newFeedback.textContent = 'Copied!';
+            
+            setTimeout(() => {
+              newCopyBtn.classList.remove('copied');
+              if (newFeedback) newFeedback.textContent = 'Copy';
+            }, 2000);
+          } catch (err) {
+            console.error('Failed to copy', err);
+          }
+        });
+      } else {
+        if (pContact) pContact.style.display = 'none';
+      }
+
+      // Handle Socials
+      if (data.socials && Array.isArray(data.socials) && data.socials.length > 0) {
+        if (sGrid && sContact) {
+          sGrid.innerHTML = data.socials.map((s: any) => `
+            <a href="${s.url}" class="social-pill" target="_blank" rel="noopener noreferrer">
+              <span class="platform-name">${s.platform}</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="external-icon">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </a>
           `).join('');
           sContact.style.display = 'block';
+          hasContent = true;
         }
+      } else {
+        if (sContact) sContact.style.display = 'none';
+      }
+      
+      if (!hasContent && emptyState) {
+        emptyState.style.display = 'block';
+        emptyState.innerHTML = '<p>Contact information coming soon.</p>';
       }
     } catch (err) {
       console.error("Failed to load Firebase contact data", err);
+      if (pContact) pContact.style.display = 'none';
+      if (sContact) sContact.style.display = 'none';
+      if (emptyState) {
+        emptyState.style.display = 'block';
+        emptyState.innerHTML = '<p>Failed to load contact data. Please try again later.</p>';
+      }
     }
   }
 
-  loadContact();
+  document.addEventListener('astro:page-load', () => {
+    loadContact();
+  });
 </script>
 
 <style>
     .contact-container {
-        max-width: 750px;
+        max-width: 650px;
     }
 
-    /* ───────── Page Header ───────── */
-    .page-header {
-        margin-bottom: 1.25rem;
-    }
-    
-    .page-title {
-        font-size: 2rem;
-        font-weight: 700;
-        color: var(--text-primary);
-        margin: 0 0 0.35rem 0;
-        line-height: 1.1;
-    }
-    
-    .page-subtitle {
-        font-size: 0.95rem;
-        color: var(--text-secondary);
-        margin: 0;
+    .hidden-visually {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
     }
 
-    /* ───────── Divider ───────── */
-    .section-divider {
-        border: none;
-        border-top: 1px solid var(--border-subtle);
-        margin: 2rem 0;
-    }
-
-    /* ───────── Content ───────── */
-    .contact-content {
-        display: flex;
-        flex-direction: column;
-        gap: 3.5rem;
+    /* ───────── HEADER ───────── */
+    .contact-header {
+        margin-bottom: 3.5rem;
     }
 
     .intro-text {
-        font-size: 1.1rem;
-        line-height: 1.65;
-        color: var(--text-secondary);
+        font-size: 1.25rem;
+        line-height: 1.6;
+        font-weight: 500;
+        color: var(--text-primary);
         margin: 0;
+    }
+
+    /* ───────── CONTENT ───────── */
+    .contact-content {
+        display: flex;
+        flex-direction: column;
+        gap: 4rem;
     }
 
     .section-title {
-        font-size: 1.25rem;
-        font-weight: 600;
-        color: var(--text-primary);
-        margin: 0 0 1rem 0;
-    }
-
-    /* ───────── Links ───────── */
-    .contact-link {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.4rem;
-        color: var(--text-secondary);
-        text-decoration: none;
         font-size: 1.05rem;
-        font-weight: 500;
-        transition: color 0.2s ease;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-primary);
+        margin: 0 0 1.25rem 0;
     }
 
-    .contact-link:hover {
+    /* ───────── EMAIL CARD ───────── */
+    .email-interaction-card {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: var(--bg-surface);
+        border: 1px solid var(--border-subtle);
+        border-radius: 16px;
+        padding: 2.5rem 2rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-align: left;
+        outline: none;
+    }
+
+    .email-interaction-card:hover, .email-interaction-card:focus-visible {
+        border-color: var(--text-secondary);
+        transform: translateY(-2px);
+    }
+
+    .email-interaction-card.copied {
+        background-color: var(--accent-blue-bg);
+        border-color: var(--accent-blue);
+    }
+
+    .email-card-content {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .email-label {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+    }
+
+    .email-address {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        word-break: break-all;
+    }
+
+    .email-interaction-card.copied .email-address,
+    .email-interaction-card.copied .email-label {
         color: var(--accent-blue);
     }
 
-    .email-link {
-        font-size: 1.2rem;
-        font-weight: 600;
+    .email-card-action {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--text-secondary);
+        transition: color 0.2s ease;
+    }
+
+    .email-interaction-card:hover .email-card-action {
         color: var(--text-primary);
     }
 
-    /* ───────── Social List ───────── */
-    .social-list {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        display: flex;
-        flex-direction: column;
-        gap: 1.25rem;
+    .email-interaction-card.copied .email-card-action {
+        color: var(--accent-blue);
     }
 
-    .social-list li {
+    .copy-feedback {
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    /* ───────── SOCIAL GRID ───────── */
+    .social-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .social-pill {
         display: flex;
-        flex-direction: column;
-        gap: 0.25rem;
+        align-items: center;
+        justify-content: space-between;
+        background-color: transparent;
+        border: 1px solid var(--border-subtle);
+        padding: 1.25rem 1.5rem;
+        border-radius: 12px;
+        text-decoration: none;
+        color: var(--text-primary);
+        transition: all 0.2s ease;
+        outline: none;
+        min-height: 48px;
+    }
+
+    .social-pill:hover, .social-pill:focus-visible {
+        background-color: var(--bg-surface);
+        border-color: var(--text-secondary);
     }
 
     .platform-name {
-        font-size: 0.85rem;
+        font-size: 1.05rem;
         font-weight: 600;
-        color: var(--text-primary);
-        letter-spacing: 0.02em;
-        text-transform: uppercase;
     }
 
-    /* ───────── Tablet/Desktop (768px+) ───────── */
-    @media (min-width: 768px) {
-        .social-list li {
+    .external-icon {
+        color: var(--text-secondary);
+        transition: color 0.2s ease;
+    }
+
+    .social-pill:hover .external-icon {
+        color: var(--text-primary);
+    }
+
+    /* ───────── EMPTY STATE ───────── */
+    .empty-state {
+        text-align: center;
+        padding: 3rem 2rem;
+        border: 1px dashed var(--border-subtle);
+        border-radius: 12px;
+        color: var(--text-secondary);
+    }
+
+    /* ───────── RESPONSIVE ───────── */
+    @media (min-width: 640px) {
+        .social-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 639px) {
+        .email-interaction-card {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 2rem;
+            padding: 2rem 1.5rem;
+        }
+        
+        .email-card-action {
             flex-direction: row;
-            align-items: center;
-            gap: 1.5rem;
+            align-self: flex-start;
         }
 
-        .platform-name {
-            min-width: 140px;
+        .email-address {
+            font-size: 1.5rem;
         }
     }
 </style>

@@ -1,4 +1,5 @@
 @import './tokens.css';
+@import './project-card.css';
 
 html {
   scroll-behavior: smooth;
@@ -8,6 +9,7 @@ html {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -60,5 +62,28 @@ body {
 @media (min-width: 1024px) {
   .main-content {
     padding: 2rem 3rem;
+  }
+}
+
+/* ───────── Skeleton Loaders ───────── */
+.skeleton {
+  background-color: var(--border-subtle);
+  color: transparent !important;
+  border-radius: 4px;
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+  user-select: none;
+  display: inline-block;
+  min-height: 1em;
+}
+
+@keyframes skeleton-pulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
   }
 }

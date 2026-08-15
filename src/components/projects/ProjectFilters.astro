@@ -86,18 +86,51 @@ import { filterCategories } from '../../data/projects';
     const projectCards = document.querySelectorAll('.project-card');
     const emptyState = document.getElementById('projects-empty-state');
 
-    if (!filterBtns.length || !projectCards.length) return;
+    if (!filterBtns.length) return;
+
+    // Load persisted filter
+    const savedFilter = sessionStorage.getItem('activeProjectFilter') || 'All';
+
+    // Apply saved filter visually
+    let initialCount = 0;
+    filterBtns.forEach(b => {
+      if (b.getAttribute('data-filter') === savedFilter) {
+        b.classList.add('active');
+      } else {
+        b.classList.remove('active');
+      }
+    });
+
+    // Filter statically rendered cards initially
+    if (projectCards.length > 0) {
+      projectCards.forEach(card => {
+        const cardCategory = card.getAttribute('data-category');
+        if (savedFilter === 'All' || savedFilter === cardCategory) {
+          (card as HTMLElement).style.display = '';
+          initialCount++;
+        } else {
+          (card as HTMLElement).style.display = 'none';
+        }
+      });
+      if (emptyState) {
+        emptyState.style.display = initialCount === 0 ? 'block' : 'none';
+      }
+    }
 
     filterBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        // Update active class
-        filterBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+      const newBtn = btn.cloneNode(true) as HTMLElement;
+      if (btn.parentNode) {
+        btn.parentNode.replaceChild(newBtn, btn);
+      }
+      
+      newBtn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        newBtn.classList.add('active');
 
-        const filterValue = btn.getAttribute('data-filter');
+        const filterValue = newBtn.getAttribute('data-filter') || 'All';
+        sessionStorage.setItem('activeProjectFilter', filterValue);
+        
         let visibleCount = 0;
-
-        // Filter cards
         const dynamicCards = document.querySelectorAll('.project-card');
         dynamicCards.forEach(card => {
           const cardCategory = card.getAttribute('data-category');
@@ -109,7 +142,6 @@ import { filterCategories } from '../../data/projects';
           }
         });
 
-        // Toggle empty state
         if (emptyState) {
           emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
         }
@@ -117,7 +149,9 @@ import { filterCategories } from '../../data/projects';
     });
   }
 
-  initProjectFilters();
+  document.addEventListener('astro:page-load', () => {
+    initProjectFilters();
+  });
 </script>
 
 

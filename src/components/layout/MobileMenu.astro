@@ -9,9 +9,7 @@ const { activeNav = 'projects' } = Astro.props;
 
 const links = [
   { href: '/projects', label: 'Projects', id: 'projects' },
-  { href: '/experience', label: 'Experience', id: 'experience' },
-  { href: '/about', label: 'About', id: 'about' },
-  { href: '/skills', label: 'Skills', id: 'skills' },
+  { href: '/about', label: 'Profile', id: 'about' },
   { href: '/contact', label: 'Contact', id: 'contact' },
 ];
 ---
@@ -140,20 +138,28 @@ const links = [
 
     if (!overlay) return;
 
+    // Clean up old overlay listeners by cloning (to prevent duplicate events on navigation)
+    const newOverlay = overlay.cloneNode(true) as HTMLElement;
+    if (overlay.parentNode) {
+      overlay.parentNode.replaceChild(newOverlay, overlay);
+    }
+    
+    const newCloseBtn = document.getElementById('close-menu-btn');
+
     function openMenu() {
-      overlay.classList.add('is-open');
-      overlay.setAttribute('aria-hidden', 'false');
+      newOverlay.classList.add('is-open');
+      newOverlay.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
     }
 
     function closeMenu() {
-      overlay.classList.remove('is-open');
-      overlay.setAttribute('aria-hidden', 'true');
+      newOverlay.classList.remove('is-open');
+      newOverlay.setAttribute('aria-hidden', 'true');
       document.body.style.overflow = '';
     }
 
     function toggleMenu() {
-      if (overlay.classList.contains('is-open')) {
+      if (newOverlay.classList.contains('is-open')) {
         closeMenu();
       } else {
         openMenu();
@@ -162,29 +168,43 @@ const links = [
 
     // Toggle on hamburger click
     hamburgers.forEach(btn => {
-      btn.addEventListener('click', toggleMenu);
+      const newBtn = btn.cloneNode(true) as HTMLElement;
+      if (btn.parentNode) {
+        btn.parentNode.replaceChild(newBtn, btn);
+      }
+      newBtn.addEventListener('click', toggleMenu);
     });
 
     // Close on close button click
-    if (closeBtn) {
-      closeBtn.addEventListener('click', closeMenu);
+    if (newCloseBtn) {
+      newCloseBtn.addEventListener('click', closeMenu);
     }
 
     // Close on backdrop click
-    overlay.addEventListener('click', (e) => {
-      if (e.target === overlay) {
+    newOverlay.addEventListener('click', (e) => {
+      if (e.target === newOverlay) {
         closeMenu();
       }
     });
 
     // Close on escape key
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && overlay.classList.contains('is-open')) {
-        closeMenu();
-      }
-    });
+    // We attach this to document. We should be careful with duplicate document listeners
+    // To handle this properly in an SPA, we could assign the handler to a global variable
+    // and remove it if it exists before adding a new one, but for simplicity we'll just check
+    if (!(window as any)._mobileMenuEscHandler) {
+      (window as any)._mobileMenuEscHandler = (e: KeyboardEvent) => {
+        const currentOverlay = document.getElementById('mobile-menu-overlay');
+        if (e.key === 'Escape' && currentOverlay && currentOverlay.classList.contains('is-open')) {
+          currentOverlay.classList.remove('is-open');
+          currentOverlay.setAttribute('aria-hidden', 'true');
+          document.body.style.overflow = '';
+        }
+      };
+      document.addEventListener('keydown', (window as any)._mobileMenuEscHandler);
+    }
   }
 
-  // Initialize once on full page load
-  initMobileMenu();
+  document.addEventListener('astro:page-load', () => {
+    initMobileMenu();
+  });
 </script>

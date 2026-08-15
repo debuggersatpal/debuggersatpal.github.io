@@ -1,4 +1,5 @@
 ---
+import { ClientRouter } from 'astro:transitions';
 import "../styles/global.css";
 
 interface Props {
@@ -23,6 +24,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://debugger
 <!doctype html>
 <html lang="en">
   <head>
+    <ClientRouter />
     <meta charset="UTF-8" />
 
     <meta
@@ -111,7 +113,9 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://debugger
         }
       }
 
-      loadSettings();
+      document.addEventListener('astro:page-load', () => {
+        loadSettings();
+      });
 
       // Intercept Astro ClientRouter to handle dynamic Firebase projects seamlessly
       document.addEventListener('astro:before-preparation', event => {

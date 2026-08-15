@@ -1,8 +1,13 @@
 ---
 // src/components/layout/Sidebar.astro
+interface Props {
+  isHome?: boolean;
+}
+
+const { isHome = true } = Astro.props;
 ---
 
-<aside class="sidebar">
+<aside class={`sidebar ${!isHome ? 'hide-on-mobile' : ''}`}>
   <div class="sidebar-scrollable">
     
     <!-- Profile Section -->
@@ -111,6 +116,12 @@
     align-items: center;
     text-align: center;
     border-bottom: 1px solid var(--border-subtle);
+  }
+
+  @media (max-width: 767px) {
+    .sidebar.hide-on-mobile {
+      display: none !important;
+    }
   }
 
   .sidebar-scrollable {
@@ -362,16 +373,23 @@
 </style>
 
 <script>
-  document.querySelectorAll('[data-set-theme]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const theme = (btn as HTMLElement).dataset.setTheme;
-      if (theme === 'dark') {
-        document.documentElement.classList.add('dark');
-        localStorage.setItem('theme', 'dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-        localStorage.setItem('theme', 'light');
+  document.addEventListener('astro:page-load', () => {
+    document.querySelectorAll('[data-set-theme]').forEach((btn) => {
+      // Re-bind safely
+      const newBtn = btn.cloneNode(true) as HTMLElement;
+      if (btn.parentNode) {
+        btn.parentNode.replaceChild(newBtn, btn);
       }
+      newBtn.addEventListener('click', () => {
+        const theme = newBtn.dataset.setTheme;
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark');
+          localStorage.setItem('theme', 'dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+          localStorage.setItem('theme', 'light');
+        }
+      });
     });
   });
 </script>

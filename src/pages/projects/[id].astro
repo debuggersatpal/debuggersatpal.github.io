@@ -21,11 +21,12 @@ export function getStaticPaths() {
 }
 
 const { project } = Astro.props;
+const isFallback = !project;
 
 // Derive fallback and color from existing logic
 let derivedFallback = '';
 let containerBg = 'var(--bg-main)';
-let staticTitle = 'Loading...';
+let staticTitle = isFallback ? '' : 'Loading...';
 let staticCategory = '';
 let staticDescription = '';
 let staticTechStack: string[] = [];
@@ -40,38 +41,76 @@ if (project) {
 }
 ---
 
-<AppLayout title={`${staticTitle} | SATPAL`} activeNav="projects">
+<AppLayout title={isFallback ? 'Loading Project... | SATPAL' : `${staticTitle} | SATPAL`} activeNav="projects">
   <div class="project-detail-container">
-    <a href="/projects" class="back-link">
+    <button class="back-link" onclick="if(document.referrer.includes(window.location.host)) history.back(); else window.location.href='/projects';">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <line x1="19" y1="12" x2="5" y2="12"></line>
         <polyline points="12 19 5 12 12 5"></polyline>
       </svg>
       Back to Projects
-    </a>
+    </button>
 
-    <header class="detail-header">
-      <div class="header-main">
-        <div class="detail-icon" id="pd-icon" style={`background-color: ${containerBg}; color: ${project?.id === 'streamguide' ? '#000000' : '#ffffff'}; font-weight: ${project?.id === 'streamguide' ? '900' : '700'}`}>
-          {project?.iconImage ? (
-            <img src={project.iconImage} alt={`${staticTitle} logo`} class="detail-img-icon" />
-          ) : project?.icon === 'resubs' ? (
-            <ReSubsIcon />
-          ) : project?.icon === 'momental' ? (
-            <MomentalIcon />
-          ) : project?.icon === 'analytics' ? (
-            <AnalyticsIcon />
-          ) : (
-            <span>{derivedFallback}</span>
-          )}
+    <article class="spotlight-page">
+      <header class="spotlight-header">
+        <div class="header-top">
+            <div class="detail-icon" id="pd-icon" style={`background-color: ${containerBg}; color: ${project?.id === 'streamguide' ? '#000000' : '#ffffff'}; font-weight: ${project?.id === 'streamguide' ? '900' : '700'}`}>
+            {isFallback ? (
+                <span class="skeleton" style="width: 100%; height: 100%; border-radius: 16px;"></span>
+            ) : project?.iconImage ? (
+                <img src={project.iconImage} alt={`${staticTitle} logo`} class="detail-img-icon" />
+            ) : project?.icon === 'resubs' ? (
+                <ReSubsIcon />
+            ) : project?.icon === 'momental' ? (
+                <MomentalIcon />
+            ) : project?.icon === 'analytics' ? (
+                <AnalyticsIcon />
+            ) : (
+                <span>{derivedFallback}</span>
+            )}
+            </div>
+            <span class="project-category" id="pd-category" style={isFallback ? "background: transparent; padding: 0;" : ""}>
+                {isFallback ? <span class="skeleton" style="width: 80px; padding: 0.25rem 0.75rem; border-radius: 20px;"></span> : staticCategory}
+            </span>
         </div>
-        <div class="title-block">
-          <h1 class="project-title" id="pd-title">{staticTitle}</h1>
-          <span class="project-category" id="pd-category">{staticCategory}</span>
+        
+        <h1 class="project-title" id="pd-title">
+          {isFallback ? <span class="skeleton" style="width: 250px;"></span> : staticTitle}
+        </h1>
+      </header>
+
+      <div class="spotlight-content">
+        <p class="project-desc" id="pd-desc">
+          {isFallback ? (
+            <Fragment>
+              <span class="skeleton" style="width: 100%;"></span><br/>
+              <span class="skeleton" style="width: 95%;"></span><br/>
+              <span class="skeleton" style="width: 80%;"></span>
+            </Fragment>
+          ) : staticDescription}
+        </p>
+        
+        <div class="tech-stack-container" id="pd-tech-container" style={isFallback ? "display: flex;" : staticTechStack.length > 0 ? "display: flex;" : "display: none;"}>
+          <div class="tech-badges" id="pd-tech">
+            {isFallback ? (
+              <Fragment>
+                <span class="badge skeleton" style="width: 60px; border-color: transparent;"></span>
+                <span class="badge skeleton" style="width: 80px; border-color: transparent;"></span>
+                <span class="badge skeleton" style="width: 50px; border-color: transparent;"></span>
+              </Fragment>
+            ) : staticTechStack.map((tech) => (
+              <span
+                class="badge"
+                style={`background-color: ${techBadgeColors[tech] || '#6B7280'}`}
+              >
+                {tech}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
 
-      <div class="header-actions" id="pd-actions">
+      <footer class="spotlight-actions" id="pd-actions" style={isFallback ? "display: flex;" : project?.demoUrl || project?.githubUrl ? "display: flex;" : "display: none;"}>
         {project?.demoUrl && (
           <a href={project.demoUrl} class="action-btn demo-btn" target="_blank" rel="noopener noreferrer">
             Live Demo
@@ -90,44 +129,8 @@ if (project) {
             GitHub
           </a>
         )}
-      </div>
-    </header>
-
-    <hr class="section-divider" />
-
-    <section class="project-content">
-      <div class="intro-block">
-        <p class="project-intro" id="pd-desc">{staticDescription}</p>
-        
-        <div class="tech-stack-container">
-          <h3 class="subsection-title">Technologies</h3>
-          <div class="tech-badges" id="pd-tech">
-            {staticTechStack.map((tech) => (
-              <span
-                class="badge"
-                style={`background-color: ${techBadgeColors[tech] || '#6B7280'}`}
-              >
-                {tech}
-              </span>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div class="structural-area content-area">
-        <h3 class="placeholder-title">Overview</h3>
-        <div class="placeholder-box">
-          <p>Detailed project content, case study, and markdown body will be rendered here.</p>
-        </div>
-      </div>
-
-      <div class="structural-area screenshots-area">
-        <h3 class="placeholder-title">Screenshots</h3>
-        <div class="placeholder-box">
-          <p>Project screenshots and visual assets will be rendered here.</p>
-        </div>
-      </div>
-    </section>
+      </footer>
+    </article>
   </div>
 </AppLayout>
 
@@ -150,7 +153,7 @@ if (project) {
             <div style="text-align: center; padding: 5rem 1rem;">
               <h1 style="font-size: 3rem; margin-bottom: 1rem; color: var(--text-primary);">Project Not Found</h1>
               <p style="color: var(--text-secondary); margin-bottom: 2rem;">The project you are looking for does not exist or has been unpublished.</p>
-              <a href="/projects" style="display: inline-block; padding: 0.75rem 1.5rem; background: var(--text-primary); color: var(--bg-surface); text-decoration: none; border-radius: 8px; font-weight: 600;">Return to Projects</a>
+              <button onclick="if(document.referrer.includes(window.location.host)) history.back(); else window.location.href='/projects';" style="display: inline-block; padding: 0.75rem 1.5rem; background: var(--text-primary); color: var(--bg-surface); text-decoration: none; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1rem;">Return to Projects</button>
             </div>
           `;
           document.title = 'Project Not Found | SATPAL';
@@ -162,6 +165,7 @@ if (project) {
       const catEl = document.getElementById('pd-category');
       const descEl = document.getElementById('pd-desc');
       const techEl = document.getElementById('pd-tech');
+      const techContainer = document.getElementById('pd-tech-container');
       const iconEl = document.getElementById('pd-icon');
       const actionsEl = document.getElementById('pd-actions');
 
@@ -169,13 +173,22 @@ if (project) {
         titleEl.textContent = p.title;
         document.title = `${p.title} | SATPAL`;
       }
-      if (catEl) catEl.textContent = p.category;
+      if (catEl) {
+        catEl.textContent = p.category;
+        catEl.style.background = "";
+        catEl.style.padding = "";
+      }
       if (descEl) descEl.textContent = p.description;
 
-      if (techEl && p.techStack) {
-        techEl.innerHTML = p.techStack.map(tech => 
-          `<span class="badge" style="background-color: ${techBadgeColors[tech] || '#6B7280'}">${tech}</span>`
-        ).join('');
+      if (p.techStack && p.techStack.length > 0) {
+        if (techEl) {
+          techEl.innerHTML = p.techStack.map(tech => 
+            `<span class="badge" style="background-color: ${techBadgeColors[tech] || '#6B7280'}">${tech}</span>`
+          ).join('');
+        }
+        if (techContainer) techContainer.style.display = 'flex';
+      } else {
+        if (techContainer) techContainer.style.display = 'none';
       }
 
       if (iconEl) {
@@ -186,7 +199,7 @@ if (project) {
         
         const fallback = p.fallbackText || p.title.substring(0, 2).toUpperCase();
         if (p.iconImage) {
-          iconEl.innerHTML = `<img src="${p.iconImage}" alt="${p.title} logo" class="detail-img-icon" style="width: 100%; height: 100%; object-fit: cover; border-radius: 14px;" />`;
+          iconEl.innerHTML = `<img src="${p.iconImage}" alt="${p.title} logo" class="detail-img-icon" style="width: 100%; height: 100%; object-fit: cover; border-radius: 16px;" />`;
         } else {
           iconEl.innerHTML = `<span>${fallback}</span>`;
         }
@@ -217,6 +230,11 @@ if (project) {
           `;
         }
         actionsEl.innerHTML = actionsHtml;
+        if (actionsHtml === '') {
+          actionsEl.style.display = 'none';
+        } else {
+          actionsEl.style.display = 'flex';
+        }
       }
 
     } catch (err) {
@@ -228,7 +246,7 @@ if (project) {
           <div style="text-align: center; padding: 5rem 1rem;">
             <h1 style="font-size: 3rem; margin-bottom: 1rem; color: var(--text-primary);">Project Unavailable</h1>
             <p style="color: var(--text-secondary); margin-bottom: 2rem;">We couldn't load this project's details right now. Please try again later.</p>
-            <a href="/projects" style="display: inline-block; padding: 0.75rem 1.5rem; background: var(--text-primary); color: var(--bg-surface); text-decoration: none; border-radius: 8px; font-weight: 600;">Return to Projects</a>
+            <button onclick="if(document.referrer.includes(window.location.host)) history.back(); else window.location.href='/projects';" style="display: inline-block; padding: 0.75rem 1.5rem; background: var(--text-primary); color: var(--bg-surface); text-decoration: none; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1rem;">Return to Projects</button>
           </div>
         `;
         document.title = 'Project Unavailable | SATPAL';
@@ -236,12 +254,16 @@ if (project) {
     }
   }
 
-  loadFirebaseProject();
+  document.addEventListener('astro:page-load', () => {
+    loadFirebaseProject();
+  });
 </script>
 
 <style>
   .project-detail-container {
-    max-width: 850px;
+    max-width: 800px;
+    margin: 0 auto;
+    padding-bottom: 4rem;
   }
 
   /* ───────── Back Link ───────── */
@@ -250,85 +272,134 @@ if (project) {
     align-items: center;
     gap: 0.5rem;
     color: var(--text-secondary);
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 500;
-    margin-bottom: 2rem;
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 3rem;
     transition: color 0.2s ease;
   }
   .back-link:hover {
     color: var(--text-primary);
   }
 
+  /* ───────── Spotlight Page Layout ───────── */
+  .spotlight-page {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
   /* ───────── Header ───────── */
-  .detail-header {
+  .spotlight-header {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-    margin-bottom: 1.5rem;
   }
-  .header-main {
+  
+  .header-top {
     display: flex;
     align-items: center;
     gap: 1.25rem;
   }
+
   .detail-icon {
-    width: 64px;
-    height: 64px;
-    min-width: 64px;
-    border-radius: 14px;
+    width: 80px;
+    height: 80px;
+    min-width: 80px;
+    border-radius: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     letter-spacing: 0.02em;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   }
   .detail-icon :global(svg) {
-    width: 36px;
-    height: 36px;
+    width: 44px;
+    height: 44px;
   }
   .detail-img-icon {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 14px;
+    border-radius: 16px;
   }
-  .title-block {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-    align-items: flex-start;
-  }
-  .project-title {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    line-height: 1.1;
-    margin: 0;
-  }
+  
   .project-category {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     font-weight: 600;
     color: var(--accent-blue);
     background-color: var(--accent-blue-bg);
-    padding: 0.25rem 0.75rem;
+    padding: 0.35rem 1rem;
     border-radius: 20px;
   }
 
-  /* ───────── Actions ───────── */
-  .header-actions {
+  .project-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    line-height: 1.1;
+    margin: 0;
+    letter-spacing: -0.02em;
+  }
+
+  /* ───────── Content ───────── */
+  .spotlight-content {
     display: flex;
-    gap: 1rem;
+    flex-direction: column;
+    gap: 2.5rem;
+    max-width: 750px;
+  }
+  
+  .project-desc {
+    font-size: 1.15rem;
+    line-height: 1.75;
+    color: var(--text-secondary);
+    margin: 0;
+  }
+  
+  /* Tech Stack */
+  .tech-stack-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .tech-badges {
+    display: flex;
     flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+  .badge {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #ffffff;
+    padding: 0.4rem 0.85rem;
+    border-radius: 8px;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    line-height: 1.5;
+  }
+
+  /* ───────── Actions ───────── */
+  .spotlight-actions {
+    display: flex;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    padding-top: 2.5rem;
+    margin-top: 1rem;
+    border-top: 1px solid var(--border-subtle);
   }
   .action-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    padding: 0.625rem 1.25rem;
-    border-radius: 8px;
-    font-size: 0.9rem;
+    padding: 0.85rem 1.5rem;
+    border-radius: 10px;
+    font-size: 1rem;
     font-weight: 600;
     text-decoration: none;
     transition: all 0.2s ease;
@@ -341,6 +412,7 @@ if (project) {
   }
   .demo-btn:hover {
     opacity: 0.9;
+    transform: translateY(-1px);
   }
   .github-btn {
     background-color: transparent;
@@ -349,93 +421,13 @@ if (project) {
   }
   .github-btn:hover {
     background-color: var(--border-subtle);
+    border-color: var(--text-secondary);
   }
 
-  /* ───────── Divider ───────── */
-  .section-divider {
-    border: none;
-    border-top: 1px solid var(--border-subtle);
-    margin: 2rem 0;
-  }
-
-  /* ───────── Content ───────── */
-  .project-content {
-    display: flex;
-    flex-direction: column;
-    gap: 3rem;
-  }
-  .intro-block {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-  }
-  .project-intro {
-    font-size: 1.1rem;
-    line-height: 1.65;
-    color: var(--text-secondary);
-    margin: 0;
-  }
-  
-  /* Tech Stack */
-  .tech-stack-container {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-  .subsection-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin: 0;
-  }
-  .tech-badges {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-  }
-  .badge {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: #ffffff;
-    padding: 0.25rem 0.6rem;
-    border-radius: 6px;
-    letter-spacing: 0.02em;
-    white-space: nowrap;
-    line-height: 1.5;
-  }
-
-  /* ───────── Structural Areas ───────── */
-  .structural-area {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-  .placeholder-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin: 0;
-  }
-  .placeholder-box {
-    border: 1px dashed var(--border-subtle);
-    border-radius: 12px;
-    padding: 4rem 2rem;
-    text-align: center;
-    background-color: var(--bg-surface);
-  }
-  .placeholder-box p {
-    color: var(--text-secondary);
-    font-size: 0.95rem;
-    margin: 0;
-  }
-
-  /* ───────── Tablet (768px+) ───────── */
+  /* ───────── Desktop (768px+) ───────── */
   @media (min-width: 768px) {
-    .detail-header {
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
+    .project-title {
+      font-size: 2.75rem;
     }
     .action-btn {
       flex: 0 1 auto; /* Don't stretch on tablet/desktop */

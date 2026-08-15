@@ -1,6 +1,12 @@
 ---
 // src/components/layout/Header.astro
 import ThemeToggle from "../ui/ThemeToggle.astro";
+
+interface Props {
+  isHome?: boolean;
+}
+
+const { isHome = true } = Astro.props;
 ---
 
 <header class="mobile-header">
@@ -22,17 +28,34 @@ import ThemeToggle from "../ui/ThemeToggle.astro";
         </svg>
     </button>
 
+    {!isHome && (
+      <a href="/" class="mobile-identity">SATPAL</a>
+    )}
+
     <ThemeToggle />
 </header>
 
 <style>
     .mobile-header {
+        position: relative;
         display: flex;
         justify-content: space-between;
         align-items: center;
         padding: 1.5rem;
         background-color: var(--bg-surface);
         width: 100%;
+        z-index: 10;
+    }
+
+    .mobile-identity {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        text-decoration: none;
+        letter-spacing: 0.05em;
     }
 
     .hamburger-menu {
