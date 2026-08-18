@@ -42,5 +42,16 @@ export const VisitorDataService = {
       if (res.status === 'success') return { status: 'success', data: { ...res.data, slug } };
       return res as DataState<import('../data/types').ProjectDetail>;
     });
+  },
+
+  async resolveMediaUrl(path: string): Promise<string> {
+    if (!path || !path.startsWith('/media/')) return path;
+    const id = path.replace('/media/', '');
+    const res = await publicClient.fetchNode<{ storagePath: string }>(`mediaMap/${id}`);
+    if (res.status === 'success' && res.data?.storagePath) {
+      const bucket = import.meta.env.PUBLIC_FIREBASE_STORAGE_BUCKET;
+      return `https://firebasestorage.googleapis.com/v0/b/${bucket}/o/${encodeURIComponent(res.data.storagePath)}?alt=media`;
+    }
+    return path; // Fallback to raw string if not found
   }
 };

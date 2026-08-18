@@ -72,9 +72,9 @@ import ExperienceItem from '../../components/visitor/experience/ExperienceItem.a
       if (img) {
         img.dataset.mediaSrc = p.thumbnail;
         img.alt = p.title;
-        // In this phase, we simply set the src to the clean path. 
-        // Edge proxy will handle resolution in future.
-        img.src = p.thumbnail; 
+        VisitorDataService.resolveMediaUrl(p.thumbnail).then(url => {
+          img.src = url;
+        });
       }
 
       const category = el.querySelector('.category');

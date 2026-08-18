@@ -45,8 +45,10 @@
     if (container) container.style.display = 'flex';
 
     if (avatar && data.avatarUrl) {
-      avatar.src = data.avatarUrl; // Edge proxy resolves this
-      avatar.style.display = 'block';
+      VisitorDataService.resolveMediaUrl(data.avatarUrl).then(url => {
+        avatar.src = url;
+        avatar.style.display = 'block';
+      });
     }
     
     if (bio) {
