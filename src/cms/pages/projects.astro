@@ -141,10 +141,10 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
             },
             {
               content: inputs.content.value,
-              techStack: inputs.tech.value.split(',').map((s: string) => s.trim()).filter(Boolean),
-              gallery: [],
-              demoUrl: inputs.demo.value.trim() || undefined,
-              githubUrl: inputs.github.value.trim() || undefined
+              techStack: inputs.tech.value.split(',').map((s: string) => s.trim()).filter(Boolean).length ? inputs.tech.value.split(',').map((s: string) => s.trim()).filter(Boolean) : null,
+              gallery: null,
+              demoUrl: inputs.demo.value.trim() || null,
+              githubUrl: inputs.github.value.trim() || null
             }
           );
           inputs.slug.disabled = true;

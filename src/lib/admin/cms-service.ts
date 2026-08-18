@@ -106,6 +106,11 @@ export const CmsService = {
     let draftData: any;
     if (entity === 'projects') {
       const summaries = await this.getProjectDrafts();
+      if (summaries.length === 0) {
+        await set(ref(db, `published/${entity}`), null);
+        console.info(`[CMS] Successfully published ${entity} (empty)`);
+        return;
+      }
       draftData = { summary: {}, details: {} };
       for (const s of summaries) {
         draftData.summary[s.slug] = s;
@@ -117,7 +122,11 @@ export const CmsService = {
       }
     } else {
       const draftRes = await get(child(ref(db), `drafts/${entity}`));
-      if (!draftRes.exists()) throw new Error('No draft found to publish');
+      if (!draftRes.exists()) {
+        await set(ref(db, `published/${entity}`), null);
+        console.info(`[CMS] Successfully published ${entity} (empty)`);
+        return;
+      }
       draftData = draftRes.val();
     }
 

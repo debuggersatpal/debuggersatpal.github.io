@@ -110,9 +110,8 @@ import VisitorLayout from '../../../layouts/VisitorLayout.astro';
     }
 
     async function init() {
-      const pathParts = window.location.pathname.split('/');
-      // Expected structure: ['', 'projects', 'slug']
-      const slug = pathParts[2];
+      const params = new URLSearchParams(window.location.search);
+      const slug = params.get('id');
 
       if (!slug) {
         if (loading) loading.style.display = 'none';

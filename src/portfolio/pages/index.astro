@@ -66,7 +66,7 @@ import ExperienceItem from '../../components/visitor/experience/ExperienceItem.a
       const el = projectTemplate.content.cloneNode(true) as DocumentFragment;
       
       const link = el.querySelector('a');
-      if (link) link.href = `/projects/${p.slug}`;
+      if (link) link.href = `/projects/?id=${p.slug}`;
       
       const img = el.querySelector('img');
       if (img) {
