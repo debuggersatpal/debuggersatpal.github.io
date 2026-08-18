@@ -1,0 +1,124 @@
+---
+---
+<aside class="hero-region">
+  <div class="hero-content">
+    <div id="hero-loading" style="color: var(--text-secondary);">Loading profile...</div>
+    <div id="hero-error" style="display: none; color: red;"></div>
+    
+    <div id="hero-profile" style="display: none; flex-direction: column; gap: var(--space-4);">
+      <img id="hero-avatar" alt="Avatar" style="width: 120px; height: 120px; border-radius: var(--radius-full); object-fit: cover; display: none;" />
+      
+      <h1 style="font-size: 2rem; font-weight: 700; line-height: 1.2;">Hi, I'm Satpal.</h1>
+      
+      <p id="hero-bio" style="color: var(--text-secondary); line-height: 1.6;"></p>
+      
+      <div>
+        <h3 style="font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin-bottom: var(--space-2);">Focus</h3>
+        <ul id="hero-focus" style="list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-2);"></ul>
+      </div>
+
+      <nav class="hero-nav" style="margin-top: var(--space-4); display: flex; flex-direction: column; gap: var(--space-2);">
+        <a href="/" style="text-decoration: none; font-weight: 500; color: var(--text-primary);">Home</a>
+        <!-- Internal scroll links if on homepage, else hard links -->
+        <a href="/#projects-container" style="text-decoration: none; color: var(--text-secondary);">Projects</a>
+        <a href="/#experience-container" style="text-decoration: none; color: var(--text-secondary);">Experience</a>
+      </nav>
+    </div>
+  </div>
+</aside>
+
+<script>
+  import { VisitorDataService } from '../../lib/visitor-data';
+  import type { Profile } from '../../data/types';
+  
+  const loading = document.getElementById('hero-loading');
+  const error = document.getElementById('hero-error');
+  const container = document.getElementById('hero-profile');
+  
+  const avatar = document.getElementById('hero-avatar') as HTMLImageElement;
+  const bio = document.getElementById('hero-bio');
+  const focusList = document.getElementById('hero-focus');
+
+  function renderProfile(data: Profile) {
+    if (loading) loading.style.display = 'none';
+    if (error) error.style.display = 'none';
+    if (container) container.style.display = 'flex';
+
+    if (avatar && data.avatarUrl) {
+      avatar.src = data.avatarUrl; // Edge proxy resolves this
+      avatar.style.display = 'block';
+    }
+    
+    if (bio) {
+      import('marked').then(({ marked }) => {
+        import('dompurify').then(({ default: DOMPurify }) => {
+          const html = marked.parse(data.bio || '') as string;
+          bio.innerHTML = DOMPurify.sanitize(html);
+        });
+      });
+    }
+    
+    if (focusList && data.focusAreas) {
+      focusList.innerHTML = '';
+      data.focusAreas.forEach((area: string) => {
+        const li = document.createElement('li');
+        li.textContent = area;
+        li.style.background = 'var(--bg-surface)';
+        li.style.padding = '4px 12px';
+        li.style.borderRadius = 'var(--radius-full)';
+        li.style.fontSize = '0.875rem';
+        li.style.border = '1px solid var(--border-subtle)';
+        focusList.appendChild(li);
+      });
+    }
+  }
+
+  async function initHero() {
+    const pState = await VisitorDataService.getProfile((updated) => {
+      renderProfile(updated);
+    });
+
+    if (pState.status === 'success') {
+      renderProfile(pState.data);
+    } else if (pState.status === 'error' && error && loading) {
+      loading.style.display = 'none';
+      error.textContent = pState.message;
+      error.style.display = 'block';
+    } else if (pState.status === 'empty' && error && loading) {
+      loading.style.display = 'none';
+      error.textContent = 'Profile data not available.';
+      error.style.display = 'block';
+    }
+  }
+
+  initHero();
+</script>
+
+<style>
+  .hero-region {
+    background-color: var(--bg-surface);
+    border-bottom: 1px solid var(--border-subtle);
+    padding: var(--space-4);
+  }
+
+  @media (min-width: 1024px) {
+    .hero-region {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: var(--hero-width-desktop);
+      height: 100vh;
+      border-bottom: none;
+      border-right: 1px solid var(--border-subtle);
+      overflow-y: auto;
+      padding: var(--space-8);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+  }
+  
+  .hero-nav a:hover {
+    color: var(--primary) !important;
+  }
+</style>

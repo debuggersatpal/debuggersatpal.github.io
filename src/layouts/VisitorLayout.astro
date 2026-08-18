@@ -1,0 +1,61 @@
+---
+import '../styles/global.css';
+import Hero from '../components/visitor/Hero.astro';
+import MobileDrawer from '../components/visitor/MobileDrawer.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "Satpal's portfolio showcasing my web, Android, and AI development projects." } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <div class="visitor-layout">
+      <Hero />
+      <main class="main-content">
+        <slot />
+      </main>
+      <MobileDrawer />
+    </div>
+  </body>
+</html>
+
+<style>
+  .visitor-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  .main-content {
+    flex: 1;
+    width: 100%;
+    padding: var(--space-4);
+  }
+
+  /* Desktop Layout */
+  @media (min-width: 1024px) {
+    .visitor-layout {
+      flex-direction: row;
+    }
+    
+    .main-content {
+      /* Pushes content right of the fixed Hero */
+      margin-left: var(--hero-width-desktop);
+      padding: var(--space-8);
+      max-width: var(--max-content-width);
+    }
+  }
+</style>

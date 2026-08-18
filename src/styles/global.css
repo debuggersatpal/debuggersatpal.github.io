@@ -1,0 +1,15 @@
+/* src/styles/global.css */
+@import './reset.css';
+@import './tokens.css';
+@import './typography.css';
+@import './utilities.css';
+
+body {
+  background-color: var(--bg-main);
+  transition: background-color var(--transition-base), color var(--transition-base);
+}
+
+::selection {
+  background-color: var(--accent-primary-bg);
+  color: var(--accent-primary);
+}

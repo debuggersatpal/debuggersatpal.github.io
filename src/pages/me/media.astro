@@ -1,0 +1,90 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+---
+<AdminLayout title="Media Manager">
+  <div class="cms-header">
+    <h1>Media Manager</h1>
+  </div>
+  
+  <div id="status-message" class="status-message"></div>
+
+  <form id="media-form" class="cms-form">
+    <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Upload New Media</h3>
+    <p style="font-size: 0.875rem; color: var(--text-secondary);">
+      Upload an image or document. The system will store it securely in Firebase Storage and generate a clean `MediaReference` path (e.g. <code>/media/your-file-name</code>) which you can paste into other CMS editors.
+    </p>
+
+    <div class="field">
+      <label>Identifier (e.g., avatar-2024)</label>
+      <input type="text" id="f-id" placeholder="avatar-2024" required />
+    </div>
+
+    <div class="field">
+      <label>File</label>
+      <input type="file" id="f-file" required />
+    </div>
+    
+    <div class="cms-actions" style="margin-top: 1rem;">
+      <button type="submit" class="btn btn-primary" id="btn-upload">Upload Media</button>
+    </div>
+  </form>
+
+  <div id="result-box" class="cms-form" style="display: none; margin-top: 2rem;">
+    <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: #16a34a;">Upload Successful</h3>
+    <div class="field">
+      <label>Media Reference (Paste this in CMS fields)</label>
+      <input type="text" id="f-result" readonly style="background: #e5e7eb; cursor: text;" />
+    </div>
+  </div>
+
+  <script>
+    import { CmsService } from '../../lib/admin/cms-service';
+    
+    const form = document.getElementById('media-form') as HTMLFormElement;
+    const btnUpload = document.getElementById('btn-upload') as HTMLButtonElement;
+    const status = document.getElementById('status-message');
+    const resultBox = document.getElementById('result-box');
+    const resultInput = document.getElementById('f-result') as HTMLInputElement;
+
+    function showStatus(msg: string, isError = false) {
+      if (!status) return;
+      status.textContent = msg;
+      status.className = 'status-message ' + (isError ? 'error' : 'success');
+    }
+
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const idInput = document.getElementById('f-id') as HTMLInputElement;
+      const fileInput = document.getElementById('f-file') as HTMLInputElement;
+
+      const file = fileInput.files?.[0];
+      const identifier = idInput.value.trim();
+
+      if (!file || !identifier) {
+        showStatus('Please provide an identifier and a file', true);
+        return;
+      }
+
+      btnUpload.disabled = true;
+      btnUpload.textContent = 'Uploading...';
+      if (resultBox) resultBox.style.display = 'none';
+      showStatus('Uploading to Firebase Storage...');
+
+      try {
+        const mediaRefStr = await CmsService.uploadMedia(file, identifier);
+        showStatus('Upload complete.', false);
+        if (resultBox) {
+          resultBox.style.display = 'flex';
+          resultInput.value = mediaRefStr;
+        }
+        form.reset();
+      } catch (err: any) {
+        showStatus('Upload failed: ' + err.message, true);
+      } finally {
+        btnUpload.disabled = false;
+        btnUpload.textContent = 'Upload Media';
+      }
+    });
+  </script>
+</AdminLayout>

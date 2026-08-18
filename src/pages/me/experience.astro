@@ -1,0 +1,152 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+---
+<AdminLayout title="Experience Editor">
+  <div class="cms-header">
+    <h1>Experience (Drafts)</h1>
+    <div class="cms-actions">
+      <button id="btn-add" class="btn btn-primary">Add New Entry</button>
+      <button id="btn-publish" class="btn">Publish to Live</button>
+    </div>
+  </div>
+  
+  <div id="status-message" class="status-message"></div>
+  <div id="loading" class="loading">Loading drafts...</div>
+
+  <div id="experience-list" style="display: flex; flex-direction: column; gap: var(--space-4);"></div>
+
+  <template id="exp-template">
+    <div class="cms-form" style="position: relative;">
+      <button class="delete-btn" style="position: absolute; right: 1rem; top: 1rem; color: #dc2626; background: none; border: none; cursor: pointer; font-size: 0.875rem;">Delete</button>
+      
+      <div class="field">
+        <label>ID / Slug</label>
+        <input type="text" class="f-id" placeholder="e.g. senior-dev-google" required />
+      </div>
+      <div class="field">
+        <label>Role</label>
+        <input type="text" class="f-role" required />
+      </div>
+      <div class="field">
+        <label>Company</label>
+        <input type="text" class="f-company" required />
+      </div>
+      <div class="field">
+        <label>Period</label>
+        <input type="text" class="f-period" placeholder="2020 - Present" required />
+      </div>
+      <div class="field">
+        <label>Description</label>
+        <textarea class="f-desc" rows="3" required></textarea>
+      </div>
+      <div class="field">
+        <label>Order (lower comes first)</label>
+        <input type="number" class="f-order" value="0" required />
+      </div>
+      
+      <div class="cms-actions" style="margin-top: 1rem;">
+        <button class="btn btn-primary save-entry-btn">Save Entry Draft</button>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    import { CmsService } from '../../lib/admin/cms-service';
+    
+    const list = document.getElementById('experience-list');
+    const template = document.getElementById('exp-template') as HTMLTemplateElement;
+    const loading = document.getElementById('loading');
+    const status = document.getElementById('status-message');
+
+    function showStatus(msg: string, isError = false) {
+      if (!status) return;
+      status.textContent = msg;
+      status.className = 'status-message ' + (isError ? 'error' : 'success');
+      setTimeout(() => status.textContent = '', 5000);
+    }
+
+    function createFormNode(data?: any) {
+      const node = template.content.cloneNode(true) as DocumentFragment;
+      const formEl = node.querySelector('.cms-form') as HTMLElement;
+      
+      const inputs = {
+        id: node.querySelector('.f-id') as HTMLInputElement,
+        role: node.querySelector('.f-role') as HTMLInputElement,
+        company: node.querySelector('.f-company') as HTMLInputElement,
+        period: node.querySelector('.f-period') as HTMLInputElement,
+        desc: node.querySelector('.f-desc') as HTMLTextAreaElement,
+        order: node.querySelector('.f-order') as HTMLInputElement
+      };
+
+      if (data) {
+        inputs.id.value = data.id;
+        inputs.id.disabled = true; 
+        inputs.role.value = data.role;
+        inputs.company.value = data.company;
+        inputs.period.value = data.period;
+        inputs.desc.value = data.description;
+        inputs.order.value = data.order;
+      }
+
+      node.querySelector('.delete-btn')?.addEventListener('click', async () => {
+        if (!data) {
+          formEl.remove();
+          return;
+        }
+        if (confirm('Delete this experience draft?')) {
+          await CmsService.deleteExperienceDraft(data.id);
+          formEl.remove();
+          showStatus('Draft deleted.');
+        }
+      });
+
+      node.querySelector('.save-entry-btn')?.addEventListener('click', async () => {
+        const id = inputs.id.value.trim();
+        if (!id || !inputs.role.value) {
+          showStatus('ID and Role are required', true);
+          return;
+        }
+        
+        try {
+          await CmsService.saveExperienceDraft(id, {
+            role: inputs.role.value,
+            company: inputs.company.value,
+            period: inputs.period.value,
+            description: inputs.desc.value,
+            order: parseInt(inputs.order.value) || 0
+          });
+          inputs.id.disabled = true;
+          showStatus(`Saved draft: ${id}`);
+        } catch (err: any) {
+          showStatus('Error saving: ' + err.message, true);
+        }
+      });
+
+      return formEl;
+    }
+
+    async function init() {
+      try {
+        const drafts = await CmsService.getExperienceDrafts();
+        drafts.forEach(d => list?.appendChild(createFormNode(d)));
+        if (loading) loading.style.display = 'none';
+      } catch (err: any) {
+        showStatus('Failed to load drafts: ' + err.message, true);
+      }
+    }
+
+    document.getElementById('btn-add')?.addEventListener('click', () => {
+      list?.prepend(createFormNode());
+    });
+
+    document.getElementById('btn-publish')?.addEventListener('click', async () => {
+      try {
+        await CmsService.triggerServerPublish('experience');
+      } catch (err: any) {
+        showStatus(err.message, true);
+      }
+    });
+
+    init();
+  </script>
+</AdminLayout>
