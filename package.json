@@ -14,7 +14,13 @@
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",
     "astro": "^7.2.2",
+    "dompurify": "^3.4.13",
     "firebase": "^12.17.1",
-    "firebase-tools": "^15.27.0"
+    "marked": "^18.0.10"
+  },
+  "devDependencies": {
+    "@types/dompurify": "^3.0.5",
+    "@types/node": "^26.2.0",
+    "typescript": "^7.0.2"
   }
 }

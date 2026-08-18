@@ -1,0 +1,93 @@
+---
+---
+<nav class="mobile-drawer" id="mobile-drawer" aria-hidden="true">
+  <div class="drawer-header" style="display: flex; justify-content: space-between; padding: var(--space-4); border-bottom: 1px solid var(--border-subtle);">
+    <span style="font-weight: 600;">Menu</span>
+    <button id="close-drawer" style="background: none; border: none; cursor: pointer; font-size: 1.5rem;">&times;</button>
+  </div>
+  
+  <div class="drawer-content" style="padding: var(--space-4); display: flex; flex-direction: column; gap: var(--space-4);">
+    <a href="/" class="drawer-link">Home</a>
+    <a href="/#projects-container" class="drawer-link">Projects</a>
+    <a href="/#experience-container" class="drawer-link">Experience</a>
+  </div>
+</nav>
+
+<!-- Toggle Button for Mobile -->
+<button id="open-drawer" class="mobile-menu-btn" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-drawer">
+  &#9776;
+</button>
+
+<script>
+  const drawer = document.getElementById('mobile-drawer');
+  const btnOpen = document.getElementById('open-drawer');
+  const btnClose = document.getElementById('close-drawer');
+  const links = document.querySelectorAll('.drawer-link');
+
+  btnOpen?.addEventListener('click', () => {
+    if (drawer) {
+      drawer.style.display = 'block';
+      drawer.setAttribute('aria-hidden', 'false');
+    }
+    btnOpen.setAttribute('aria-expanded', 'true');
+  });
+
+  function closeDrawer() {
+    if (drawer) {
+      drawer.style.display = 'none';
+      drawer.setAttribute('aria-hidden', 'true');
+    }
+    btnOpen?.setAttribute('aria-expanded', 'false');
+  }
+
+  btnClose?.addEventListener('click', closeDrawer);
+  
+  links.forEach(link => {
+    link.addEventListener('click', closeDrawer);
+  });
+</script>
+
+<style>
+  .mobile-drawer {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: var(--bg-surface);
+    z-index: 50;
+  }
+
+  .mobile-menu-btn {
+    position: fixed;
+    bottom: var(--space-4);
+    right: var(--space-4);
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-full);
+    background-color: var(--text-primary);
+    color: var(--bg-surface);
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  }
+  
+  .drawer-link {
+    text-decoration: none;
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    font-weight: 500;
+  }
+  
+  @media (min-width: 1024px) {
+    .mobile-drawer, .mobile-menu-btn {
+      display: none !important;
+    }
+  }
+</style>

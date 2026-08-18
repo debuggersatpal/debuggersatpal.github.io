@@ -1,89 +1,15 @@
+/* src/styles/global.css */
+@import './reset.css';
 @import './tokens.css';
-@import './project-card.css';
-
-html {
-  scroll-behavior: smooth;
-}
-
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  -webkit-tap-highlight-color: transparent;
-}
+@import './typography.css';
+@import './utilities.css';
 
 body {
-  font-family: var(--font-sans);
   background-color: var(--bg-main);
-  color: var(--text-primary);
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  transition: background-color var(--transition-base), color var(--transition-base);
 }
 
-/* Keyboard focus indicator */
-:focus-visible {
-  outline: 2px solid var(--accent-blue);
-  outline-offset: 2px;
-}
-
-:focus:not(:focus-visible) {
-  outline: none;
-}
-
-/* 
-  The Core Layout 
-  Mobile: Stacked
-  Tablet/Desktop: Side-by-side flexbox stretching full viewport height
-*/
-.app-layout {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-.main-content {
-  flex: 1;
-  padding: 2rem 1.5rem;
-}
-
-/* Tablet (768px+) */
-@media (min-width: 768px) {
-  .app-layout {
-    flex-direction: row;
-  }
-  
-  .main-content {
-    padding: 2rem;
-  }
-}
-
-/* Desktop (1024px+) */
-@media (min-width: 1024px) {
-  .main-content {
-    padding: 2rem 3rem;
-  }
-}
-
-/* ───────── Skeleton Loaders ───────── */
-.skeleton {
-  background-color: var(--border-subtle);
-  color: transparent !important;
-  border-radius: 4px;
-  animation: skeleton-pulse 1.5s ease-in-out infinite;
-  user-select: none;
-  display: inline-block;
-  min-height: 1em;
-}
-
-@keyframes skeleton-pulse {
-  0% {
-    opacity: 0.6;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0.6;
-  }
+::selection {
+  background-color: var(--accent-primary-bg);
+  color: var(--accent-primary);
 }

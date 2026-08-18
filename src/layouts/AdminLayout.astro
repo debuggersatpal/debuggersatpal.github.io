@@ -1,0 +1,174 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{title} | CMS</title>
+  </head>
+  <body class="admin-body">
+    <div id="auth-loading" class="auth-loading">
+      <p>Verifying authentication...</p>
+    </div>
+    
+    <div id="admin-app" class="admin-app" style="display: none;">
+      <aside class="admin-sidebar">
+        <div class="brand">Admin CMS</div>
+        <nav class="admin-nav">
+          <a href="/me">Dashboard</a>
+          <!-- Extensibility: Future CMS Modules -->
+          <a href="/me/profile">Profile</a>
+          <a href="/me/experience">Experience</a>
+          <a href="/me/projects">Projects</a>
+          <a href="/me/media">Media</a>
+          <button id="logout-btn">Logout</button>
+        </nav>
+      </aside>
+      <main class="admin-main">
+        <slot />
+      </main>
+    </div>
+    
+    <script>
+      import { auth, onAuthStateChanged, signOut } from '../lib/admin/firebase';
+      
+      const loadingEl = document.getElementById('auth-loading');
+      const appEl = document.getElementById('admin-app');
+      const logoutBtn = document.getElementById('logout-btn');
+
+      // Admin boundary guard
+      onAuthStateChanged(auth, (user) => {
+        if (!user) {
+          window.location.href = '/me/login';
+        } else {
+          if (loadingEl) loadingEl.style.display = 'none';
+          if (appEl) appEl.style.display = 'flex';
+        }
+      });
+
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', async () => {
+          await signOut(auth);
+          window.location.href = '/me/login';
+        });
+      }
+    </script>
+  </body>
+</html>
+
+<style>
+  .admin-body {
+    background: #f3f4f6;
+    color: #111827;
+  }
+  .auth-loading {
+    display: flex;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+  }
+  .admin-app {
+    display: flex;
+    min-height: 100vh;
+  }
+  .admin-sidebar {
+    width: 250px;
+    background: #1f2937;
+    color: #fff;
+    padding: var(--space-4);
+  }
+  .brand {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: var(--space-8);
+  }
+  .admin-nav {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .admin-nav a, .admin-nav button {
+    color: #d1d5db;
+    text-decoration: none;
+    padding: var(--space-2);
+    text-align: left;
+    border-radius: var(--radius-sm);
+  }
+  .admin-nav a:hover, .admin-nav button:hover {
+    background: #374151;
+    color: #fff;
+  }
+  .admin-main {
+    flex: 1;
+    padding: var(--space-8);
+    background: #fff;
+    overflow-y: auto;
+  }
+  
+  /* Shared CMS Form Styles */
+  .cms-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-8);
+  }
+  .cms-actions {
+    display: flex;
+    gap: var(--space-4);
+  }
+  .btn {
+    padding: var(--space-2) var(--space-4);
+    background: #fff;
+    border: 1px solid #d1d5db;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  .btn-primary {
+    background: var(--accent-primary);
+    color: white;
+    border-color: var(--accent-primary);
+  }
+  .cms-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    background: #f9fafb;
+    padding: var(--space-6);
+    border: 1px solid #e5e7eb;
+    border-radius: var(--radius-md);
+  }
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .field label {
+    font-weight: 600;
+    font-size: 0.875rem;
+  }
+  .field input, .field textarea {
+    padding: var(--space-3);
+    border: 1px solid #d1d5db;
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+  }
+  .status-message {
+    margin-bottom: var(--space-4);
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  .status-message.error { color: #dc2626; }
+  .status-message.success { color: #16a34a; }
+  .loading { color: var(--text-secondary); }
+</style>

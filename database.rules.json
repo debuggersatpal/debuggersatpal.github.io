@@ -1,35 +1,26 @@
 {
   "rules": {
-    ".write": "auth != null",
-    "projects": {
-      ".read": "auth != null || (query.orderByChild == 'published' && query.equalTo == true)",
-      ".indexOn": ["published", "order"],
-      "$projectId": {
-        ".read": "auth != null || data.child('published').val() == true"
+    "admins": {
+      "$uid": {
+        ".read": "auth != null && auth.uid == $uid",
+        ".write": false
       }
     },
-    "experience": {
-      ".read": "auth != null || (query.orderByChild == 'published' && query.equalTo == true)",
-      ".indexOn": ["published", "order"],
-      "$expId": {
-        ".read": "auth != null || data.child('published').val() == true"
-      }
+    "published": {
+      ".read": true,
+      ".write": false
     },
-    "skills": {
-      ".read": "auth != null || (query.orderByChild == 'published' && query.equalTo == true)",
-      ".indexOn": ["published", "order"],
-      "$skillId": {
-        ".read": "auth != null || data.child('published').val() == true"
-      }
+    "drafts": {
+      ".read": "auth != null && root.child('admins').child(auth.uid).exists()",
+      ".write": "auth != null && root.child('admins').child(auth.uid).exists()"
     },
-    "about": {
-      ".read": true
+    "versions": {
+      ".read": "auth != null && root.child('admins').child(auth.uid).exists()",
+      ".write": "auth != null && root.child('admins').child(auth.uid).exists()"
     },
-    "contact": {
-      ".read": true
-    },
-    "settings": {
-      ".read": true
+    "mediaMap": {
+      ".read": "auth != null && root.child('admins').child(auth.uid).exists()",
+      ".write": "auth != null && root.child('admins').child(auth.uid).exists()"
     }
   }
 }
