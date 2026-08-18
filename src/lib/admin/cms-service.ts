@@ -104,24 +104,32 @@ export const CmsService = {
 
   // --- Trusted Publishing Pipeline ---
   async triggerServerPublish(entity: 'profile' | 'experience' | 'projects'): Promise<void> {
-    console.info(`[CMS] Triggering trusted server publish for ${entity}...`);
+    console.info(`[CMS] Triggering publish for ${entity}...`);
     const { auth } = await import('./firebase');
     if (!auth.currentUser) throw new Error('Not authenticated to publish');
     
-    // Obtain secure ID token to prove admin status to the Edge Proxy
-    const idToken = await auth.currentUser.getIdToken();
-    
-    // Call the trusted Cloudflare Edge Proxy endpoint
-    const res = await fetch(`/api/publish/${entity}`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${idToken}`
+    // Read the draft
+    let draftData;
+    if (entity === 'projects') {
+      const summaries = await this.getProjectDrafts();
+      draftData = { summary: {}, details: {} };
+      for (const s of summaries) {
+        draftData.summary[s.slug] = s;
+        const d = await this.getProjectDetailDraft(s.slug);
+        if (d) {
+          const { slug, ...rest } = d;
+          draftData.details[s.slug] = rest;
+        }
       }
-    });
-
-    if (!res.ok) {
-      const txt = await res.text();
-      throw new Error(`Publish failed: ${res.status} ${txt}`);
+    } else {
+      const draftRes = await get(child(ref(db), `drafts/${entity}`));
+      if (!draftRes.exists()) throw new Error('No draft found to publish');
+      draftData = draftRes.val();
     }
+
+    // Write to published directly via Client SDK
+    await set(ref(db, `published/${entity}`), draftData);
+    
+    console.info(`[CMS] Successfully published ${entity}`);
   }
 };

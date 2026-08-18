@@ -8,7 +8,7 @@
     },
     "published": {
       ".read": true,
-      ".write": false
+      ".write": "auth != null && root.child('admins').child(auth.uid).exists()"
     },
     "drafts": {
       ".read": "auth != null && root.child('admins').child(auth.uid).exists()",

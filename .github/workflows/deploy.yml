@@ -36,7 +36,7 @@ jobs:
         run: npm ci
 
       - name: Build Astro
-        run: npm run build
+        run: npm run build:public
         env:
           PUBLIC_FIREBASE_API_KEY: ${{ secrets.PUBLIC_FIREBASE_API_KEY }}
           PUBLIC_FIREBASE_AUTH_DOMAIN: ${{ secrets.PUBLIC_FIREBASE_AUTH_DOMAIN }}

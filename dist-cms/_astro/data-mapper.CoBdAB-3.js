@@ -1,0 +1,1 @@
+function e(e,t=`id`){return e?Object.entries(e).map(([e,n])=>({...n,[t]:e})).sort((e,t)=>(e.order??0)-(t.order??0)):[]}export{e as t};
