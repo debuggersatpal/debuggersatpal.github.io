@@ -24,12 +24,12 @@ const { title } = Astro.props;
       <aside class="admin-sidebar">
         <div class="brand">Admin CMS</div>
         <nav class="admin-nav">
-          <a href="/me">Dashboard</a>
+          <a href="/me/">Dashboard</a>
           <!-- Extensibility: Future CMS Modules -->
-          <a href="/me/profile">Profile</a>
-          <a href="/me/experience">Experience</a>
-          <a href="/me/projects">Projects</a>
-          <a href="/me/media">Media</a>
+          <a href="/me/profile/">Profile</a>
+          <a href="/me/experience/">Experience</a>
+          <a href="/me/projects/">Projects</a>
+          <a href="/me/media/">Media</a>
           <button id="logout-btn">Logout</button>
         </nav>
       </aside>
@@ -40,6 +40,7 @@ const { title } = Astro.props;
     
     <script>
       import { auth, onAuthStateChanged, signOut } from '../lib/admin/firebase';
+      import { getProxyAwareUrl } from '../lib/admin/cms-service';
       
       const loadingEl = document.getElementById('auth-loading');
       const appEl = document.getElementById('admin-app');
@@ -48,7 +49,7 @@ const { title } = Astro.props;
       // Admin boundary guard
       onAuthStateChanged(auth, (user) => {
         if (!user) {
-          window.location.href = '/me/login';
+          window.location.href = getProxyAwareUrl('/me/login');
         } else {
           if (loadingEl) loadingEl.style.display = 'none';
           if (appEl) appEl.style.display = 'flex';
@@ -58,7 +59,7 @@ const { title } = Astro.props;
       if (logoutBtn) {
         logoutBtn.addEventListener('click', async () => {
           await signOut(auth);
-          window.location.href = '/me/login';
+          window.location.href = getProxyAwareUrl('/me/login');
         });
       }
     </script>

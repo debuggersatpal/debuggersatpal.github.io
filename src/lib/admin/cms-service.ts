@@ -2,6 +2,13 @@ import { db, ref, get, set, child, update, storage, storageRef, uploadBytes } fr
 import type { Profile, Experience, ProjectSummary, ProjectDetail } from '../../data/types';
 import { mapDictionaryToArray } from '../data-mapper';
 
+export const getProxyAwareUrl = (path: string): string => {
+  if (typeof window === 'undefined') return path;
+  const cleanPath = path.startsWith('/') ? path : `/${path}`;
+  const finalPath = cleanPath.endsWith('/') ? cleanPath : `${cleanPath}/`;
+  return `${window.location.origin}${finalPath}`;
+};
+
 /**
  * CMS Service for isolated interaction with the `drafts` and `mediaMap` nodes.
  * 
