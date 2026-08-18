@@ -79,44 +79,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://debugger
     <slot />
     
     <script>
-      import { getSettings } from '../lib/portfolio-data';
-      
-      async function loadSettings() {
-        try {
-          const settings = await getSettings();
-          if (settings) {
-            if (settings.siteTitle) {
-              const originalTitle = document.title;
-              if (originalTitle.includes('SATPAL')) {
-                document.title = originalTitle.replace('SATPAL', settings.siteTitle);
-                
-                const ogTitle = document.getElementById('og-title');
-                if (ogTitle) ogTitle.setAttribute('content', document.title);
-                
-                const twTitle = document.getElementById('twitter-title');
-                if (twTitle) twTitle.setAttribute('content', document.title);
-              }
-            }
-            if (settings.seoDescription) {
-              const metaDesc = document.querySelector('meta[name="description"]');
-              if (metaDesc) {
-                metaDesc.setAttribute('content', settings.seoDescription);
-              }
-              const ogDesc = document.getElementById('og-description');
-              if (ogDesc) ogDesc.setAttribute('content', settings.seoDescription);
-              const twDesc = document.getElementById('twitter-description');
-              if (twDesc) twDesc.setAttribute('content', settings.seoDescription);
-            }
-          }
-        } catch (e) {
-          console.error("Failed to load settings", e);
-        }
-      }
-
-      document.addEventListener('astro:page-load', () => {
-        loadSettings();
-      });
-
       // Intercept Astro ClientRouter to handle dynamic Firebase projects seamlessly
       document.addEventListener('astro:before-preparation', event => {
         const url = new URL(event.to);
@@ -131,5 +93,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://debugger
         }
       });
     </script>
+
   </body>
 </html>

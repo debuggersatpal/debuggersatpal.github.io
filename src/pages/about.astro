@@ -1,6 +1,8 @@
 ---
 import AppLayout from "../layouts/AppLayout.astro";
 import { techBadgeColors } from "../data/projects";
+import { profile, skills } from "../data/profile";
+import { experience } from "../data/experience";
 ---
 
 <AppLayout 
@@ -14,20 +16,17 @@ import { techBadgeColors } from "../data/projects";
             <h1 class="page-title hidden-visually">Profile</h1>
             
             <p class="lead-text" id="profile-intro">
-                <span class="skeleton" style="width: 100%;"></span><br/>
-                <span class="skeleton" style="width: 80%;"></span>
+                {profile.introduction}
             </p>
 
             <div class="prose-block" id="profile-bio">
-                <p><span class="skeleton" style="width: 100%;"></span><br/><span class="skeleton" style="width: 95%;"></span><br/><span class="skeleton" style="width: 85%;"></span></p>
-                <p><span class="skeleton" style="width: 98%;"></span><br/><span class="skeleton" style="width: 90%;"></span></p>
+                {profile.biography.map((p) => <p>{p}</p>)}
             </div>
 
-            <div class="focus-area" id="focus-section">
+            <div class="focus-area" id="focus-section" style={profile.focusAreas?.length ? "" : "display: none;"}>
                 <h2 class="sub-section-title">Current Focus</h2>
                 <ul class="focus-list" id="focus-list">
-                    <li><span class="skeleton" style="width: 250px;"></span></li>
-                    <li><span class="skeleton" style="width: 200px;"></span></li>
+                    {profile.focusAreas?.map((f) => <li>{f}</li>)}
                 </ul>
             </div>
         </section>
@@ -35,35 +34,36 @@ import { techBadgeColors } from "../data/projects";
         <!-- EXPERIENCE SECTION -->
         <section class="profile-section" id="experience-section">
             <h2 class="section-title">Experience</h2>
-            <div class="timeline-container" id="experience-timeline">
+            <div class="timeline-container" id="experience-timeline" style={experience.length ? "" : "display: none;"}>
                 <div class="timeline-axis"></div>
-                <!-- Skeletons -->
-                <article class="timeline-node skeleton-node">
-                    <div class="node-dot"></div>
-                    <div class="node-content">
-                        <header class="node-header">
-                            <h3 class="role"><span class="skeleton" style="width: 180px;"></span></h3>
-                            <span class="company"><span class="skeleton" style="width: 120px;"></span></span>
-                            <span class="period"><span class="skeleton" style="width: 100px;"></span></span>
-                        </header>
-                        <div class="node-details">
-                            <span class="skeleton" style="width: 90%;"></span><br/>
-                            <span class="skeleton" style="width: 85%;"></span>
+                {experience.map((job) => (
+                    <article class="timeline-node">
+                        <div class="node-dot"></div>
+                        <div class="node-content">
+                            <header class="node-header">
+                                <div class="role-company">
+                                    <h3 class="role">{job.role}</h3>
+                                    <span class="company">{job.company} {job.location && <span class="location hidden-mobile">• {job.location}</span>}</span>
+                                </div>
+                                <span class="period">{job.startDate} — {job.endDate || 'Present'}</span>
+                            </header>
+                            <div class="node-details">
+                                {job.highlights?.length > 0 && (
+                                    <ul class="highlights">
+                                        {job.highlights.map((hl: string) => <li>{hl}</li>)}
+                                    </ul>
+                                )}
+                                {job.techStack?.length > 0 && (
+                                    <div class="tech-badges">
+                                        {job.techStack.map((t: string) => <span class="badge" style={`background-color: ${techBadgeColors[t] || '#6B7280'}`}>{t}</span>)}
+                                    </div>
+                                )}
+                            </div>
                         </div>
-                    </div>
-                </article>
-                <article class="timeline-node skeleton-node">
-                    <div class="node-dot"></div>
-                    <div class="node-content">
-                        <header class="node-header">
-                            <h3 class="role"><span class="skeleton" style="width: 150px;"></span></h3>
-                            <span class="company"><span class="skeleton" style="width: 100px;"></span></span>
-                            <span class="period"><span class="skeleton" style="width: 90px;"></span></span>
-                        </header>
-                    </div>
-                </article>
+                    </article>
+                ))}
             </div>
-            <div id="experience-empty" class="empty-state" style="display: none;">
+            <div id="experience-empty" class="empty-state" style={experience.length ? "display: none;" : "display: block;"}>
                 <p>Experience details coming soon.</p>
             </div>
         </section>
@@ -71,24 +71,17 @@ import { techBadgeColors } from "../data/projects";
         <!-- SKILLS SECTION -->
         <section class="profile-section" id="skills-section">
             <h2 class="section-title">Capabilities</h2>
-            <div class="skills-grid" id="skills-grid">
-                <!-- Skeletons -->
-                <div class="capability-card skeleton-card">
-                    <h3 class="category-title"><span class="skeleton" style="width: 120px;"></span></h3>
-                    <div class="skill-pills">
-                        <span class="skill-pill skeleton" style="width: 60px;"></span>
-                        <span class="skill-pill skeleton" style="width: 80px;"></span>
+            <div class="skills-grid" id="skills-grid" style={skills.length ? "" : "display: none;"}>
+                {skills.map((section) => (
+                    <div class="capability-card">
+                        <h3 class="category-title">{section.category}</h3>
+                        <div class="skill-pills">
+                            {section.skills?.map((item: string) => <span class="skill-pill">{item}</span>)}
+                        </div>
                     </div>
-                </div>
-                <div class="capability-card skeleton-card">
-                    <h3 class="category-title"><span class="skeleton" style="width: 100px;"></span></h3>
-                    <div class="skill-pills">
-                        <span class="skill-pill skeleton" style="width: 70px;"></span>
-                        <span class="skill-pill skeleton" style="width: 90px;"></span>
-                    </div>
-                </div>
+                ))}
             </div>
-            <div id="skills-empty" class="empty-state" style="display: none;">
+            <div id="skills-empty" class="empty-state" style={skills.length ? "display: none;" : "display: block;"}>
                 <p>Skills coming soon.</p>
             </div>
         </section>
@@ -106,136 +99,7 @@ import { techBadgeColors } from "../data/projects";
     </div>
 </AppLayout>
 
-<script>
-  import { getAbout, getPublishedExperience, getPublishedSkills } from "../lib/portfolio-data";
-  import { techBadgeColors } from "../data/projects";
 
-  async function loadProfile() {
-    // 1. Load About
-    try {
-      const aboutData = await getAbout();
-      const introEl = document.getElementById('profile-intro');
-      const bioEl = document.getElementById('profile-bio');
-      const focusSection = document.getElementById('focus-section');
-      const focusList = document.getElementById('focus-list');
-
-      if (aboutData) {
-        if (introEl && aboutData.introduction) {
-          introEl.textContent = aboutData.introduction;
-          introEl.classList.remove('skeleton');
-        } else if (introEl) {
-          introEl.style.display = 'none';
-        }
-
-        if (bioEl && aboutData.biography) {
-          const paragraphs = aboutData.biography.split(/\n\n+/);
-          bioEl.innerHTML = paragraphs.map((p: string) => `<p>${p.trim()}</p>`).join('');
-        } else if (bioEl) {
-          bioEl.style.display = 'none';
-        }
-
-        if (focusList && aboutData.focusAreas && Array.isArray(aboutData.focusAreas) && aboutData.focusAreas.length > 0) {
-          focusList.innerHTML = aboutData.focusAreas.map((f: string) => `<li>${f}</li>`).join('');
-        } else if (focusSection) {
-          focusSection.style.display = 'none';
-        }
-      } else {
-        if (introEl) introEl.innerHTML = '<p>Profile information coming soon.</p>';
-        if (bioEl) bioEl.style.display = 'none';
-        if (focusSection) focusSection.style.display = 'none';
-      }
-    } catch (err) {
-      console.error("Failed to load About data", err);
-    }
-
-    // 2. Load Experience
-    try {
-      const exps = await getPublishedExperience();
-      const expTimeline = document.getElementById('experience-timeline');
-      const expEmpty = document.getElementById('experience-empty');
-
-      if (exps && exps.length > 0 && expTimeline) {
-        let html = '<div class="timeline-axis"></div>';
-        exps.forEach(job => {
-          const period = job.startDate + (job.endDate ? ` — ${job.endDate}` : ' — Present');
-          const loc = job.location ? `<span class="location hidden-mobile">• ${job.location}</span>` : '';
-          
-          let hlHtml = '';
-          if (job.highlights && Array.isArray(job.highlights)) {
-            hlHtml = `<ul class="highlights">${job.highlights.map((hl: string) => `<li>${hl}</li>`).join('')}</ul>`;
-          }
-
-          let techHtml = '';
-          if (job.techStack && Array.isArray(job.techStack) && job.techStack.length > 0) {
-            techHtml = `<div class="tech-badges">
-              ${job.techStack.map((t: string) => `<span class="badge" style="background-color: ${techBadgeColors[t] || '#6B7280'}">${t}</span>`).join('')}
-            </div>`;
-          }
-
-          html += `
-            <article class="timeline-node">
-                <div class="node-dot"></div>
-                <div class="node-content">
-                    <header class="node-header">
-                        <div class="role-company">
-                            <h3 class="role">${job.role}</h3>
-                            <span class="company">${job.company} ${loc}</span>
-                        </div>
-                        <span class="period">${period}</span>
-                    </header>
-                    <div class="node-details">
-                        ${hlHtml}
-                        ${techHtml}
-                    </div>
-                </div>
-            </article>
-          `;
-        });
-        expTimeline.innerHTML = html;
-      } else {
-        if (expTimeline) expTimeline.style.display = 'none';
-        if (expEmpty) expEmpty.style.display = 'block';
-      }
-    } catch (err) {
-      console.error("Failed to load Experience data", err);
-    }
-
-    // 3. Load Skills
-    try {
-      const skillsData = await getPublishedSkills();
-      const skillsGrid = document.getElementById('skills-grid');
-      const skillsEmpty = document.getElementById('skills-empty');
-
-      if (skillsData && skillsData.length > 0 && skillsGrid) {
-        let html = '';
-        skillsData.forEach(section => {
-          let itemsHtml = '';
-          if (section.skills && Array.isArray(section.skills)) {
-            itemsHtml = section.skills.map((item: string) => `<span class="skill-pill">${item}</span>`).join('');
-          }
-          html += `
-            <div class="capability-card">
-                <h3 class="category-title">${section.category}</h3>
-                <div class="skill-pills">
-                    ${itemsHtml}
-                </div>
-            </div>
-          `;
-        });
-        skillsGrid.innerHTML = html;
-      } else {
-        if (skillsGrid) skillsGrid.style.display = 'none';
-        if (skillsEmpty) skillsEmpty.style.display = 'block';
-      }
-    } catch (err) {
-      console.error("Failed to load Skills data", err);
-    }
-  }
-
-  document.addEventListener('astro:page-load', () => {
-    loadProfile();
-  });
-</script>
 
 <style>
     .profile-container {

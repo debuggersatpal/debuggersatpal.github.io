@@ -1,39 +1,43 @@
-export const profile = {
+import type { Profile, SkillCategory } from '../types';
+
+export const profile: Profile = {
   name: "SATPAL",
-  location: "India",
   role: "Developer",
-
-  description:
-    "I build clean, efficient and impactful digital products that solve real-world problems.",
-
-  about:
+  location: "India",
+  email: "hellow.satpal@gmail.com",
+  introduction: "I build clean, efficient and impactful digital products that solve real-world problems.",
+  biography: [
     "Passionate about Web, Mobile, AI and Systems. Love turning ideas into products.",
-
-  stats: [
-    {
-      value: "8+",
-      label: "Projects",
-    },
-    {
-      value: "3+",
-      label: "Years Exp.",
-    },
-    {
-      value: "5+",
-      label: "Tech Stack",
-    },
+    "I focus on creating high-quality, performant, and accessible applications with a strong emphasis on clean architecture and minimal design."
   ],
-
+  focusAreas: [
+    "Frontend Architecture & Performance",
+    "Mobile App Development",
+    "System Design & Cloud Integrations"
+  ],
   socials: [
     {
-      label: "GitHub",
-      href: "https://github.com/satpalkumarofficial",
+      platform: "GitHub",
+      url: "https://github.com/satpalkumarofficial",
     },
     {
-      label: "LinkedIn",
-      href: "https://linkedin.com/in/debuggersatpal",
+      platform: "LinkedIn",
+      url: "https://linkedin.com/in/debuggersatpal",
     },
-  ],
-
-  resume: "/resume.pdf",
+  ]
 };
+
+export const skills: SkillCategory[] = [
+  {
+    category: "Frontend",
+    skills: ["TypeScript", "React", "Next.js", "Astro", "Tailwind CSS"]
+  },
+  {
+    category: "Mobile & Backend",
+    skills: ["Flutter", "Kotlin", "Android", "Firebase", "Node.js"]
+  },
+  {
+    category: "Tools & Systems",
+    skills: ["Git", "Figma", "REST APIs", "Cloud Architecture"]
+  }
+];
