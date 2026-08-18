@@ -1,0 +1,101 @@
+---
+import '../../styles/global.css';
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Login | CMS</title>
+  </head>
+  <body class="login-body">
+    <div class="login-container">
+      <h1>Admin Login</h1>
+      <form id="login-form">
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" required />
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input type="password" id="password" required />
+        </div>
+        <p id="error-msg" class="error"></p>
+        <button type="submit">Login</button>
+      </form>
+    </div>
+
+    <script>
+      import { auth, signInWithEmailAndPassword, onAuthStateChanged } from '../../lib/admin/firebase';
+      import { getProxyAwareUrl } from '../../lib/admin/cms-service';
+      
+      const form = document.getElementById('login-form');
+      const emailInput = document.getElementById('email') as HTMLInputElement;
+      const passInput = document.getElementById('password') as HTMLInputElement;
+      const errorMsg = document.getElementById('error-msg');
+
+      // If already authenticated, redirect away from login
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          window.location.href = getProxyAwareUrl('/');
+        }
+      });
+
+      form?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        try {
+          await signInWithEmailAndPassword(auth, emailInput.value, passInput.value);
+          window.location.href = getProxyAwareUrl('/');
+        } catch (err: any) {
+          if (errorMsg) errorMsg.textContent = err.message;
+        }
+      });
+    </script>
+  </body>
+</html>
+
+<style>
+  .login-body {
+    display: flex;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+    background: #f3f4f6;
+  }
+  .login-container {
+    background: #fff;
+    padding: var(--space-8);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    width: 100%;
+    max-width: 400px;
+  }
+  .login-container h1 {
+    margin-bottom: var(--space-6);
+    font-size: 1.5rem;
+  }
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    margin-bottom: var(--space-4);
+  }
+  .field input {
+    padding: var(--space-2);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+  }
+  button {
+    width: 100%;
+    padding: var(--space-3);
+    background: var(--accent-primary);
+    color: #fff;
+    border-radius: var(--radius-sm);
+    font-weight: 500;
+  }
+  .error {
+    color: red;
+    font-size: 0.875rem;
+    margin-bottom: var(--space-4);
+  }
+</style>

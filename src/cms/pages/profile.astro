@@ -1,0 +1,101 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+---
+<AdminLayout title="Profile Editor">
+  <div class="cms-header">
+    <h1>Profile Editor (Draft)</h1>
+    <div class="cms-actions">
+      <button id="btn-save" class="btn btn-primary">Save Draft</button>
+      <button id="btn-publish" class="btn">Publish to Live</button>
+    </div>
+  </div>
+  
+  <div id="status-message" class="status-message"></div>
+
+  <form id="profile-form" class="cms-form" style="display: none;">
+    <div class="field">
+      <label>Bio (Markdown)</label>
+      <textarea id="f-bio" rows="6" required></textarea>
+    </div>
+    
+    <div class="field">
+      <label>Focus Areas (Comma separated)</label>
+      <input type="text" id="f-focus" placeholder="e.g. Frontend, Backend, UI/UX" required />
+    </div>
+
+    <div class="field">
+      <label>Avatar Media Reference</label>
+      <input type="text" id="f-avatar" placeholder="/media/avatar.png" required />
+      <small style="color: var(--text-secondary);">Use a clean path like /media/avatar.png.</small>
+    </div>
+  </form>
+  
+  <div id="loading" class="loading">Loading draft data...</div>
+
+  <script>
+    import { CmsService } from '../../lib/admin/cms-service';
+    
+    const form = document.getElementById('profile-form') as HTMLFormElement;
+    const loading = document.getElementById('loading');
+    const status = document.getElementById('status-message');
+    
+    const bioInput = document.getElementById('f-bio') as HTMLTextAreaElement;
+    const focusInput = document.getElementById('f-focus') as HTMLInputElement;
+    const avatarInput = document.getElementById('f-avatar') as HTMLInputElement;
+
+    function showStatus(msg: string, isError = false) {
+      if (!status) return;
+      status.textContent = msg;
+      status.className = 'status-message ' + (isError ? 'error' : 'success');
+      setTimeout(() => status.textContent = '', 5000);
+    }
+
+    async function init() {
+      try {
+        const draft = await CmsService.getProfileDraft();
+        if (draft) {
+          bioInput.value = draft.bio || '';
+          focusInput.value = (draft.focusAreas || []).join(', ');
+          avatarInput.value = draft.avatarUrl || '';
+        }
+        if (form) form.style.display = 'flex';
+      } catch (err: any) {
+        const { auth } = await import('../../lib/admin/firebase');
+        console.warn('[CMS Diagnostics] Authenticated UID:', auth.currentUser?.uid);
+        showStatus('Failed to load draft: ' + err.message, true);
+      } finally {
+        if (loading) loading.style.display = 'none';
+      }
+    }
+
+    document.getElementById('btn-save')?.addEventListener('click', async () => {
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+      
+      const data = {
+        bio: bioInput.value,
+        focusAreas: focusInput.value.split(',').map(s => s.trim()).filter(Boolean),
+        avatarUrl: avatarInput.value
+      };
+      
+      try {
+        await CmsService.saveProfileDraft(data);
+        showStatus('Draft saved successfully.');
+      } catch (err: any) {
+        showStatus('Error saving draft: ' + err.message, true);
+      }
+    });
+
+    document.getElementById('btn-publish')?.addEventListener('click', async () => {
+      try {
+        await CmsService.triggerServerPublish('profile');
+      } catch (err: any) {
+        showStatus(err.message, true); 
+      }
+    });
+
+    init();
+  </script>
+</AdminLayout>

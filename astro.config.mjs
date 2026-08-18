@@ -9,6 +9,7 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
+    srcDir: './src/portfolio',
     site: 'https://debuggersatpal.github.io',
     devToolbar: {
         enabled: false,

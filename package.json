@@ -8,8 +8,8 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "build:public": "astro build && rm -rf dist/me",
-    "build:cms": "astro build && rm -rf dist-cms && mkdir -p dist-cms && cp -R dist/me dist-cms/ && cp -R dist/_astro dist-cms/ && cp dist/index.html dist-cms/",
+    "build:public": "astro build",
+    "build:cms": "astro build --config astro.cms.config.mjs",
     "preview": "astro preview",
     "astro": "astro"
   },

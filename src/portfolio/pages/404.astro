@@ -1,0 +1,25 @@
+---
+import VisitorLayout from '../../layouts/VisitorLayout.astro';
+import SectionHeading from '../../components/visitor/ui/SectionHeading.astro';
+---
+
+<VisitorLayout title="404 - Page Not Found">
+  <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 50vh; text-align: center;">
+    <SectionHeading title="404" />
+    <p style="color: var(--text-secondary); margin-bottom: var(--space-6);">
+      The page you're looking for doesn't exist or has been moved.
+    </p>
+    <a href="/" style="
+      display: inline-block;
+      padding: var(--space-3) var(--space-6);
+      background-color: var(--text-primary);
+      color: var(--bg-surface);
+      text-decoration: none;
+      border-radius: var(--radius-sm);
+      font-weight: 500;
+      transition: opacity 0.2s;
+    " onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+      Return Home
+    </a>
+  </div>
+</VisitorLayout>

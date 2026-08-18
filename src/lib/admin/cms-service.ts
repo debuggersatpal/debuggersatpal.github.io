@@ -109,7 +109,7 @@ export const CmsService = {
     if (!auth.currentUser) throw new Error('Not authenticated to publish');
     
     // Read the draft
-    let draftData;
+    let draftData: any;
     if (entity === 'projects') {
       const summaries = await this.getProjectDrafts();
       draftData = { summary: {}, details: {} };

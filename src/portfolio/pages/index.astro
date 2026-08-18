@@ -1,0 +1,156 @@
+---
+import VisitorLayout from '../../layouts/VisitorLayout.astro';
+import SectionHeading from '../../components/visitor/ui/SectionHeading.astro';
+import ProjectCard from '../../components/visitor/projects/ProjectCard.astro';
+import ExperienceItem from '../../components/visitor/experience/ExperienceItem.astro';
+---
+
+<VisitorLayout title="Portfolio">
+  <SectionHeading title="Selected Work" />
+  
+  <div id="projects-container" style="display: grid; gap: var(--space-6); grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));">
+    <p id="projects-loading" style="color: var(--text-secondary);">Loading projects...</p>
+    <p id="projects-error" style="display: none; color: red;"></p>
+    <p id="projects-empty" style="display: none; color: var(--text-secondary);">No projects found.</p>
+  </div>
+
+  <div style="margin-top: var(--space-12);">
+    <SectionHeading title="Experience" />
+    <div id="experience-container" style="display: flex; flex-direction: column; gap: var(--space-6);">
+      <p id="experience-loading" style="color: var(--text-secondary);">Loading experience...</p>
+      <p id="experience-error" style="display: none; color: red;"></p>
+      <p id="experience-empty" style="display: none; color: var(--text-secondary);">No experience found.</p>
+    </div>
+  </div>
+</VisitorLayout>
+
+<!-- Templates for Vanilla JS DOM hydration -->
+<template id="project-template">
+  <ProjectCard slug="" title="" category="" thumbnail="" order={0} />
+</template>
+
+<template id="experience-template">
+  <ExperienceItem role="" company="" period="" description="" />
+</template>
+
+<script>
+  import { VisitorDataService } from '../../lib/visitor-data';
+  import type { ProjectSummary, Experience } from '../../data/types';
+
+  // DOM Elements
+  const projectsContainer = document.getElementById('projects-container');
+  const projectsLoading = document.getElementById('projects-loading');
+  const projectsError = document.getElementById('projects-error');
+  const projectsEmpty = document.getElementById('projects-empty');
+  const projectTemplate = document.getElementById('project-template') as HTMLTemplateElement;
+
+  const experienceContainer = document.getElementById('experience-container');
+  const experienceLoading = document.getElementById('experience-loading');
+  const experienceError = document.getElementById('experience-error');
+  const experienceEmpty = document.getElementById('experience-empty');
+  const experienceTemplate = document.getElementById('experience-template') as HTMLTemplateElement;
+
+  function renderProjects(projects: ProjectSummary[]) {
+    if (!projectsContainer || !projectTemplate) return;
+    
+    // Clear existing dynamically added nodes
+    Array.from(projectsContainer.children).forEach(child => {
+      if (!child.id.startsWith('projects-')) child.remove();
+    });
+
+    if (projectsLoading) projectsLoading.style.display = 'none';
+    if (projectsError) projectsError.style.display = 'none';
+    if (projectsEmpty) projectsEmpty.style.display = projects.length === 0 ? 'block' : 'none';
+
+    projects.forEach(p => {
+      const el = projectTemplate.content.cloneNode(true) as DocumentFragment;
+      
+      const link = el.querySelector('a');
+      if (link) link.href = `/projects/${p.slug}`;
+      
+      const img = el.querySelector('img');
+      if (img) {
+        img.dataset.mediaSrc = p.thumbnail;
+        img.alt = p.title;
+        // In this phase, we simply set the src to the clean path. 
+        // Edge proxy will handle resolution in future.
+        img.src = p.thumbnail; 
+      }
+
+      const category = el.querySelector('.category');
+      if (category) category.textContent = p.category;
+
+      const title = el.querySelector('.title');
+      if (title) title.textContent = p.title;
+
+      projectsContainer.appendChild(el);
+    });
+  }
+
+  function renderExperience(experience: Experience[]) {
+    if (!experienceContainer || !experienceTemplate) return;
+
+    Array.from(experienceContainer.children).forEach(child => {
+      if (!child.id.startsWith('experience-')) child.remove();
+    });
+
+    if (experienceLoading) experienceLoading.style.display = 'none';
+    if (experienceError) experienceError.style.display = 'none';
+    if (experienceEmpty) experienceEmpty.style.display = experience.length === 0 ? 'block' : 'none';
+
+    experience.forEach(e => {
+      const el = experienceTemplate.content.cloneNode(true) as DocumentFragment;
+      
+      const period = el.querySelector('.period');
+      if (period) period.textContent = e.period;
+
+      const role = el.querySelector('.role');
+      if (role) role.textContent = e.role;
+
+      const company = el.querySelector('.company');
+      if (company) company.textContent = e.company;
+
+      const desc = el.querySelector('.description');
+      if (desc) desc.textContent = e.description;
+
+      experienceContainer.appendChild(el);
+    });
+  }
+
+  async function init() {
+    // 1. Fetch & Hydrate Projects
+    const pState = await VisitorDataService.getProjects((updated) => {
+      renderProjects(updated);
+    });
+
+    if (pState.status === 'success') {
+      renderProjects(pState.data);
+    } else if (pState.status === 'error' && projectsError && projectsLoading) {
+      projectsLoading.style.display = 'none';
+      projectsError.textContent = pState.message;
+      projectsError.style.display = 'block';
+    } else if (pState.status === 'empty' && projectsEmpty && projectsLoading) {
+      projectsLoading.style.display = 'none';
+      projectsEmpty.style.display = 'block';
+    }
+
+    // 2. Fetch & Hydrate Experience
+    const eState = await VisitorDataService.getExperience((updated) => {
+      renderExperience(updated);
+    });
+
+    if (eState.status === 'success') {
+      renderExperience(eState.data);
+    } else if (eState.status === 'error' && experienceError && experienceLoading) {
+      experienceLoading.style.display = 'none';
+      experienceError.textContent = eState.message;
+      experienceError.style.display = 'block';
+    } else if (eState.status === 'empty' && experienceEmpty && experienceLoading) {
+      experienceLoading.style.display = 'none';
+      experienceEmpty.style.display = 'block';
+    }
+  }
+
+  // Initialize data fetch
+  init();
+</script>
