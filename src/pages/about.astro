@@ -561,6 +561,21 @@ import { techBadgeColors } from "../data/projects";
             border-left: 2px solid var(--border-subtle);
             padding-left: 1rem;
         }
+        .timeline-node::before {
+            content: "";
+            position: absolute;
+            left: -5px;
+            top: 8px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--bg-surface);
+            border: 2px solid var(--border-subtle);
+            transition: all 0.2s ease;
+        }
+        .timeline-node:hover::before {
+            border-color: var(--text-primary);
+        }
         .timeline-node:hover {
             border-color: var(--text-primary);
         }
