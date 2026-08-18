@@ -15,7 +15,7 @@ export default defineConfig({
     },
     integrations: [
         sitemap({
-            filter: (page) => !page.includes('/internal-cms') && !page.includes('[id]')
+            filter: (page) => !page.includes('/me') && !page.includes('[id]')
         })
     ]
 });
