@@ -30,13 +30,16 @@ export default {
       // Intercept any deep link to /projects/example-slug
       // Rewrite it server-side to serve the static index.html shell from GitHub Pages
       const shellUrl = new URL('/projects/index.html', request.url);
+      shellUrl.hostname = 'debuggersatpal.github.io';
       
       // Transparent subrequest to the static origin
       return fetch(shellUrl.toString(), request);
     }
 
     // 3. Passthrough for all other visitor assets (HTML, CSS, JS)
-    return fetch(request);
+    const originUrl = new URL(request.url);
+    originUrl.hostname = 'debuggersatpal.github.io';
+    return fetch(originUrl.toString(), request);
   }
 };
 
