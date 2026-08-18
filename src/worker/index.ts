@@ -39,17 +39,28 @@ export default {
     // 3. Passthrough for all other visitor assets (HTML, CSS, JS)
     const originUrl = new URL(request.url);
     originUrl.hostname = 'debuggersatpal.github.io';
+
+    // Reverse Proxy: Map public /me to isolated /internal-cms origin path
+    const isCmsRoute = originUrl.pathname.startsWith('/me/') || originUrl.pathname === '/me';
+    if (isCmsRoute) {
+      originUrl.pathname = originUrl.pathname.replace(/^\/me/, '/internal-cms');
+    }
+
     const response = await fetch(originUrl.toString(), request);
 
     // Intercept GitHub Pages canonical redirects to prevent escaping the Worker origin
     if ([301, 302, 307, 308].includes(response.status)) {
       const location = response.headers.get('Location');
       if (location && location.startsWith('https://debuggersatpal.github.io')) {
+        let newLocation = location.replace('https://debuggersatpal.github.io', url.origin);
+        
+        // Mask the internal origin path by reversing it back to /me
+        if (isCmsRoute && newLocation.includes('/internal-cms')) {
+          newLocation = newLocation.replace('/internal-cms', '/me');
+        }
+
         const newResponse = new Response(response.body, response);
-        newResponse.headers.set(
-          'Location',
-          location.replace('https://debuggersatpal.github.io', url.origin)
-        );
+        newResponse.headers.set('Location', newLocation);
         return newResponse;
       }
     }
