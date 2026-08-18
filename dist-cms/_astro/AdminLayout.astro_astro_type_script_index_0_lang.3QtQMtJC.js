@@ -1,1 +1,0 @@
-import{c as e,i as t,n,o as r}from"./cms-service.B8M2liLe.js";var i=document.getElementById(`auth-loading`),a=document.getElementById(`admin-app`),o=document.getElementById(`logout-btn`);r(t,e=>{e?(i&&(i.style.display=`none`),a&&(a.style.display=`flex`)):window.location.href=n(`/login`)}),o&&o.addEventListener(`click`,async()=>{await e(t),window.location.href=n(`/login`)});

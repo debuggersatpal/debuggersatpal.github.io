@@ -27,25 +27,24 @@ import '../../styles/global.css';
 
     <script>
       import { auth, signInWithEmailAndPassword, onAuthStateChanged } from '../../lib/admin/firebase';
-      import { getProxyAwareUrl } from '../../lib/admin/cms-service';
-      
-      const form = document.getElementById('login-form');
+
       const emailInput = document.getElementById('email') as HTMLInputElement;
       const passInput = document.getElementById('password') as HTMLInputElement;
+      const form = document.getElementById('login-form') as HTMLFormElement;
       const errorMsg = document.getElementById('error-msg');
 
       // If already authenticated, redirect away from login
       onAuthStateChanged(auth, (user) => {
         if (user) {
-          window.location.href = getProxyAwareUrl('/');
+          window.location.href = '/';
         }
       });
 
-      form?.addEventListener('submit', async (e) => {
+      form.addEventListener('submit', async (e) => {
         e.preventDefault();
         try {
           await signInWithEmailAndPassword(auth, emailInput.value, passInput.value);
-          window.location.href = getProxyAwareUrl('/');
+          window.location.href = '/';
         } catch (err: any) {
           if (errorMsg) errorMsg.textContent = err.message;
         }

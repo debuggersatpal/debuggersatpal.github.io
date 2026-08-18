@@ -39,17 +39,16 @@ const { title } = Astro.props;
     </div>
     
     <script>
-      import { auth, onAuthStateChanged, signOut } from '../lib/admin/firebase';
-      import { getProxyAwareUrl } from '../lib/admin/cms-service';
-      
-      const loadingEl = document.getElementById('auth-loading');
-      const appEl = document.getElementById('admin-app');
+      import { auth, signOut, onAuthStateChanged } from '../lib/admin/firebase';
+
       const logoutBtn = document.getElementById('logout-btn');
+      const appEl = document.getElementById('admin-app');
+      const loadingEl = document.getElementById('auth-loading');
 
       // Admin boundary guard
       onAuthStateChanged(auth, (user) => {
         if (!user) {
-          window.location.href = getProxyAwareUrl('/login');
+          window.location.href = '/login/';
         } else {
           if (loadingEl) loadingEl.style.display = 'none';
           if (appEl) appEl.style.display = 'flex';
@@ -59,7 +58,7 @@ const { title } = Astro.props;
       if (logoutBtn) {
         logoutBtn.addEventListener('click', async () => {
           await signOut(auth);
-          window.location.href = getProxyAwareUrl('/login');
+          window.location.href = '/login/';
         });
       }
     </script>
