@@ -181,6 +181,7 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
     document.getElementById('btn-publish')?.addEventListener('click', async () => {
       try {
         await CmsService.triggerServerPublish('projects');
+        showStatus('Published successfully to live site!');
       } catch (err: any) {
         showStatus(err.message, true);
       }
