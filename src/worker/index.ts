@@ -39,7 +39,22 @@ export default {
     // 3. Passthrough for all other visitor assets (HTML, CSS, JS)
     const originUrl = new URL(request.url);
     originUrl.hostname = 'debuggersatpal.github.io';
-    return fetch(originUrl.toString(), request);
+    const response = await fetch(originUrl.toString(), request);
+
+    // Intercept GitHub Pages canonical redirects to prevent escaping the Worker origin
+    if ([301, 302, 307, 308].includes(response.status)) {
+      const location = response.headers.get('Location');
+      if (location && location.startsWith('https://debuggersatpal.github.io')) {
+        const newResponse = new Response(response.body, response);
+        newResponse.headers.set(
+          'Location',
+          location.replace('https://debuggersatpal.github.io', url.origin)
+        );
+        return newResponse;
+      }
+    }
+
+    return response;
   }
 };
 
