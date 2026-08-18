@@ -165,9 +165,12 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
           const detail = await CmsService.getProjectDetailDraft(s.slug);
           list?.appendChild(createFormNode(s, detail));
         }
-        if (loading) loading.style.display = 'none';
       } catch (err: any) {
+        const { auth } = await import('../../lib/admin/firebase');
+        console.warn('[CMS Diagnostics] Authenticated UID:', auth.currentUser?.uid);
         showStatus('Failed to load drafts: ' + err.message, true);
+      } finally {
+        if (loading) loading.style.display = 'none';
       }
     }
 

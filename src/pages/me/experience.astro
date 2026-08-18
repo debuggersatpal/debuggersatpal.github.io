@@ -129,9 +129,12 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
       try {
         const drafts = await CmsService.getExperienceDrafts();
         drafts.forEach(d => list?.appendChild(createFormNode(d)));
-        if (loading) loading.style.display = 'none';
       } catch (err: any) {
+        const { auth } = await import('../../lib/admin/firebase');
+        console.warn('[CMS Diagnostics] Authenticated UID:', auth.currentUser?.uid);
         showStatus('Failed to load drafts: ' + err.message, true);
+      } finally {
+        if (loading) loading.style.display = 'none';
       }
     }
 
