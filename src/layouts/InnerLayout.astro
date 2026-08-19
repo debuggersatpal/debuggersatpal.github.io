@@ -1,7 +1,9 @@
 ---
 import '../styles/global.css';
+import SiteHeader from '../components/visitor/SiteHeader.astro';
 import Sidebar from '../components/visitor/Sidebar.astro';
-import MobileDrawer from '../components/visitor/MobileDrawer.astro';
+import ThemeScript from '../components/ThemeScript.astro';
+import { ClientRouter } from 'astro:transitions';
 
 interface Props {
   title: string;
@@ -18,17 +20,45 @@ const { title, description = "Satpal's portfolio showcasing my web, Android, and
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
+    <ClientRouter />
+    <ThemeScript />
     <meta name="description" content={description} />
     <title>{title}</title>
   </head>
   <body>
+    <SiteHeader />
     <div class="visitor-layout inner-layout">
       <Sidebar />
       <main class="main-content">
         <slot />
       </main>
-      <MobileDrawer />
     </div>
+    <script>
+      document.addEventListener('astro:page-load', () => {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        const observeElements = () => {
+          document.querySelectorAll('.fade-up:not(.observed)').forEach((el) => {
+            el.classList.add('observed');
+            observer.observe(el);
+          });
+        };
+
+        observeElements();
+
+        const mutObserver = new MutationObserver(() => {
+          observeElements();
+        });
+        mutObserver.observe(document.body, { childList: true, subtree: true });
+      });
+    </script>
   </body>
 </html>
 
@@ -36,7 +66,7 @@ const { title, description = "Satpal's portfolio showcasing my web, Android, and
   .visitor-layout {
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    min-height: calc(100vh - 56px);
   }
   
   .main-content {
@@ -46,17 +76,19 @@ const { title, description = "Satpal's portfolio showcasing my web, Android, and
   }
 
   /* Desktop Layout */
-  @media (min-width: 1024px) {
+  @media (min-width: 768px) {
     .visitor-layout {
+      min-height: calc(100vh - 64px);
       flex-direction: row;
     }
     
     .main-content {
       /* Pushes content right of the narrower Sidebar */
-      margin-left: 280px; 
+      margin-left: var(--sidebar-width-desktop); 
       padding: var(--space-8) var(--space-12);
-      width: calc(100% - 280px);
-      max-width: none; /* Let it expand to fill viewport as requested */
+      padding-left: calc(var(--space-12) + (var(--hero-width-desktop) - var(--sidebar-width-desktop))); /* Stabilize layout shift */
+      width: calc(100% - var(--sidebar-width-desktop));
+      max-width: 1400px; /* Constrain max width on ultra-wide */
     }
   }
 </style>

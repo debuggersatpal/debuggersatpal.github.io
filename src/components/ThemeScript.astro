@@ -1,0 +1,40 @@
+---
+---
+<script is:inline>
+  (function() {
+    function getTheme() {
+      const saved = localStorage.getItem('theme');
+      if (saved) return saved;
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+
+    function applyTheme() {
+      const theme = getTheme();
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    }
+
+    // Apply immediately
+    applyTheme();
+
+    // Apply on view transitions
+    document.addEventListener('astro:after-swap', applyTheme);
+
+    // Listen for OS theme changes
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+      // Only apply if user hasn't explicitly set a preference
+      if (!localStorage.getItem('theme')) {
+        if (e.matches) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+        // Dispatch custom event to update toggle UI
+        document.dispatchEvent(new CustomEvent('theme-changed'));
+      }
+    });
+  })();
+</script>

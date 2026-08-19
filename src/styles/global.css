@@ -4,6 +4,10 @@
 @import './typography.css';
 @import './utilities.css';
 
+html {
+  scrollbar-gutter: stable;
+}
+
 body {
   background-color: var(--bg-main);
   transition: background-color var(--transition-base), color var(--transition-base);
@@ -12,4 +16,54 @@ body {
 ::selection {
   background-color: var(--accent-primary-bg);
   color: var(--accent-primary);
+}
+
+/* ===== Animations & Smooth UX ===== */
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Subtle Hover Lift for Project Cards & Focus Cards */
+.project-card, .focus-card, .social-link-card, .home-exp-item, .timeline-item {
+  transition: transform var(--transition-base) cubic-bezier(0.4, 0, 0.2, 1), 
+              box-shadow var(--transition-base) cubic-bezier(0.4, 0, 0.2, 1),
+              background-color var(--transition-base);
+}
+
+.project-card:hover, .focus-card:hover, .social-link-card:hover {
+  transform: translateY(-2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-card:hover, .focus-card:hover, .social-link-card:hover {
+    transform: none;
+  }
+}
+
+/* Section Fade Entrance */
+.fade-up {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity, transform;
+}
+
+.fade-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-up {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }

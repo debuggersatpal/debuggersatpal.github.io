@@ -25,6 +25,9 @@ import InnerLayout from '../../../layouts/InnerLayout.astro';
   <script>
     import { VisitorDataService } from '../../../lib/visitor-data';
 
+  document.addEventListener('astro:page-load', () => {
+
+
     const container = document.getElementById('project-detail-container');
     const loading = document.getElementById('project-loading');
     const error = document.getElementById('project-error');
@@ -148,5 +151,7 @@ import InnerLayout from '../../../layouts/InnerLayout.astro';
     }
 
     init();
-  </script>
+  
+  });
+</script>
 </InnerLayout>

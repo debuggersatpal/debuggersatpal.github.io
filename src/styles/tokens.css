@@ -45,7 +45,8 @@
   --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
 
   /* Layout */
-  --hero-width-desktop: 320px;
+  --hero-width-desktop: clamp(280px, 30vw, 320px);
+  --sidebar-width-desktop: clamp(240px, 25vw, 280px);
   --hero-width-tablet: 260px;
   --max-content-width: 1440px;
   

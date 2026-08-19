@@ -18,5 +18,6 @@ export default defineConfig({
         sitemap({
             filter: (page) => !page.includes('/me') && !page.includes('[id]')
         })
-    ]
+    ],
+    // allowedHosts: ['192.0.0.4', 'localhost'],
 });
