@@ -1,5 +1,5 @@
 import { db, ref, get, set, child, update, storage, storageRef, uploadBytes } from './firebase';
-import type { Profile, Experience, ProjectSummary, ProjectDetail } from '../../data/types';
+import type { Profile, Experience, ProjectSummary, ProjectDetail, Capability, Contact } from '../../data/types';
 import { mapDictionaryToArray } from '../data-mapper';
 
 
@@ -62,6 +62,31 @@ export const CmsService = {
     await update(ref(db), updates);
   },
 
+  // --- Capabilities ---
+  async getCapabilitiesDrafts(): Promise<Capability[]> {
+    const snapshot = await get(child(ref(db), 'drafts/capabilities'));
+    if (!snapshot.exists()) return [];
+    return mapDictionaryToArray<Capability>(snapshot.val(), 'id').sort((a, b) => a.order - b.order);
+  },
+
+  async saveCapabilityDraft(id: string, data: Omit<Capability, 'id'>): Promise<void> {
+    await set(ref(db, `drafts/capabilities/${id}`), data);
+  },
+
+  async deleteCapabilityDraft(id: string): Promise<void> {
+    await set(ref(db, `drafts/capabilities/${id}`), null);
+  },
+
+  // --- Contact ---
+  async getContactDraft(): Promise<Contact | null> {
+    const snapshot = await get(child(ref(db), 'drafts/contact'));
+    return snapshot.exists() ? snapshot.val() : null;
+  },
+
+  async saveContactDraft(data: Contact): Promise<void> {
+    await set(ref(db, 'drafts/contact'), data);
+  },
+
   // --- Media ---
   async uploadMedia(file: File, identifier: string): Promise<string> {
     const cleanId = identifier.replace(/[^a-zA-Z0-9_.-]/g, '');
@@ -97,7 +122,7 @@ export const CmsService = {
   },
 
   // --- Trusted Publishing Pipeline ---
-  async triggerServerPublish(entity: 'profile' | 'experience' | 'projects'): Promise<void> {
+  async triggerServerPublish(entity: 'profile' | 'experience' | 'projects' | 'capabilities' | 'contact'): Promise<void> {
     console.info(`[CMS] Triggering publish for ${entity}...`);
     const { auth } = await import('./firebase');
     if (!auth.currentUser) throw new Error('Not authenticated to publish');

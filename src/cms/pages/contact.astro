@@ -1,0 +1,153 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+---
+<AdminLayout title="Contact Editor">
+  <div class="cms-header">
+    <h1>Contact Editor (Draft)</h1>
+    <div class="cms-actions">
+      <button id="btn-save" class="btn btn-primary">Save Draft</button>
+      <button id="btn-publish" class="btn">Publish to Live</button>
+    </div>
+  </div>
+  
+  <div id="status-message" class="status-message"></div>
+
+  <form id="contact-form" class="cms-form" style="display: none;">
+    <div class="field">
+      <label>Primary Email</label>
+      <input type="email" id="f-email" required />
+    </div>
+
+    <!-- Contact Socials -->
+    <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #e5e7eb;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h3 style="font-size: 1.1rem; margin: 0;">Contact Social Profiles</h3>
+        <button type="button" id="btn-add-social" class="btn">Add Profile</button>
+      </div>
+      <div id="socials-list" style="display: flex; flex-direction: column; gap: 1rem;"></div>
+    </div>
+  </form>
+  
+  <div id="loading" class="loading">Loading draft data...</div>
+
+  <template id="social-template">
+    <div class="cms-form" style="position: relative; padding: 1rem; margin: 0;">
+      <button type="button" class="delete-btn" style="position: absolute; right: 1rem; top: 1rem; color: #dc2626; background: none; border: none; cursor: pointer;">Delete</button>
+      <div class="field">
+        <label>Platform Name</label>
+        <input type="text" class="f-social-platform" placeholder="e.g. LinkedIn" required />
+      </div>
+      <div class="field">
+        <label>URL</label>
+        <input type="url" class="f-social-url" required />
+      </div>
+      <div class="field">
+        <label>Handle</label>
+        <input type="text" class="f-social-handle" placeholder="@username" required />
+      </div>
+      <div class="field">
+        <label>Description</label>
+        <input type="text" class="f-social-desc" placeholder="Connect with me professionally" required />
+      </div>
+    </div>
+  </template>
+
+  <script>
+    import { CmsService } from '../../lib/admin/cms-service';
+    
+    const form = document.getElementById('contact-form') as HTMLFormElement;
+    const loading = document.getElementById('loading');
+    const status = document.getElementById('status-message');
+    
+    const emailInput = document.getElementById('f-email') as HTMLInputElement;
+
+    const socialsList = document.getElementById('socials-list');
+    const socialTemplate = document.getElementById('social-template') as HTMLTemplateElement;
+
+    function showStatus(msg: string, isError = false) {
+      if (!status) return;
+      status.textContent = msg;
+      status.className = 'status-message ' + (isError ? 'error' : 'success');
+      setTimeout(() => status.textContent = '', 5000);
+    }
+
+    function addSocialNode(data?: any) {
+      if (!socialsList) return;
+      const node = socialTemplate.content.cloneNode(true) as DocumentFragment;
+      const el = node.querySelector('.cms-form') as HTMLElement;
+      
+      const pInput = el.querySelector('.f-social-platform') as HTMLInputElement;
+      const urlInput = el.querySelector('.f-social-url') as HTMLInputElement;
+      const handleInput = el.querySelector('.f-social-handle') as HTMLInputElement;
+      const descInput = el.querySelector('.f-social-desc') as HTMLInputElement;
+
+      if (data) {
+        pInput.value = data.platform || '';
+        urlInput.value = data.url || '';
+        handleInput.value = data.handle || '';
+        descInput.value = data.description || '';
+      }
+      el.querySelector('.delete-btn')?.addEventListener('click', () => el.remove());
+      socialsList.appendChild(el);
+    }
+
+    async function init() {
+      try {
+        const draft = await CmsService.getContactDraft();
+        if (draft) {
+          emailInput.value = draft.email || '';
+          if (draft.socials) {
+            draft.socials.forEach((s: any) => addSocialNode(s));
+          }
+        }
+        if (form) form.style.display = 'flex';
+      } catch (err: any) {
+        showStatus('Failed to load draft: ' + err.message, true);
+      } finally {
+        if (loading) loading.style.display = 'none';
+      }
+    }
+
+    document.getElementById('btn-add-social')?.addEventListener('click', () => addSocialNode());
+
+    document.getElementById('btn-save')?.addEventListener('click', async () => {
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+      
+      const socials: any[] = [];
+      socialsList?.querySelectorAll('.cms-form').forEach(el => {
+        socials.push({
+          platform: (el.querySelector('.f-social-platform') as HTMLInputElement).value,
+          url: (el.querySelector('.f-social-url') as HTMLInputElement).value,
+          handle: (el.querySelector('.f-social-handle') as HTMLInputElement).value,
+          description: (el.querySelector('.f-social-desc') as HTMLInputElement).value
+        });
+      });
+
+      const data = {
+        email: emailInput.value,
+        socials
+      };
+      
+      try {
+        await CmsService.saveContactDraft(data as any);
+        showStatus('Draft saved successfully.');
+      } catch (err: any) {
+        showStatus('Error saving draft: ' + err.message, true);
+      }
+    });
+
+    document.getElementById('btn-publish')?.addEventListener('click', async () => {
+      try {
+        await CmsService.triggerServerPublish('contact');
+        showStatus('Published successfully to live site!');
+      } catch (err: any) {
+        showStatus(err.message, true); 
+      }
+    });
+
+    init();
+  </script>
+</AdminLayout>

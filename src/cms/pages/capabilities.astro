@@ -1,11 +1,11 @@
 ---
 import AdminLayout from '../../layouts/AdminLayout.astro';
 ---
-<AdminLayout title="Experience Editor">
+<AdminLayout title="Capabilities Editor">
   <div class="cms-header">
-    <h1>Experience (Drafts)</h1>
+    <h1>Capabilities (Drafts)</h1>
     <div class="cms-actions">
-      <button id="btn-add" class="btn btn-primary">Add New Entry</button>
+      <button id="btn-add" class="btn btn-primary">Add Category</button>
       <button id="btn-publish" class="btn">Publish to Live</button>
     </div>
   </div>
@@ -13,35 +13,23 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
   <div id="status-message" class="status-message"></div>
   <div id="loading" class="loading">Loading drafts...</div>
 
-  <div id="experience-list" style="display: flex; flex-direction: column; gap: var(--space-4);"></div>
+  <div id="capabilities-list" style="display: flex; flex-direction: column; gap: var(--space-4);"></div>
 
-  <template id="exp-template">
+  <template id="cap-template">
     <div class="cms-form" style="position: relative;">
       <button class="delete-btn" style="position: absolute; right: 1rem; top: 1rem; color: #dc2626; background: none; border: none; cursor: pointer; font-size: 0.875rem;">Delete</button>
       
       <div class="field">
         <label>ID / Slug</label>
-        <input type="text" class="f-id" placeholder="e.g. senior-dev-google" required />
+        <input type="text" class="f-id" placeholder="e.g. frontend" required />
       </div>
       <div class="field">
-        <label>Role</label>
-        <input type="text" class="f-role" required />
+        <label>Category Title</label>
+        <input type="text" class="f-category" placeholder="e.g. Frontend Development" required />
       </div>
       <div class="field">
-        <label>Company</label>
-        <input type="text" class="f-company" required />
-      </div>
-      <div class="field">
-        <label>Period</label>
-        <input type="text" class="f-period" placeholder="2020 - Present" required />
-      </div>
-      <div class="field">
-        <label>Description</label>
-        <textarea class="f-desc" rows="3" required></textarea>
-      </div>
-      <div class="field">
-        <label>Technologies (Comma separated, optional)</label>
-        <input type="text" class="f-tech" placeholder="e.g. React, Node.js" />
+        <label>Skills (Comma separated)</label>
+        <input type="text" class="f-skills" placeholder="React, Astro, Vue" required />
       </div>
       <div class="field">
         <label>Order (lower comes first)</label>
@@ -49,7 +37,7 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
       </div>
       
       <div class="cms-actions" style="margin-top: 1rem;">
-        <button class="btn btn-primary save-entry-btn">Save Entry Draft</button>
+        <button class="btn btn-primary save-entry-btn">Save Capability Draft</button>
       </div>
     </div>
   </template>
@@ -57,8 +45,8 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
   <script>
     import { CmsService } from '../../lib/admin/cms-service';
     
-    const list = document.getElementById('experience-list');
-    const template = document.getElementById('exp-template') as HTMLTemplateElement;
+    const list = document.getElementById('capabilities-list');
+    const template = document.getElementById('cap-template') as HTMLTemplateElement;
     const loading = document.getElementById('loading');
     const status = document.getElementById('status-message');
 
@@ -75,22 +63,16 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
       
       const inputs = {
         id: node.querySelector('.f-id') as HTMLInputElement,
-        role: node.querySelector('.f-role') as HTMLInputElement,
-        company: node.querySelector('.f-company') as HTMLInputElement,
-        period: node.querySelector('.f-period') as HTMLInputElement,
-        desc: node.querySelector('.f-desc') as HTMLTextAreaElement,
-        tech: node.querySelector('.f-tech') as HTMLInputElement,
+        category: node.querySelector('.f-category') as HTMLInputElement,
+        skills: node.querySelector('.f-skills') as HTMLInputElement,
         order: node.querySelector('.f-order') as HTMLInputElement
       };
 
       if (data) {
         inputs.id.value = data.id;
         inputs.id.disabled = true; 
-        inputs.role.value = data.role;
-        inputs.company.value = data.company;
-        inputs.period.value = data.period;
-        inputs.desc.value = data.description;
-        inputs.tech.value = (data.technologies || []).join(', ');
+        inputs.category.value = data.category;
+        inputs.skills.value = (data.skills || []).join(', ');
         inputs.order.value = data.order;
       }
 
@@ -99,8 +81,8 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
           formEl.remove();
           return;
         }
-        if (confirm('Delete this experience draft?')) {
-          await CmsService.deleteExperienceDraft(data.id);
+        if (confirm('Delete this capability draft?')) {
+          await CmsService.deleteCapabilityDraft(data.id);
           formEl.remove();
           showStatus('Draft deleted.');
         }
@@ -108,19 +90,16 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
 
       node.querySelector('.save-entry-btn')?.addEventListener('click', async () => {
         const id = inputs.id.value.trim();
-        if (!id || !inputs.role.value) {
-          showStatus('ID and Role are required', true);
+        if (!id || !inputs.category.value || !inputs.skills.value) {
+          showStatus('ID, Category, and Skills are required', true);
           return;
         }
         
         try {
-          const techArr = inputs.tech.value.split(',').map(s => s.trim()).filter(Boolean);
-          await CmsService.saveExperienceDraft(id, {
-            role: inputs.role.value,
-            company: inputs.company.value,
-            period: inputs.period.value,
-            description: inputs.desc.value,
-            technologies: techArr.length ? techArr : undefined,
+          const skillsArr = inputs.skills.value.split(',').map(s => s.trim()).filter(Boolean);
+          await CmsService.saveCapabilityDraft(id, {
+            category: inputs.category.value,
+            skills: skillsArr,
             order: parseInt(inputs.order.value) || 0
           });
           inputs.id.disabled = true;
@@ -135,11 +114,9 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
 
     async function init() {
       try {
-        const drafts = await CmsService.getExperienceDrafts();
+        const drafts = await CmsService.getCapabilitiesDrafts();
         drafts.forEach(d => list?.appendChild(createFormNode(d)));
       } catch (err: any) {
-        const { auth } = await import('../../lib/admin/firebase');
-        console.warn('[CMS Diagnostics] Authenticated UID:', auth.currentUser?.uid);
         showStatus('Failed to load drafts: ' + err.message, true);
       } finally {
         if (loading) loading.style.display = 'none';
@@ -152,7 +129,7 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
 
     document.getElementById('btn-publish')?.addEventListener('click', async () => {
       try {
-        await CmsService.triggerServerPublish('experience');
+        await CmsService.triggerServerPublish('capabilities');
         showStatus('Published successfully to live site!');
       } catch (err: any) {
         showStatus(err.message, true);

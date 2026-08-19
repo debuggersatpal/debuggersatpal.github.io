@@ -14,23 +14,104 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
 
   <form id="profile-form" class="cms-form" style="display: none;">
     <div class="field">
+      <label>Name</label>
+      <input type="text" id="f-name" required />
+    </div>
+    <div class="field">
+      <label>Role</label>
+      <input type="text" id="f-role" required />
+    </div>
+    <div class="field">
+      <label>Location</label>
+      <input type="text" id="f-location" required />
+    </div>
+    <div class="field">
+      <label>Tagline (Optional)</label>
+      <input type="text" id="f-tagline" />
+    </div>
+    <div class="field">
       <label>Bio (Markdown)</label>
       <textarea id="f-bio" rows="6" required></textarea>
     </div>
     
     <div class="field">
-      <label>Focus Areas (Comma separated)</label>
-      <input type="text" id="f-focus" placeholder="e.g. Frontend, Backend, UI/UX" required />
-    </div>
-
-    <div class="field">
       <label>Avatar Media Reference</label>
       <input type="text" id="f-avatar" placeholder="/media/avatar.png" required />
       <small style="color: var(--text-secondary);">Use a clean path like /media/avatar.png.</small>
     </div>
+    <div class="field">
+      <label>Resume Media Reference (Optional)</label>
+      <input type="text" id="f-resume" placeholder="/media/resume.pdf" />
+    </div>
+
+    <!-- Stats -->
+    <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #e5e7eb;">
+      <h3 style="font-size: 1.1rem; margin-bottom: 1rem;">Stats (Optional)</h3>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+        <div class="field">
+          <label>Projects</label>
+          <input type="number" id="f-stats-proj" value="0" />
+        </div>
+        <div class="field">
+          <label>Experience (Years)</label>
+          <input type="number" id="f-stats-exp" value="0" />
+        </div>
+        <div class="field">
+          <label>Tech Stack</label>
+          <input type="number" id="f-stats-tech" value="0" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Focus Areas -->
+    <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #e5e7eb;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h3 style="font-size: 1.1rem; margin: 0;">Focus Areas</h3>
+        <button type="button" id="btn-add-focus" class="btn">Add Focus Area</button>
+      </div>
+      <div id="focus-list" style="display: flex; flex-direction: column; gap: 1rem;"></div>
+    </div>
+
+    <!-- Socials -->
+    <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #e5e7eb;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h3 style="font-size: 1.1rem; margin: 0;">Social Links</h3>
+        <button type="button" id="btn-add-social" class="btn">Add Social Link</button>
+      </div>
+      <div id="socials-list" style="display: flex; flex-direction: column; gap: 1rem;"></div>
+    </div>
   </form>
   
   <div id="loading" class="loading">Loading draft data...</div>
+
+  <!-- Templates -->
+  <template id="focus-template">
+    <div class="cms-form" style="position: relative; padding: 1rem; margin: 0;">
+      <button type="button" class="delete-btn" style="position: absolute; right: 1rem; top: 1rem; color: #dc2626; background: none; border: none; cursor: pointer;">Delete</button>
+      <div class="field">
+        <label>Title</label>
+        <input type="text" class="f-focus-title" required />
+      </div>
+      <div class="field">
+        <label>Description</label>
+        <textarea class="f-focus-desc" rows="2" required></textarea>
+      </div>
+    </div>
+  </template>
+
+  <template id="social-template">
+    <div class="cms-form" style="position: relative; padding: 1rem; margin: 0;">
+      <button type="button" class="delete-btn" style="position: absolute; right: 1rem; top: 1rem; color: #dc2626; background: none; border: none; cursor: pointer;">Delete</button>
+      <div class="field">
+        <label>Platform Name</label>
+        <input type="text" class="f-social-platform" placeholder="e.g. GitHub" required />
+      </div>
+      <div class="field">
+        <label>URL</label>
+        <input type="url" class="f-social-url" required />
+      </div>
+    </div>
+  </template>
 
   <script>
     import { CmsService } from '../../lib/admin/cms-service';
@@ -39,9 +120,22 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
     const loading = document.getElementById('loading');
     const status = document.getElementById('status-message');
     
+    const nameInput = document.getElementById('f-name') as HTMLInputElement;
+    const roleInput = document.getElementById('f-role') as HTMLInputElement;
+    const locInput = document.getElementById('f-location') as HTMLInputElement;
+    const taglineInput = document.getElementById('f-tagline') as HTMLInputElement;
     const bioInput = document.getElementById('f-bio') as HTMLTextAreaElement;
-    const focusInput = document.getElementById('f-focus') as HTMLInputElement;
     const avatarInput = document.getElementById('f-avatar') as HTMLInputElement;
+    const resumeInput = document.getElementById('f-resume') as HTMLInputElement;
+
+    const statsProj = document.getElementById('f-stats-proj') as HTMLInputElement;
+    const statsExp = document.getElementById('f-stats-exp') as HTMLInputElement;
+    const statsTech = document.getElementById('f-stats-tech') as HTMLInputElement;
+
+    const focusList = document.getElementById('focus-list');
+    const focusTemplate = document.getElementById('focus-template') as HTMLTemplateElement;
+    const socialsList = document.getElementById('socials-list');
+    const socialTemplate = document.getElementById('social-template') as HTMLTemplateElement;
 
     function showStatus(msg: string, isError = false) {
       if (!status) return;
@@ -50,23 +144,71 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
       setTimeout(() => status.textContent = '', 5000);
     }
 
+    function addFocusNode(data?: any) {
+      if (!focusList) return;
+      const node = focusTemplate.content.cloneNode(true) as DocumentFragment;
+      const el = node.querySelector('.cms-form') as HTMLElement;
+      
+      const titleInput = el.querySelector('.f-focus-title') as HTMLInputElement;
+      const descInput = el.querySelector('.f-focus-desc') as HTMLTextAreaElement;
+      if (data) {
+        titleInput.value = data.title || '';
+        descInput.value = data.description || '';
+      }
+      el.querySelector('.delete-btn')?.addEventListener('click', () => el.remove());
+      focusList.appendChild(el);
+    }
+
+    function addSocialNode(data?: any) {
+      if (!socialsList) return;
+      const node = socialTemplate.content.cloneNode(true) as DocumentFragment;
+      const el = node.querySelector('.cms-form') as HTMLElement;
+      
+      const pInput = el.querySelector('.f-social-platform') as HTMLInputElement;
+      const urlInput = el.querySelector('.f-social-url') as HTMLInputElement;
+      if (data) {
+        pInput.value = data.platform || '';
+        urlInput.value = data.url || '';
+      }
+      el.querySelector('.delete-btn')?.addEventListener('click', () => el.remove());
+      socialsList.appendChild(el);
+    }
+
     async function init() {
       try {
         const draft = await CmsService.getProfileDraft();
         if (draft) {
+          nameInput.value = draft.name || '';
+          roleInput.value = draft.role || '';
+          locInput.value = draft.location || '';
+          taglineInput.value = draft.tagline || '';
           bioInput.value = draft.bio || '';
-          focusInput.value = (draft.focusAreas || []).join(', ');
           avatarInput.value = draft.avatarUrl || '';
+          resumeInput.value = draft.resumeUrl || '';
+          
+          if (draft.stats) {
+            statsProj.value = draft.stats.projects?.toString() || '0';
+            statsExp.value = draft.stats.experience?.toString() || '0';
+            statsTech.value = draft.stats.techStack?.toString() || '0';
+          }
+
+          if (draft.focusAreas) {
+            draft.focusAreas.forEach((f: any) => addFocusNode(f));
+          }
+          if (draft.socials) {
+            draft.socials.forEach((s: any) => addSocialNode(s));
+          }
         }
         if (form) form.style.display = 'flex';
       } catch (err: any) {
-        const { auth } = await import('../../lib/admin/firebase');
-        console.warn('[CMS Diagnostics] Authenticated UID:', auth.currentUser?.uid);
         showStatus('Failed to load draft: ' + err.message, true);
       } finally {
         if (loading) loading.style.display = 'none';
       }
     }
+
+    document.getElementById('btn-add-focus')?.addEventListener('click', () => addFocusNode());
+    document.getElementById('btn-add-social')?.addEventListener('click', () => addSocialNode());
 
     document.getElementById('btn-save')?.addEventListener('click', async () => {
       if (!form.checkValidity()) {
@@ -74,14 +216,41 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
         return;
       }
       
+      const focusAreas: {title: string, description: string}[] = [];
+      focusList?.querySelectorAll('.cms-form').forEach(el => {
+        focusAreas.push({
+          title: (el.querySelector('.f-focus-title') as HTMLInputElement).value,
+          description: (el.querySelector('.f-focus-desc') as HTMLTextAreaElement).value
+        });
+      });
+
+      const socials: {platform: string, url: string}[] = [];
+      socialsList?.querySelectorAll('.cms-form').forEach(el => {
+        socials.push({
+          platform: (el.querySelector('.f-social-platform') as HTMLInputElement).value,
+          url: (el.querySelector('.f-social-url') as HTMLInputElement).value
+        });
+      });
+
       const data = {
+        name: nameInput.value,
+        role: roleInput.value,
+        location: locInput.value,
+        tagline: taglineInput.value || undefined,
         bio: bioInput.value,
-        focusAreas: focusInput.value.split(',').map(s => s.trim()).filter(Boolean),
-        avatarUrl: avatarInput.value
+        focusAreas,
+        socials,
+        avatarUrl: avatarInput.value,
+        resumeUrl: resumeInput.value || undefined,
+        stats: {
+          projects: parseInt(statsProj.value) || 0,
+          experience: parseInt(statsExp.value) || 0,
+          techStack: parseInt(statsTech.value) || 0
+        }
       };
       
       try {
-        await CmsService.saveProfileDraft(data);
+        await CmsService.saveProfileDraft(data as any);
         showStatus('Draft saved successfully.');
       } catch (err: any) {
         showStatus('Error saving draft: ' + err.message, true);

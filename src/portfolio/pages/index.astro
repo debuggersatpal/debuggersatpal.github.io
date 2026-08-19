@@ -885,7 +885,7 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
 </style>
 
 <script>
-  import { VisitorDataService } from '../../lib/visitor-data';
+  import { PublicDataService as VisitorDataService } from '../../lib/public-fetch';
   import type { Profile, Experience, Capability, ProjectSummary, Contact } from '../../data/types';
 
   document.addEventListener('astro:page-load', () => {

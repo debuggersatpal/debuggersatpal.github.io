@@ -1,1 +1,0 @@
-import{f as e,m as t,t as n}from"./firebase.5P12s-MX.js";var r=document.getElementById(`logout-btn`),i=document.getElementById(`admin-app`),a=document.getElementById(`auth-loading`);e(n,e=>{e?(a&&(a.style.display=`none`),i&&(i.style.display=`flex`)):window.location.href=`/login/`}),r&&r.addEventListener(`click`,async()=>{await t(n),window.location.href=`/login/`});

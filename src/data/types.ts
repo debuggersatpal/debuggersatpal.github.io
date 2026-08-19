@@ -40,7 +40,7 @@ export interface Education {
 export interface ProjectSummary {
   slug: string;
   title: string;
-  category: string;
+  categories: string[];
   thumbnail: MediaReference;
   icon?: MediaReference; // For Home page cards
   description: string;

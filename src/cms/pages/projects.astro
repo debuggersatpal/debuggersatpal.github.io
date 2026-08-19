@@ -29,12 +29,24 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
         <input type="text" class="f-title" required />
       </div>
       <div class="field">
-        <label>Category</label>
-        <input type="text" class="f-category" required />
+        <label>Categories (Comma separated)</label>
+        <input type="text" class="f-category" placeholder="Web Apps, APIs" required />
       </div>
       <div class="field">
         <label>Thumbnail Media Reference</label>
         <input type="text" class="f-thumb" placeholder="/media/thumb.jpg" required />
+      </div>
+      <div class="field">
+        <label>Icon Media Reference (Optional)</label>
+        <input type="text" class="f-icon" placeholder="/media/icon.svg" />
+      </div>
+      <div class="field">
+        <label>Short Description (Summary)</label>
+        <textarea class="f-desc" rows="2" required></textarea>
+      </div>
+      <div class="field">
+        <label>Summary Technologies (Comma separated)</label>
+        <input type="text" class="f-sum-tech" placeholder="React, Node.js" required />
       </div>
       <div class="field">
         <label>Order (lower comes first)</label>
@@ -47,8 +59,12 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
         <textarea class="f-content" rows="6"></textarea>
       </div>
       <div class="field">
-        <label>Tech Stack (Comma separated)</label>
+        <label>Detail Tech Stack (Comma separated)</label>
         <input type="text" class="f-tech" placeholder="Astro, Firebase, TypeScript" />
+      </div>
+      <div class="field">
+        <label>Gallery (Comma separated media references)</label>
+        <input type="text" class="f-gallery" placeholder="/media/1.jpg, /media/2.jpg" />
       </div>
       <div class="field">
         <label>Demo URL (Optional)</label>
@@ -89,9 +105,13 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
         title: node.querySelector('.f-title') as HTMLInputElement,
         category: node.querySelector('.f-category') as HTMLInputElement,
         thumb: node.querySelector('.f-thumb') as HTMLInputElement,
+        icon: node.querySelector('.f-icon') as HTMLInputElement,
+        desc: node.querySelector('.f-desc') as HTMLTextAreaElement,
+        sumTech: node.querySelector('.f-sum-tech') as HTMLInputElement,
         order: node.querySelector('.f-order') as HTMLInputElement,
         content: node.querySelector('.f-content') as HTMLTextAreaElement,
         tech: node.querySelector('.f-tech') as HTMLInputElement,
+        gallery: node.querySelector('.f-gallery') as HTMLInputElement,
         demo: node.querySelector('.f-demo') as HTMLInputElement,
         github: node.querySelector('.f-github') as HTMLInputElement
       };
@@ -100,14 +120,18 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
         inputs.slug.value = summary.slug;
         inputs.slug.disabled = true;
         inputs.title.value = summary.title;
-        inputs.category.value = summary.category;
+        inputs.category.value = (summary.categories || []).join(', ');
         inputs.thumb.value = summary.thumbnail;
+        inputs.icon.value = summary.icon || '';
+        inputs.desc.value = summary.description || '';
+        inputs.sumTech.value = (summary.technologies || []).join(', ');
         inputs.order.value = summary.order;
       }
 
       if (detail) {
         inputs.content.value = detail.content || '';
         inputs.tech.value = (detail.techStack || []).join(', ');
+        inputs.gallery.value = (detail.gallery || []).join(', ');
         inputs.demo.value = detail.demoUrl || '';
         inputs.github.value = detail.githubUrl || '';
       }
@@ -126,8 +150,8 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
 
       node.querySelector('.save-proj-btn')?.addEventListener('click', async () => {
         const slug = inputs.slug.value.trim();
-        if (!slug || !inputs.title.value) {
-          showStatus('Slug and Title are required', true);
+        if (!slug || !inputs.title.value || !inputs.desc.value || !inputs.sumTech.value) {
+          showStatus('Slug, Title, Description, and Summary Technologies are required', true);
           return;
         }
         
@@ -135,16 +159,19 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
           await CmsService.saveProjectDraft(slug, 
             {
               title: inputs.title.value,
-              category: inputs.category.value,
+              categories: inputs.category.value.split(',').map(s => s.trim()).filter(Boolean),
               thumbnail: inputs.thumb.value,
+              icon: inputs.icon.value.trim() || undefined,
+              description: inputs.desc.value,
+              technologies: inputs.sumTech.value.split(',').map(s => s.trim()).filter(Boolean),
               order: parseInt(inputs.order.value) || 0
             },
             {
               content: inputs.content.value,
-              techStack: inputs.tech.value.split(',').map((s: string) => s.trim()).filter(Boolean).length ? inputs.tech.value.split(',').map((s: string) => s.trim()).filter(Boolean) : null,
-              gallery: null,
-              demoUrl: inputs.demo.value.trim() || null,
-              githubUrl: inputs.github.value.trim() || null
+              techStack: inputs.tech.value.split(',').map(s => s.trim()).filter(Boolean),
+              gallery: inputs.gallery.value.split(',').map(s => s.trim()).filter(Boolean),
+              demoUrl: inputs.demo.value.trim() || undefined,
+              githubUrl: inputs.github.value.trim() || undefined
             }
           );
           inputs.slug.disabled = true;

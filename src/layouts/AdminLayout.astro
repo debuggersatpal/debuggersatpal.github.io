@@ -29,6 +29,8 @@ const { title } = Astro.props;
           <a href="/profile/">Profile</a>
           <a href="/experience/">Experience</a>
           <a href="/projects/">Projects</a>
+          <a href="/capabilities/">Capabilities</a>
+          <a href="/contact/">Contact</a>
           <a href="/media/">Media</a>
           <button id="logout-btn">Logout</button>
         </nav>
@@ -45,9 +47,8 @@ const { title } = Astro.props;
       const appEl = document.getElementById('admin-app');
       const loadingEl = document.getElementById('auth-loading');
 
-      // Admin boundary guard
       onAuthStateChanged(auth, (user) => {
-        if (!user) {
+        if (!user && window.location.pathname !== '/login/') {
           window.location.href = '/login/';
         } else {
           if (loadingEl) loadingEl.style.display = 'none';
