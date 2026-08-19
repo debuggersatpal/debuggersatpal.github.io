@@ -94,7 +94,7 @@ export const publicClient = new PublicDataClient(import.meta.env.PUBLIC_FIREBASE
 
 import { mapDictionaryToArray } from './data-mapper';
 import type { Profile, Experience, ProjectSummary, Capability, Contact, ProjectDetail } from '../data/types';
-import mockDb from '../../database.json'; 
+
 
 export const PublicDataService = {
   async getProfile(onUpdate?: (data: Profile) => void): Promise<DataState<Profile>> {
@@ -132,10 +132,6 @@ export const PublicDataService = {
     return publicClient.fetchNode<Contact>('published/contact', onUpdate);
   },
   async resolveMediaUrl(path: string): Promise<string> {
-    if (!path || !path.startsWith('/media/')) return path;
-    const cleanId = path.replace('/media/', '');
-    const mediaRecord = mockDb.media.find((m: any) => m.id === cleanId);
-    if (mediaRecord && mediaRecord.url) return mediaRecord.url;
     return path; 
   }
 };
