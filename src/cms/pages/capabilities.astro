@@ -42,100 +42,146 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
     </div>
   </template>
 
-  <script>
-    import { CmsService } from '../../lib/admin/cms-service';
-    
-    const list = document.getElementById('capabilities-list');
-    const template = document.getElementById('cap-template') as HTMLTemplateElement;
-    const loading = document.getElementById('loading');
-    const status = document.getElementById('status-message');
+    <div id="empty-state" style="display: none; text-align: center; padding: 3rem; background: var(--cms-card); border-radius: var(--cms-radius); border: 1px dashed var(--cms-border);">
+      <p style="color: var(--cms-text); margin-bottom: 1rem;">No capabilities found.</p>
+      <button id="btn-add-empty" class="btn btn-primary">Add Your First Capability</button>
+    </div>
 
-    function showStatus(msg: string, isError = false) {
-      if (!status) return;
-      status.textContent = msg;
-      status.className = 'status-message ' + (isError ? 'error' : 'success');
-      setTimeout(() => status.textContent = '', 5000);
-    }
-
-    function createFormNode(data?: any) {
-      const node = template.content.cloneNode(true) as DocumentFragment;
-      const formEl = node.querySelector('.cms-form') as HTMLElement;
+    <script>
+      import { CmsService } from '../../lib/admin/cms-service';
       
-      const inputs = {
-        id: node.querySelector('.f-id') as HTMLInputElement,
-        category: node.querySelector('.f-category') as HTMLInputElement,
-        skills: node.querySelector('.f-skills') as HTMLInputElement,
-        order: node.querySelector('.f-order') as HTMLInputElement
-      };
+      const list = document.getElementById('capabilities-list');
+      const template = document.getElementById('cap-template') as HTMLTemplateElement;
+      const loading = document.getElementById('loading');
+      const status = document.getElementById('status-message');
+      const emptyState = document.getElementById('empty-state');
+      const btnPublish = document.getElementById('btn-publish') as HTMLButtonElement;
 
-      if (data) {
-        inputs.id.value = data.id;
-        inputs.id.disabled = true; 
-        inputs.category.value = data.category;
-        inputs.skills.value = (data.skills || []).join(', ');
-        inputs.order.value = data.order;
+      function checkEmpty() {
+        if (list && emptyState) {
+          emptyState.style.display = list.children.length === 0 ? 'block' : 'none';
+        }
       }
 
-      node.querySelector('.delete-btn')?.addEventListener('click', async () => {
-        if (!data) {
-          formEl.remove();
-          return;
-        }
-        if (confirm('Delete this capability draft?')) {
-          await CmsService.deleteCapabilityDraft(data.id);
-          formEl.remove();
-          showStatus('Draft deleted.');
-        }
-      });
+      function showStatus(msg: string, isError = false) {
+        if (!status) return;
+        status.textContent = msg;
+        status.className = 'status-message ' + (isError ? 'error' : 'success');
+        setTimeout(() => status.textContent = '', 5000);
+      }
 
-      node.querySelector('.save-entry-btn')?.addEventListener('click', async () => {
-        const id = inputs.id.value.trim();
-        if (!id || !inputs.category.value || !inputs.skills.value) {
-          showStatus('ID, Category, and Skills are required', true);
-          return;
-        }
+      function createFormNode(data?: any) {
+        const node = template.content.cloneNode(true) as DocumentFragment;
+        const formEl = node.querySelector('.cms-form') as HTMLElement;
         
+        const inputs = {
+          id: node.querySelector('.f-id') as HTMLInputElement,
+          category: node.querySelector('.f-category') as HTMLInputElement,
+          skills: node.querySelector('.f-skills') as HTMLInputElement,
+          order: node.querySelector('.f-order') as HTMLInputElement
+        };
+
+        if (data) {
+          inputs.id.value = data.id;
+          inputs.id.disabled = true; 
+          inputs.category.value = data.category;
+          inputs.skills.value = (data.skills || []).join(', ');
+          inputs.order.value = data.order;
+        }
+
+        const delBtn = node.querySelector('.delete-btn') as HTMLButtonElement;
+        delBtn?.addEventListener('click', async () => {
+          if (!data) {
+            formEl.remove();
+            checkEmpty();
+            return;
+          }
+          if (confirm('Are you sure you want to permanently delete this capability draft?')) {
+            const originalText = delBtn.textContent;
+            delBtn.disabled = true;
+            delBtn.textContent = 'Deleting...';
+            try {
+              await CmsService.deleteCapabilityDraft(data.id);
+              formEl.remove();
+              showStatus('Draft deleted.');
+              checkEmpty();
+            } catch (err: any) {
+              delBtn.disabled = false;
+              delBtn.textContent = originalText;
+              showStatus('Error deleting: ' + err.message, true);
+            }
+          }
+        });
+
+        const saveBtn = node.querySelector('.save-entry-btn') as HTMLButtonElement;
+        saveBtn?.addEventListener('click', async () => {
+          const id = inputs.id.value.trim();
+          if (!id || !inputs.category.value || !inputs.skills.value) {
+            showStatus('ID, Category, and Skills are required', true);
+            return;
+          }
+          
+          const originalText = saveBtn.textContent;
+          saveBtn.disabled = true;
+          saveBtn.textContent = 'Saving...';
+
+          try {
+            const skillsArr = inputs.skills.value.split(',').map(s => s.trim()).filter(Boolean);
+            await CmsService.saveCapabilityDraft(id, {
+              category: inputs.category.value,
+              skills: skillsArr,
+              order: parseInt(inputs.order.value) || 0
+            });
+            inputs.id.disabled = true;
+            data = { id };
+            showStatus(`Saved draft: ${id}`);
+          } catch (err: any) {
+            showStatus('Error saving: ' + err.message, true);
+          } finally {
+            saveBtn.disabled = false;
+            saveBtn.textContent = originalText;
+          }
+        });
+
+        return formEl;
+      }
+
+      async function init() {
         try {
-          const skillsArr = inputs.skills.value.split(',').map(s => s.trim()).filter(Boolean);
-          await CmsService.saveCapabilityDraft(id, {
-            category: inputs.category.value,
-            skills: skillsArr,
-            order: parseInt(inputs.order.value) || 0
-          });
-          inputs.id.disabled = true;
-          showStatus(`Saved draft: ${id}`);
+          const drafts = await CmsService.getCapabilitiesDrafts();
+          drafts.forEach(d => list?.appendChild(createFormNode(d)));
+          checkEmpty();
         } catch (err: any) {
-          showStatus('Error saving: ' + err.message, true);
+          showStatus('Failed to load drafts: ' + err.message, true);
+        } finally {
+          if (loading) loading.style.display = 'none';
+        }
+      }
+
+      const handleAdd = () => {
+        list?.prepend(createFormNode());
+        checkEmpty();
+      };
+      
+      document.getElementById('btn-add')?.addEventListener('click', handleAdd);
+      document.getElementById('btn-add-empty')?.addEventListener('click', handleAdd);
+
+      btnPublish?.addEventListener('click', async () => {
+        if (!confirm('This will immediately update the live public portfolio with these drafts. Proceed?')) return;
+        const originalText = btnPublish.textContent;
+        btnPublish.disabled = true;
+        btnPublish.textContent = 'Publishing...';
+        try {
+          await CmsService.triggerServerPublish('capabilities');
+          showStatus('Published successfully to live site!');
+        } catch (err: any) {
+          showStatus(err.message, true);
+        } finally {
+          btnPublish.disabled = false;
+          btnPublish.textContent = originalText;
         }
       });
 
-      return formEl;
-    }
-
-    async function init() {
-      try {
-        const drafts = await CmsService.getCapabilitiesDrafts();
-        drafts.forEach(d => list?.appendChild(createFormNode(d)));
-      } catch (err: any) {
-        showStatus('Failed to load drafts: ' + err.message, true);
-      } finally {
-        if (loading) loading.style.display = 'none';
-      }
-    }
-
-    document.getElementById('btn-add')?.addEventListener('click', () => {
-      list?.prepend(createFormNode());
-    });
-
-    document.getElementById('btn-publish')?.addEventListener('click', async () => {
-      try {
-        await CmsService.triggerServerPublish('capabilities');
-        showStatus('Published successfully to live site!');
-      } catch (err: any) {
-        showStatus(err.message, true);
-      }
-    });
-
-    init();
-  </script>
+      init();
+    </script>
 </AdminLayout>

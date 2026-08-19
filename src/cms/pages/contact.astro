@@ -110,12 +110,17 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
 
     document.getElementById('btn-add-social')?.addEventListener('click', () => addSocialNode());
 
-    document.getElementById('btn-save')?.addEventListener('click', async () => {
+    const btnSave = document.getElementById('btn-save') as HTMLButtonElement;
+    btnSave?.addEventListener('click', async () => {
       if (!form.checkValidity()) {
         form.reportValidity();
         return;
       }
       
+      const originalText = btnSave.textContent;
+      btnSave.disabled = true;
+      btnSave.textContent = 'Saving...';
+
       const socials: any[] = [];
       socialsList?.querySelectorAll('.cms-form').forEach(el => {
         socials.push({
@@ -136,15 +141,26 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
         showStatus('Draft saved successfully.');
       } catch (err: any) {
         showStatus('Error saving draft: ' + err.message, true);
+      } finally {
+        btnSave.disabled = false;
+        btnSave.textContent = originalText;
       }
     });
 
-    document.getElementById('btn-publish')?.addEventListener('click', async () => {
+    const btnPublish = document.getElementById('btn-publish') as HTMLButtonElement;
+    btnPublish?.addEventListener('click', async () => {
+      if (!confirm('This will immediately update the live public portfolio with these drafts. Proceed?')) return;
+      const originalText = btnPublish.textContent;
+      btnPublish.disabled = true;
+      btnPublish.textContent = 'Publishing...';
       try {
         await CmsService.triggerServerPublish('contact');
         showStatus('Published successfully to live site!');
       } catch (err: any) {
         showStatus(err.message, true); 
+      } finally {
+        btnPublish.disabled = false;
+        btnPublish.textContent = originalText;
       }
     });
 

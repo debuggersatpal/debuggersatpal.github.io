@@ -54,111 +54,155 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
     </div>
   </template>
 
-  <script>
-    import { CmsService } from '../../lib/admin/cms-service';
-    
-    const list = document.getElementById('experience-list');
-    const template = document.getElementById('exp-template') as HTMLTemplateElement;
-    const loading = document.getElementById('loading');
-    const status = document.getElementById('status-message');
+    <div id="empty-state" style="display: none; text-align: center; padding: 3rem; background: var(--cms-card); border-radius: var(--cms-radius); border: 1px dashed var(--cms-border);">
+      <p style="color: var(--cms-text); margin-bottom: 1rem;">No experience entries found.</p>
+      <button id="btn-add-empty" class="btn btn-primary">Add Your First Entry</button>
+    </div>
 
-    function showStatus(msg: string, isError = false) {
-      if (!status) return;
-      status.textContent = msg;
-      status.className = 'status-message ' + (isError ? 'error' : 'success');
-      setTimeout(() => status.textContent = '', 5000);
-    }
-
-    function createFormNode(data?: any) {
-      const node = template.content.cloneNode(true) as DocumentFragment;
-      const formEl = node.querySelector('.cms-form') as HTMLElement;
+    <script>
+      import { CmsService } from '../../lib/admin/cms-service';
       
-      const inputs = {
-        id: node.querySelector('.f-id') as HTMLInputElement,
-        role: node.querySelector('.f-role') as HTMLInputElement,
-        company: node.querySelector('.f-company') as HTMLInputElement,
-        period: node.querySelector('.f-period') as HTMLInputElement,
-        desc: node.querySelector('.f-desc') as HTMLTextAreaElement,
-        tech: node.querySelector('.f-tech') as HTMLInputElement,
-        order: node.querySelector('.f-order') as HTMLInputElement
+      const list = document.getElementById('experience-list');
+      const template = document.getElementById('exp-template') as HTMLTemplateElement;
+      const loading = document.getElementById('loading');
+      const status = document.getElementById('status-message');
+      const emptyState = document.getElementById('empty-state');
+      const btnPublish = document.getElementById('btn-publish') as HTMLButtonElement;
+
+      function checkEmpty() {
+        if (list && emptyState) {
+          emptyState.style.display = list.children.length === 0 ? 'block' : 'none';
+        }
+      }
+
+      function showStatus(msg: string, isError = false) {
+        if (!status) return;
+        status.textContent = msg;
+        status.className = 'status-message ' + (isError ? 'error' : 'success');
+        setTimeout(() => status.textContent = '', 5000);
+      }
+
+      function createFormNode(data?: any) {
+        const node = template.content.cloneNode(true) as DocumentFragment;
+        const formEl = node.querySelector('.cms-form') as HTMLElement;
+        
+        const inputs = {
+          id: node.querySelector('.f-id') as HTMLInputElement,
+          role: node.querySelector('.f-role') as HTMLInputElement,
+          company: node.querySelector('.f-company') as HTMLInputElement,
+          period: node.querySelector('.f-period') as HTMLInputElement,
+          desc: node.querySelector('.f-desc') as HTMLTextAreaElement,
+          tech: node.querySelector('.f-tech') as HTMLInputElement,
+          order: node.querySelector('.f-order') as HTMLInputElement
+        };
+
+        if (data) {
+          inputs.id.value = data.id;
+          inputs.id.disabled = true; 
+          inputs.role.value = data.role;
+          inputs.company.value = data.company;
+          inputs.period.value = data.period;
+          inputs.desc.value = data.description;
+          inputs.tech.value = (data.technologies || []).join(', ');
+          inputs.order.value = data.order;
+        }
+
+        const delBtn = node.querySelector('.delete-btn') as HTMLButtonElement;
+        delBtn?.addEventListener('click', async () => {
+          if (!data) {
+            formEl.remove();
+            checkEmpty();
+            return;
+          }
+          if (confirm('Are you sure you want to permanently delete this experience draft?')) {
+            const originalText = delBtn.textContent;
+            delBtn.disabled = true;
+            delBtn.textContent = 'Deleting...';
+            try {
+              await CmsService.deleteExperienceDraft(data.id);
+              formEl.remove();
+              showStatus('Draft deleted.');
+              checkEmpty();
+            } catch (err: any) {
+              delBtn.disabled = false;
+              delBtn.textContent = originalText;
+              showStatus('Error deleting: ' + err.message, true);
+            }
+          }
+        });
+
+        const saveBtn = node.querySelector('.save-entry-btn') as HTMLButtonElement;
+        saveBtn?.addEventListener('click', async () => {
+          const id = inputs.id.value.trim();
+          if (!id || !inputs.role.value) {
+            showStatus('ID and Role are required', true);
+            return;
+          }
+          
+          const originalText = saveBtn.textContent;
+          saveBtn.disabled = true;
+          saveBtn.textContent = 'Saving...';
+
+          try {
+            const techArr = inputs.tech.value.split(',').map(s => s.trim()).filter(Boolean);
+            await CmsService.saveExperienceDraft(id, {
+              role: inputs.role.value,
+              company: inputs.company.value,
+              period: inputs.period.value,
+              description: inputs.desc.value,
+              technologies: techArr.length ? techArr : undefined,
+              order: parseInt(inputs.order.value) || 0
+            });
+            inputs.id.disabled = true;
+            data = { id }; // promote to saved entity
+            showStatus(`Saved draft: ${id}`);
+          } catch (err: any) {
+            showStatus('Error saving: ' + err.message, true);
+          } finally {
+            saveBtn.disabled = false;
+            saveBtn.textContent = originalText;
+          }
+        });
+
+        return formEl;
+      }
+
+      async function init() {
+        try {
+          const drafts = await CmsService.getExperienceDrafts();
+          drafts.forEach(d => list?.appendChild(createFormNode(d)));
+          checkEmpty();
+        } catch (err: any) {
+          showStatus('Failed to load drafts: ' + err.message, true);
+        } finally {
+          if (loading) loading.style.display = 'none';
+        }
+      }
+
+      const handleAdd = () => {
+        list?.prepend(createFormNode());
+        checkEmpty();
       };
 
-      if (data) {
-        inputs.id.value = data.id;
-        inputs.id.disabled = true; 
-        inputs.role.value = data.role;
-        inputs.company.value = data.company;
-        inputs.period.value = data.period;
-        inputs.desc.value = data.description;
-        inputs.tech.value = (data.technologies || []).join(', ');
-        inputs.order.value = data.order;
-      }
+      document.getElementById('btn-add')?.addEventListener('click', handleAdd);
+      document.getElementById('btn-add-empty')?.addEventListener('click', handleAdd);
 
-      node.querySelector('.delete-btn')?.addEventListener('click', async () => {
-        if (!data) {
-          formEl.remove();
-          return;
-        }
-        if (confirm('Delete this experience draft?')) {
-          await CmsService.deleteExperienceDraft(data.id);
-          formEl.remove();
-          showStatus('Draft deleted.');
-        }
-      });
-
-      node.querySelector('.save-entry-btn')?.addEventListener('click', async () => {
-        const id = inputs.id.value.trim();
-        if (!id || !inputs.role.value) {
-          showStatus('ID and Role are required', true);
-          return;
-        }
-        
+      btnPublish?.addEventListener('click', async () => {
+        if (!confirm('This will immediately update the live public portfolio with these drafts. Proceed?')) return;
+        const originalText = btnPublish.textContent;
+        btnPublish.disabled = true;
+        btnPublish.textContent = 'Publishing...';
         try {
-          const techArr = inputs.tech.value.split(',').map(s => s.trim()).filter(Boolean);
-          await CmsService.saveExperienceDraft(id, {
-            role: inputs.role.value,
-            company: inputs.company.value,
-            period: inputs.period.value,
-            description: inputs.desc.value,
-            technologies: techArr.length ? techArr : undefined,
-            order: parseInt(inputs.order.value) || 0
-          });
-          inputs.id.disabled = true;
-          showStatus(`Saved draft: ${id}`);
+          await CmsService.triggerServerPublish('experience');
+          showStatus('Published successfully to live site!');
         } catch (err: any) {
-          showStatus('Error saving: ' + err.message, true);
+          showStatus(err.message, true);
+        } finally {
+          btnPublish.disabled = false;
+          btnPublish.textContent = originalText;
         }
       });
 
-      return formEl;
-    }
-
-    async function init() {
-      try {
-        const drafts = await CmsService.getExperienceDrafts();
-        drafts.forEach(d => list?.appendChild(createFormNode(d)));
-      } catch (err: any) {
-        const { auth } = await import('../../lib/admin/firebase');
-        console.warn('[CMS Diagnostics] Authenticated UID:', auth.currentUser?.uid);
-        showStatus('Failed to load drafts: ' + err.message, true);
-      } finally {
-        if (loading) loading.style.display = 'none';
-      }
-    }
-
-    document.getElementById('btn-add')?.addEventListener('click', () => {
-      list?.prepend(createFormNode());
-    });
-
-    document.getElementById('btn-publish')?.addEventListener('click', async () => {
-      try {
-        await CmsService.triggerServerPublish('experience');
-        showStatus('Published successfully to live site!');
-      } catch (err: any) {
-        showStatus(err.message, true);
-      }
-    });
-
-    init();
-  </script>
+      init();
+    </script>
 </AdminLayout>

@@ -2,13 +2,49 @@
 import AdminLayout from '../../layouts/AdminLayout.astro';
 ---
 <AdminLayout title="Dashboard">
-  <h1>Dashboard</h1>
+  <div class="cms-header">
+    <h1>Welcome, Admin</h1>
+  </div>
+  
   <p style="color: var(--cms-text); margin-top: 0.5rem; font-size: 1.125rem;">
-    Welcome to the Portfolio CMS. Select a module from the sidebar to author content.
+    Here is an overview of your portfolio content. Select a module below to start editing.
   </p>
   
-  <div class="cms-form" style="margin-top: 3rem;">
+  <div class="media-grid" style="margin-top: 2rem;">
+    <!-- Content Cards -->
+    <a href="/profile/" class="item-card" style="text-decoration: none; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem; text-align: center;">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--cms-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 1rem;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+      <h3 style="color: var(--cms-text-heading); font-size: 1.125rem; margin-bottom: 0.5rem;">Profile & SEO</h3>
+      <p style="color: var(--cms-text); font-size: 0.875rem;">Manage your name, bio, and social links.</p>
+    </a>
+
+    <a href="/experience/" class="item-card" style="text-decoration: none; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem; text-align: center;">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--cms-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 1rem;"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+      <h3 style="color: var(--cms-text-heading); font-size: 1.125rem; margin-bottom: 0.5rem;">Experience</h3>
+      <p style="color: var(--cms-text); font-size: 0.875rem;">Add or update your work history.</p>
+    </a>
+
+    <a href="/projects/" class="item-card" style="text-decoration: none; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem; text-align: center;">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--cms-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 1rem;"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+      <h3 style="color: var(--cms-text-heading); font-size: 1.125rem; margin-bottom: 0.5rem;">Projects</h3>
+      <p style="color: var(--cms-text); font-size: 0.875rem;">Showcase your portfolio works.</p>
+    </a>
+
+    <a href="/capabilities/" class="item-card" style="text-decoration: none; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem; text-align: center;">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--cms-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 1rem;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+      <h3 style="color: var(--cms-text-heading); font-size: 1.125rem; margin-bottom: 0.5rem;">Capabilities</h3>
+      <p style="color: var(--cms-text); font-size: 0.875rem;">List your skills and services.</p>
+    </a>
+
+    <a href="/media/" class="item-card" style="text-decoration: none; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem; text-align: center;">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--cms-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 1rem;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+      <h3 style="color: var(--cms-text-heading); font-size: 1.125rem; margin-bottom: 0.5rem;">Media Assets</h3>
+      <p style="color: var(--cms-text); font-size: 0.875rem;">Upload and manage images.</p>
+    </a>
+  </div>
+  
+  <div class="cms-form" style="margin-top: 3rem; border-left: 4px solid var(--cms-primary);">
     <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--cms-text-heading); margin-bottom: 0.5rem;">CMS Architecture Active</h3>
-    <p style="color: var(--cms-text); line-height: 1.6;">This CMS natively enforces draft and published isolation. Draft changes made in the sidebar modules will not impact the live visitor portfolio until a trusted edge publishing mechanism is triggered.</p>
+    <p style="color: var(--cms-text); line-height: 1.6;">This CMS natively enforces draft and published isolation. Draft changes made in the modules will not impact the live visitor portfolio until you explicitly click <strong>Publish to Live</strong>.</p>
   </div>
 </AdminLayout>

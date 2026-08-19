@@ -42,11 +42,19 @@ import '../../styles/global.css';
 
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
+        
+        const btn = form.querySelector('button') as HTMLButtonElement;
+        const originalText = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = 'Logging in...';
+
         try {
           await signInWithEmailAndPassword(auth, emailInput.value, passInput.value);
           window.location.href = '/';
         } catch (err: any) {
           if (errorMsg) errorMsg.textContent = err.message;
+          btn.disabled = false;
+          btn.textContent = originalText;
         }
       });
     </script>
@@ -138,8 +146,13 @@ import '../../styles/global.css';
     margin-top: 0.5rem;
   }
   
-  button:hover {
+  button:hover:not(:disabled) {
     background: var(--cms-primary-hover);
+  }
+  
+  button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
   }
   
   .error {
