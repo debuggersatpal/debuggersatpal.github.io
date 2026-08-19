@@ -7,8 +7,11 @@
     <div id="hero-profile" style="display: flex; flex-direction: column; gap: var(--space-6);">
       
       <!-- Top Section: Identity -->
-      <div class="identity-section" style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: var(--space-2);">
-        <img id="hero-avatar" alt="Avatar" style="width: 140px; height: 140px; border-radius: var(--radius-full); object-fit: cover; display: block; background-color: var(--bg-inset); margin-bottom: var(--space-2);" />
+      <div class="identity-section" style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: var(--space-3);">
+        <div class="avatar-wrapper" style="margin-bottom: var(--space-2);">
+          <img id="hero-avatar" alt="Avatar" style="width: 160px; height: 160px; border-radius: var(--radius-full); object-fit: cover; display: block; background-color: var(--bg-inset);" />
+          <div class="status-dot"></div>
+        </div>
         
         <h1 id="hero-name" style="font-size: 2.25rem; font-weight: 800; line-height: 1.1; letter-spacing: -0.02em;">SATPAL</h1>
         
@@ -30,7 +33,7 @@
         <h3 style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-primary);">About Me</h3>
         <p id="hero-bio" style="color: var(--text-secondary); line-height: 1.6; font-size: 0.9375rem;"></p>
         
-        <a id="hero-resume" href="#" target="_blank" class="resume-btn" style="display: none; margin-top: var(--space-2); padding: var(--space-2) var(--space-4); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); text-align: center; text-decoration: none; color: var(--text-primary); font-weight: 500; font-size: 0.875rem; display: flex; justify-content: center; align-items: center; gap: var(--space-2);">
+        <a id="hero-resume" href="#" target="_blank" class="resume-btn" style="display: none;">
           Download Resume
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
         </a>
@@ -170,7 +173,66 @@
     padding: var(--space-4);
   }
 
-  @media (min-width: 768px) {
+  .resume-btn {
+    margin-top: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-full);
+    text-align: center;
+    text-decoration: none;
+    color: var(--text-primary);
+    background: color-mix(in srgb, var(--bg-surface) 80%, transparent);
+    font-weight: 500;
+    font-size: 0.875rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-2);
+    transition: all var(--transition-base);
+  }
+  .resume-btn:hover {
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 10px var(--accent-glow);
+    color: var(--accent-primary);
+    transform: translateY(-2px);
+  }
+
+  .avatar-wrapper {
+    position: relative;
+    padding: 6px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-tertiary), var(--accent-primary));
+    display: inline-block;
+  }
+  
+  .avatar-wrapper::after {
+    content: "";
+    position: absolute;
+    inset: 4px;
+    border-radius: 50%;
+    background: var(--bg-surface);
+    z-index: 1;
+  }
+
+  .avatar-wrapper img {
+    position: relative;
+    z-index: 2;
+  }
+
+  .status-dot {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    width: 16px;
+    height: 16px;
+    background-color: #10B981; /* Emerald/Green */
+    border: 3px solid var(--bg-surface);
+    border-radius: 50%;
+    z-index: 3;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+  }
+
+  @media (min-width: 1024px) {
     .desktop-only {
       display: flex !important;
     }
@@ -179,12 +241,11 @@
     }
     .hero-region {
       position: fixed;
-      top: 64px;
+      top: 72px;
       left: 0;
       width: var(--hero-width-desktop);
-      height: calc(100vh - 64px);
+      height: calc(100vh - 72px);
       border-bottom: none;
-      border-right: 1px solid var(--border-subtle);
       overflow-y: auto;
       padding: var(--space-8);
       display: flex;

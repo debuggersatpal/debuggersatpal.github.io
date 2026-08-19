@@ -10,12 +10,58 @@ html {
 
 body {
   background-color: var(--bg-main);
+  background-image: radial-gradient(circle at top right, rgba(139, 92, 246, 0.03) 0%, transparent 40%),
+                    radial-gradient(circle at bottom left, rgba(6, 182, 212, 0.03) 0%, transparent 40%);
+  background-attachment: fixed;
   transition: background-color var(--transition-base), color var(--transition-base);
 }
 
 ::selection {
   background-color: var(--accent-primary-bg);
   color: var(--accent-primary);
+}
+
+/* ===== Custom Scrollbar ===== */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-main);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: var(--radius-full);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-primary);
+}
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) var(--bg-main);
+}
+html.dark {
+  scrollbar-color: var(--border-strong) var(--bg-main);
+}
+
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--accent-primary);
+  color: white;
+  padding: 8px;
+  z-index: 100;
+  transition: top 0.2s;
+}
+.skip-link:focus {
+  top: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+  border-radius: inherit;
 }
 
 /* ===== Animations & Smooth UX ===== */

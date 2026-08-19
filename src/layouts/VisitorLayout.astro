@@ -25,11 +25,12 @@ const { title, description = "Satpal's portfolio showcasing my web, Android, and
     <meta name="description" content={description} />
     <title>{title}</title>
   </head>
-  <body>
+  <body class="antialiased">
+    <a href="#main-content" class="skip-link">Skip to main content</a>
     <SiteHeader />
     <div class="visitor-layout">
       <Hero />
-      <main class="main-content">
+      <main id="main-content" class="main-content">
         <slot />
       </main>
     </div>
@@ -76,7 +77,7 @@ const { title, description = "Satpal's portfolio showcasing my web, Android, and
   }
 
   /* Desktop Layout */
-  @media (min-width: 768px) {
+  @media (min-width: 1024px) {
     .visitor-layout {
       min-height: calc(100vh - 64px);
       flex-direction: row;
@@ -85,9 +86,9 @@ const { title, description = "Satpal's portfolio showcasing my web, Android, and
     .main-content {
       /* Pushes content right of the fixed Hero */
       margin-left: var(--hero-width-desktop);
-      padding: var(--space-8) var(--space-12);
+      padding: var(--space-4) var(--space-12) var(--space-8);
       width: calc(100% - var(--hero-width-desktop));
-      max-width: 1400px; /* Constrain wide desktop */
+      max-width: 1200px; /* Constrain wide desktop */
     }
   }
 </style>

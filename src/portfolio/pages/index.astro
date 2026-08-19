@@ -8,13 +8,13 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
   <div id="about">
     <section class="about-page">
     <div class="page-header fade-up">
-      <h1 class="page-title">About Me</h1>
+      <h1 class="page-title"><span class="title-accent">A</span>bout Me <span class="heading-sparkle">✦</span></h1>
       <p class="page-subtitle">A brief story about me and my experience.</p>
     </div>
 
     <!-- Focus Areas -->
     <div class="section-container fade-up" style="margin-top: var(--space-8);">
-      <h2 class="section-heading">Focus Areas</h2>
+      <h2 class="section-heading">Focus Areas <span class="heading-sparkle">✦</span></h2>
       <div id="focus-container" class="focus-grid">
         <p id="focus-loading" style="color: var(--text-secondary);">Loading focus areas...</p>
       </div>
@@ -22,7 +22,7 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
 
     <!-- Experience Timeline -->
     <div id="experience" class="section-container fade-up" style="margin-top: var(--space-12);">
-      <h2 class="section-heading">Experience</h2>
+      <h2 class="section-heading">Experience <span class="heading-sparkle">✦</span></h2>
       <div id="timeline-container" class="timeline-list">
         <p id="timeline-loading" style="color: var(--text-secondary);">Loading experience...</p>
       </div>
@@ -30,7 +30,7 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
 
     <!-- Skills -->
     <div id="skills" class="section-container fade-up" style="margin-top: var(--space-12); margin-bottom: var(--space-12);">
-      <h2 class="section-heading">Skills & Technologies</h2>
+      <h2 class="section-heading">Skills & Technologies <span class="heading-sparkle">✦</span></h2>
       <div id="skills-container" class="skills-grid">
         <p id="skills-loading" style="color: var(--text-secondary);">Loading skills...</p>
       </div>
@@ -41,7 +41,7 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
   <!-- PROJECTS SECTION -->
   <div id="projects" style="margin-top: var(--space-16);">
     <section class="projects-section fade-up">
-    <h1 class="section-title">All Projects & Works</h1>
+      <h1 class="page-title"><span class="title-accent">A</span>ll Projects & Works <span class="heading-sparkle">✦</span></h1>
     <p class="section-subtitle">Browse every project I've worked on.</p>
 
     <div class="filter-pills" id="projects-filters">
@@ -62,23 +62,25 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
   </div>
 
   <!-- CONTACT SECTION -->
-  <div id="contact" style="margin-top: var(--space-16); margin-bottom: var(--space-16);">
+  <div id="contact" style="margin-top: var(--space-12); margin-bottom: var(--space-8);">
     <section class="contact-page">
-    <div class="page-header fade-up">
-      <h1 class="page-title">Get in Touch</h1>
+    <div class="page-header fade-up" style="margin-bottom: var(--space-6);">
+      <h1 class="page-title"><span class="title-accent">G</span>et in Touch <span class="heading-sparkle">✦</span></h1>
       <p class="page-subtitle">Let's work together or just say hi!</p>
     </div>
 
     <div id="contact-container" class="contact-content fade-up">
       <p id="contact-loading" style="color: var(--text-secondary);">Loading contact information...</p>
       
-      <div id="email-section" style="display: none;">
-        <h2 class="section-heading">Email</h2>
+      <div id="email-section" style="display: none; margin-bottom: var(--space-6);">
+        <h2 class="section-heading" style="margin-bottom: var(--space-3); font-size: 1.125rem;">Email</h2>
         <div class="email-card fade-up">
           <div class="email-info">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="email-icon"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+            <div class="email-icon-wrapper">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="email-icon"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+            </div>
             <div>
-              <p class="email-label">Drop me a line</p>
+              <p class="email-label">Email</p>
               <p id="contact-email" class="email-address"></p>
             </div>
           </div>
@@ -89,20 +91,33 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
         </div>
       </div>
 
-      <div id="socials-section" style="display: none; margin-top: var(--space-8);">
-        <h2 class="section-heading">Socials</h2>
+      <div id="socials-section" style="display: none; margin-top: var(--space-6);">
+        <h2 class="section-heading" style="margin-bottom: var(--space-3); font-size: 1.125rem;">Socials</h2>
         <div id="socials-grid" class="socials-grid"></div>
       </div>
     </div>
   </section>
   </div>
 
+  <footer class="site-footer fade-up">
+    <div class="footer-inner">
+      <p>© 2026</p>
+    </div>
+  </footer>
+
+  <button id="scroll-top-btn" class="scroll-top-btn" aria-label="Scroll to top">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
+  </button>
+
 </VisitorLayout>
 
 <!-- Templates for Vanilla JS DOM hydration -->
 <template id="focus-template">
   <div class="focus-card fade-up">
-    <h3 class="focus-title"></h3>
+    <div class="focus-header">
+      <div class="focus-icon-box"></div>
+      <h3 class="focus-title"></h3>
+    </div>
     <p class="focus-desc"></p>
   </div>
 </template>
@@ -111,11 +126,15 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
   <div class="timeline-item fade-up">
     <div class="timeline-period-col">
       <p class="timeline-period"></p>
+    </div>
+    <div class="timeline-dot-wrapper">
+      <div class="timeline-dot"></div>
       <div class="timeline-line"></div>
     </div>
     <div class="timeline-content-col">
       <h3 class="timeline-role"></h3>
       <p class="timeline-company"></p>
+      <p class="timeline-period-mobile"></p>
       <ul class="timeline-bullets"></ul>
       <div class="timeline-techs"></div>
     </div>
@@ -123,9 +142,12 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
 </template>
 
 <template id="skill-group-template">
-  <div class="skill-group fade-up">
-    <h3 class="skill-category"></h3>
-    <div class="skill-pills"></div>
+  <div class="skill-group-card fade-up">
+    <div class="skill-category-header">
+      <div class="skill-category-icon"></div>
+      <h3 class="skill-category"></h3>
+    </div>
+    <div class="skill-list"></div>
   </div>
 </template>
 
@@ -207,7 +229,7 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
   /* Focus Areas */
   .focus-grid {
     display: grid;
-    gap: var(--space-4);
+    gap: var(--space-6);
     grid-template-columns: 1fr;
   }
   @media (min-width: 640px) {
@@ -215,18 +237,65 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
       grid-template-columns: repeat(2, 1fr);
     }
   }
+  @media (min-width: 1024px) {
+    .focus-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .title-accent {
+    color: var(--accent-tertiary);
+  }
+
+  .heading-sparkle {
+    color: var(--accent-primary);
+    font-size: 0.8em;
+    vertical-align: middle;
+    filter: drop-shadow(0 0 8px var(--accent-glow));
+    display: inline-block;
+    margin-left: var(--space-2);
+  }
 
   .focus-card {
     background: var(--bg-surface);
     border: 1px solid var(--border-subtle);
     padding: var(--space-6);
     border-radius: var(--radius-xl);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .focus-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--card-accent, transparent), transparent);
+    opacity: 0.5;
+  }
+
+  .focus-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-3);
+  }
+
+  .focus-icon-box {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   
   .focus-title {
     font-size: 1.125rem;
     font-weight: 700;
-    margin: 0 0 var(--space-2) 0;
+    margin: 0;
   }
 
   .focus-desc {
@@ -240,28 +309,57 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
   .timeline-list {
     display: flex;
     flex-direction: column;
-    gap: 0;
+    gap: var(--space-8);
+    position: relative;
   }
 
   .timeline-item {
     display: flex;
-    flex-direction: row;
     gap: var(--space-6);
-    position: relative;
-    padding-bottom: var(--space-8);
   }
 
-  .timeline-item:last-child {
-    padding-bottom: 0;
+  .timeline-dot-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 24px;
+    flex-shrink: 0;
   }
+
+  .timeline-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--bg-surface);
+    border: 2px solid var(--accent-primary);
+    box-shadow: 0 0 10px var(--accent-glow);
+    z-index: 2;
+    margin-top: 6px;
+  }
+
+  .timeline-line {
+    flex: 1;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--accent-primary), transparent);
+    margin-top: 4px;
+    margin-bottom: -32px; /* Extend to next item */
+    opacity: 0.5;
+  }
+
   .timeline-item:last-child .timeline-line {
     display: none;
   }
 
+  .timeline-content-col {
+    flex: 1;
+    padding-bottom: var(--space-4);
+  }
+
   .timeline-period-col {
+    display: none;
     flex: 0 0 120px;
-    position: relative;
-    padding-top: var(--space-1);
+    padding-top: 4px;
+    text-align: right;
   }
 
   .timeline-period {
@@ -271,30 +369,21 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
     margin: 0;
   }
 
-  .timeline-line {
-    position: absolute;
-    top: 24px;
-    bottom: -8px;
-    left: 8px; /* rough center alignment depending on layout */
-    width: 2px;
-    background: var(--border-subtle);
-    display: none; /* simple version for mobile, maybe visible on desktop */
+  .timeline-period-mobile {
+    display: block;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    margin: 0 0 var(--space-4) 0;
   }
 
   @media (min-width: 768px) {
-    .timeline-line {
+    .timeline-period-col {
       display: block;
-      left: auto;
-      right: -12px;
     }
-    .timeline-period {
-      text-align: right;
-      padding-right: var(--space-6);
+    .timeline-period-mobile {
+      display: none;
     }
-  }
-
-  .timeline-content-col {
-    flex: 1;
   }
 
   .timeline-role {
@@ -312,7 +401,6 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
 
   .timeline-bullets {
     margin: var(--space-4) 0 0 0;
-    padding-left: var(--space-4);
     color: var(--text-secondary);
     font-size: 0.9375rem;
     line-height: 1.6;
@@ -350,29 +438,44 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
     }
   }
 
+  .skill-group-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4) var(--space-6);
+  }
+
+  .skill-category-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-3);
+  }
+
+  .skill-category-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .skill-category {
     font-size: 1.125rem;
     font-weight: 700;
-    margin-bottom: var(--space-4);
+    margin: 0;
     color: var(--text-primary);
   }
 
-  .skill-pills {
+  .skill-list {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-2);
+    gap: var(--space-3);
   }
 
-  .skill-pill {
-    background: var(--bg-surface);
-    border: 1px solid var(--border-subtle);
-    padding: 6px 16px;
-    border-radius: var(--radius-full);
-    font-size: 0.875rem;
-    font-weight: 500;
+  .skill-text-item {
+    font-size: 0.9375rem;
     color: var(--text-secondary);
+    font-weight: 500;
   }
-
 
   .projects-section {
     display: flex;
@@ -420,9 +523,10 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
   }
 
   .filter-pill.active {
-    background: var(--text-primary);
-    border-color: var(--text-primary);
-    color: var(--bg-surface);
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
+    color: #fff;
+    box-shadow: 0 0 10px var(--accent-glow);
   }
 
   .projects-grid {
@@ -433,6 +537,11 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
   @media (min-width: 640px) {
     .projects-grid {
       grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1024px) {
+    .projects-grid {
+      grid-template-columns: repeat(3, 1fr);
     }
   }
 
@@ -522,13 +631,13 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
     align-items: center;
     gap: var(--space-2);
     text-decoration: none;
-    color: var(--text-primary);
+    color: var(--accent-primary);
     font-weight: 600;
     font-size: 0.875rem;
-    transition: color var(--transition-fast);
+    transition: opacity var(--transition-fast);
   }
   .demo-link:hover {
-    color: var(--accent-primary);
+    opacity: 0.8;
   }
 
   .github-link {
@@ -579,10 +688,11 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
     padding: var(--space-4) var(--space-6);
     border-radius: var(--radius-xl);
     transition: all var(--transition-base);
+    max-width: 480px;
   }
   .email-card:hover {
-    border-color: var(--border-strong);
-    box-shadow: var(--shadow-sm);
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 15px var(--accent-glow);
   }
 
   .email-info {
@@ -591,8 +701,19 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
     gap: var(--space-4);
   }
 
+  .email-icon-wrapper {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--accent-primary-bg);
+    color: var(--accent-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .email-icon {
-    color: var(--text-secondary);
+    color: inherit;
   }
 
   .email-label {
@@ -629,7 +750,7 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
 
   .socials-grid {
     display: grid;
-    gap: var(--space-4);
+    gap: var(--space-6);
     grid-template-columns: 1fr;
   }
   @media (min-width: 640px) {
@@ -638,7 +759,7 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
     }
   }
 
-  .social-card {
+  :global(.social-card) {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -650,22 +771,54 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
     color: inherit;
     transition: all var(--transition-base);
   }
-  .social-card:hover {
+  :global(.social-card:hover) {
     transform: translateY(-2px);
-    box-shadow: var(--shadow-sm);
-    border-color: var(--border-strong);
+    box-shadow: 0 0 15px var(--accent-glow);
+    border-color: var(--accent-primary);
   }
 
-  .social-card-content {
+  :global(.social-card-content) {
     display: flex;
     align-items: center;
     gap: var(--space-4);
+    min-width: 0;
   }
 
-  .social-handle {
+  :global(.social-text) {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  :global(.social-icon-wrapper) {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-lg);
+    background: var(--bg-inset);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-primary);
+  }
+
+  :global(.social-platform-name) {
     font-size: 1.125rem;
     font-weight: 700;
     margin: 0 0 2px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  :global(.social-handle) {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  :global(.external-icon) {
+    flex-shrink: 0;
   }
 
   .social-desc {
@@ -682,6 +835,46 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
     color: var(--text-primary);
   }
 
+  .site-footer {
+    margin-top: var(--space-16);
+    border-top: 1px solid var(--border-subtle);
+    padding: var(--space-8) 0;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+  }
+
+  .scroll-top-btn {
+    position: fixed;
+    bottom: var(--space-8);
+    right: var(--space-8);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-base);
+    opacity: 0;
+    visibility: hidden;
+    z-index: 50;
+  }
+  .scroll-top-btn.visible {
+    opacity: 1;
+    visibility: visible;
+  }
+  .scroll-top-btn:hover {
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px var(--accent-glow);
+  }
 
 </style>
 
@@ -724,8 +917,36 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
       if (focusLoading) focusLoading.style.display = 'none';
   
       if (profile.focusAreas && profile.focusAreas.length > 0) {
-        profile.focusAreas.forEach(area => {
+        profile.focusAreas.forEach((area, i) => {
           const el = focusTemplate.content.cloneNode(true) as DocumentFragment;
+          
+          const iconBox = el.querySelector('.focus-icon-box');
+          if (iconBox) {
+            let svg = '';
+            let colorVar = 'var(--accent-primary)';
+            if (area.title.includes('Web')) {
+              svg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>`;
+            } else if (area.title.includes('Mobile')) {
+              svg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>`;
+              colorVar = 'var(--accent-secondary)';
+            } else if (area.title.includes('Problem')) {
+              svg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>`;
+              colorVar = 'var(--accent-tertiary)';
+            } else if (area.title.includes('Code')) {
+              svg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="10 15 15 20 20 15"></polyline><path d="M4 7h16"></path><path d="M4 12h16"></path></svg>`;
+              colorVar = '#F59E0B'; // Orange accent
+            }
+            iconBox.innerHTML = svg;
+            (iconBox as HTMLElement).style.color = colorVar;
+            (iconBox as HTMLElement).style.backgroundColor = `color-mix(in srgb, ${colorVar} 15%, transparent)`;
+            
+            // Add custom style property for card border glow
+            const card = el.querySelector('.focus-card') as HTMLElement;
+            if (card) {
+              card.style.setProperty('--card-accent', colorVar);
+            }
+          }
+
           const title = el.querySelector('.focus-title');
           if (title) title.textContent = area.title;
           const desc = el.querySelector('.focus-desc');
@@ -744,6 +965,10 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
         
         const period = el.querySelector('.timeline-period');
         if (period) period.textContent = e.period;
+        
+        const mobilePeriod = el.querySelector('.timeline-period-mobile');
+        if (mobilePeriod) mobilePeriod.textContent = e.period;
+
         const role = el.querySelector('.timeline-role');
         if (role) role.textContent = e.role;
         const company = el.querySelector('.timeline-company');
@@ -782,15 +1007,39 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
   
       capabilities.forEach(cap => {
         const el = skillGroupTemplate.content.cloneNode(true) as DocumentFragment;
+        
+        const iconBox = el.querySelector('.skill-category-icon');
+        if (iconBox) {
+          let svg = '';
+          let colorVar = 'var(--accent-primary)';
+          if (cap.category.includes('Language')) {
+            svg = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>`;
+          } else if (cap.category.includes('Front')) {
+            svg = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>`;
+            colorVar = 'var(--accent-tertiary)';
+          } else if (cap.category.includes('Back')) {
+            svg = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>`;
+            colorVar = 'var(--accent-secondary)';
+          } else if (cap.category.includes('Tool')) {
+            svg = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>`;
+            colorVar = 'var(--accent-primary)';
+          } else {
+            svg = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`;
+            colorVar = 'var(--accent-tertiary)';
+          }
+          iconBox.innerHTML = svg;
+          (iconBox as HTMLElement).style.color = colorVar;
+        }
+
         const cat = el.querySelector('.skill-category');
         if (cat) cat.textContent = cap.category;
-        const pills = el.querySelector('.skill-pills');
-        if (pills && cap.skills) {
+        const list = el.querySelector('.skill-list');
+        if (list && cap.skills) {
           cap.skills.forEach(skill => {
             const span = document.createElement('span');
-            span.className = 'skill-pill';
+            span.className = 'skill-text-item';
             span.textContent = skill;
-            pills.appendChild(span);
+            list.appendChild(span);
           });
         }
         skillsContainer.appendChild(el);
@@ -798,18 +1047,48 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
     }
 
     // --- PROJECTS RENDER FUNCTIONS ---
+    let allProjects: ProjectSummary[] = [];
+    let currentFilter = 'All';
+
+    const filterPills = document.querySelectorAll('.filter-pill');
+    filterPills.forEach(pill => {
+      pill.addEventListener('click', (e) => {
+        filterPills.forEach(p => p.classList.remove('active'));
+        (e.target as HTMLElement).classList.add('active');
+        currentFilter = (e.target as HTMLElement).textContent?.trim() || 'All';
+        renderFilteredProjects();
+      });
+    });
+
     function renderProjects(projects: ProjectSummary[]) {
+      allProjects = projects;
+      renderFilteredProjects();
+    }
+
+    function renderFilteredProjects() {
       if (!projectsContainer || !projectTemplate) return;
       
       Array.from(projectsContainer.children).forEach(child => {
         if (!child.id.startsWith('projects-')) child.remove();
       });
-  
+
+      let filtered = allProjects;
+      if (currentFilter !== 'All') {
+        filtered = allProjects.filter(p => {
+          if (!p.categories) return false;
+          // Soft match, e.g. "Web Apps" matches "Web" or "Web Apps"
+          return p.categories.some(cat => 
+            cat.toLowerCase().includes(currentFilter.toLowerCase().replace(' apps', '')) ||
+            currentFilter.toLowerCase().includes(cat.toLowerCase())
+          );
+        });
+      }
+
       if (projectsLoading) projectsLoading.style.display = 'none';
       if (projectsError) projectsError.style.display = 'none';
-      if (projectsEmpty) projectsEmpty.style.display = projects.length === 0 ? 'block' : 'none';
-  
-      projects.forEach(p => {
+      if (projectsEmpty) projectsEmpty.style.display = filtered.length === 0 ? 'block' : 'none';
+
+      filtered.forEach(p => {
         const el = projectTemplate.content.cloneNode(true) as DocumentFragment;
         
         const fullLink = el.querySelector('.full-card-link') as HTMLAnchorElement;
@@ -903,7 +1182,7 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
         data.socials.forEach(social => {
           const a = document.createElement('a');
           a.href = social.url;
-          a.className = 'social-link-card group fade-up';
+          a.className = 'social-card group fade-up';
           a.target = '_blank';
           a.rel = 'noopener noreferrer';
   
@@ -920,12 +1199,14 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
           }
   
           a.innerHTML = `
-            <div class="social-icon-wrapper">${iconSvg}</div>
-            <div class="social-text">
-              <p class="social-platform">${social.platform}</p>
-              <p class="social-handle">${social.handle}</p>
+            <div class="social-card-content">
+              <div class="social-icon-wrapper">${iconSvg}</div>
+              <div class="social-text">
+                <p class="social-platform-name">${social.platform}</p>
+                <p class="social-handle" style="color: var(--text-secondary); font-size: 0.9375rem; font-weight: 500; margin: 0;">${social.url.replace(/^https?:\/\//, '').replace(/\/$/, '')}</p>
+              </div>
             </div>
-            <svg class="external-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+            <svg class="external-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-secondary);"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
           `;
           
           socialsGrid.appendChild(a);
@@ -937,6 +1218,20 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
 
     // --- INIT ---
     async function init() {
+      const scrollTopBtn = document.getElementById('scroll-top-btn');
+      if (scrollTopBtn) {
+        window.addEventListener('scroll', () => {
+          if (window.scrollY > 300) {
+            scrollTopBtn.classList.add('visible');
+          } else {
+            scrollTopBtn.classList.remove('visible');
+          }
+        });
+        scrollTopBtn.addEventListener('click', () => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      }
+
       // Fetch Profile for Focus Areas
       const pState = await VisitorDataService.getProfile();
       if (pState.status === 'success') {

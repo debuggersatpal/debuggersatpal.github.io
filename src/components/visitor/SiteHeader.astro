@@ -62,26 +62,24 @@ const navItems = [
         id="mobile-menu-toggle"
         class="mobile-menu-toggle"
         type="button"
-        aria-label="Open navigation menu"
         aria-expanded="false"
+        aria-label="Open navigation menu"
         aria-controls="mobile-menu"
       >
-        <svg class="icon-menu" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <line x1="3" y1="6" x2="21" y2="6"></line>
+        <svg class="menu-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
           <line x1="3" y1="18" x2="21" y2="18"></line>
-        </svg>
-        <svg class="icon-close" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>
       </button>
     </div>
   </div>
+</header>
 
-  <!-- Mobile Navigation Panel -->
-  <nav id="mobile-menu" class="mobile-menu" aria-label="Mobile navigation" aria-hidden="true">
-    <div class="mobile-menu-inner">
+<!-- Mobile Menu Overlay -->
+<div id="mobile-menu" class="mobile-menu" aria-hidden="true">
+  <div class="mobile-menu-inner">
+    <nav class="mobile-nav" aria-label="Mobile navigation">
       {navItems.map(item => (
         <a
           href={item.href}
@@ -90,18 +88,15 @@ const navItems = [
           {item.label}
         </a>
       ))}
-    </div>
-  </nav>
-</header>
-
-<!-- Spacer to prevent content from being hidden behind the fixed header -->
-<div class="header-spacer"></div>
+    </nav>
+  </div>
+</div>
 
 <script>
   document.addEventListener('astro:page-load', () => {
     // --- Theme Toggle ---
     const themeBtn = document.getElementById('theme-toggle');
-    
+
     function updateThemeIcon() {
       const isDark = document.documentElement.classList.contains('dark');
       if (themeBtn) {
@@ -155,7 +150,7 @@ const navItems = [
     });
 
     mobileLinks.forEach(link => {
-      link.addEventListener('click', () => closeMenu());
+      link.addEventListener('click', closeMenu);
     });
 
     // Close menu on Escape key
@@ -168,61 +163,102 @@ const navItems = [
 
     // Ensure menu is closed on page load (ClientRouter navigation)
     closeMenu();
+
+    // --- Scroll Spy for Active Nav State ---
+    function setupScrollSpy() {
+      // Only run on the main portfolio page
+      if (window.location.pathname !== '/' && window.location.pathname !== '/index.html') return;
+
+      const navLinks = document.querySelectorAll('.header-nav-link, .mobile-nav-link');
+      const sections = document.querySelectorAll('#about, #projects, #contact');
+
+      function updateActive() {
+        let currentId = 'home';
+        const scrollY = window.scrollY;
+
+        // If not at the top, figure out which section we are in
+        if (scrollY > 100) {
+          sections.forEach(section => {
+            const rect = (section as HTMLElement).getBoundingClientRect();
+            const sectionTop = rect.top + scrollY;
+            // Subtract offset for fixed header and some threshold
+            if (scrollY >= sectionTop - 200) {
+              currentId = section.getAttribute('id') || 'home';
+            }
+          });
+          
+          // If we hit the bottom of the page, the last section is active
+          const totalHeight = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+          if (window.innerHeight + scrollY >= totalHeight - 10) {
+            currentId = sections[sections.length - 1].getAttribute('id') || currentId;
+          }
+        }
+
+        navLinks.forEach(link => {
+          link.classList.remove('active');
+          const href = link.getAttribute('href');
+          if (currentId === 'home' && href === '/') {
+            link.classList.add('active');
+          } else if (currentId !== 'home' && href === `/#${currentId}`) {
+            link.classList.add('active');
+          }
+        });
+      }
+
+      window.addEventListener('scroll', updateActive);
+      window.addEventListener('hashchange', updateActive);
+      // Run once on load
+      updateActive();
+    }
+
+    setupScrollSpy();
   });
 </script>
 
 <style>
-  /* ===== Header Container ===== */
+  /* ===== Header Layout ===== */
   .site-header {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     z-index: var(--z-nav);
-    background-color: var(--bg-surface);
-    border-bottom: 1px solid var(--border-subtle);
-    transition: background-color var(--transition-base), border-color var(--transition-base);
+    width: 100%;
+    height: 72px; /* Taller for modern floating look */
+    display: flex;
+    align-items: center;
+    background-color: transparent;
+    pointer-events: none; /* Let clicks pass through empty areas */
   }
 
   .header-inner {
+    width: 100%;
+    max-width: var(--max-content-width);
+    margin: 0 auto;
+    padding: 0 var(--space-4);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 56px;
-    padding: 0 var(--space-4);
-    max-width: var(--max-content-width);
-    margin: 0 auto;
-  }
-
-  .header-spacer {
-    height: 56px;
-    flex-shrink: 0;
+    pointer-events: auto;
   }
 
   /* ===== Branding ===== */
   .header-brand {
     display: flex;
-    align-items: center;
-    text-decoration: none;
-    gap: 0;
-    flex-shrink: 0;
-  }
-
-  .brand-name {
+    align-items: baseline;
     font-size: 1.25rem;
     font-weight: 800;
-    color: var(--text-primary);
     letter-spacing: -0.02em;
-    transition: color var(--transition-fast);
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: opacity var(--transition-fast);
+  }
+
+  .header-brand:hover {
+    opacity: 0.8;
   }
 
   .brand-dot {
-    font-size: 1.25rem;
-    font-weight: 800;
-    color: var(--accent-primary);
-  }
-
-  .header-brand:hover .brand-name {
     color: var(--accent-primary);
   }
 
@@ -230,41 +266,54 @@ const navItems = [
   .header-nav {
     display: none;
     align-items: center;
-    gap: var(--space-1);
+    gap: var(--space-2);
+    background: color-mix(in srgb, var(--bg-surface) 80%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border-subtle);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-full);
+    box-shadow: var(--shadow-sm);
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  @media (min-width: 768px) {
+    .header-nav {
+      display: flex;
+    }
+    .header-inner {
+      padding: 0 var(--space-8);
+    }
   }
 
   .header-nav-link {
-    position: relative;
-    padding: var(--space-2) var(--space-3);
-    text-decoration: none;
-    color: var(--text-secondary);
     font-size: 0.875rem;
     font-weight: 500;
-    border-radius: var(--radius-md);
-    transition: color var(--transition-fast), background-color var(--transition-fast);
-    white-space: nowrap;
+    color: var(--text-secondary);
+    text-decoration: none;
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-full);
+    transition: color var(--transition-base), background-color var(--transition-base), box-shadow var(--transition-base);
   }
 
   .header-nav-link:hover {
     color: var(--text-primary);
-    background-color: var(--bg-main);
-  }
-
-  .header-nav-link:focus-visible {
-    outline: 2px solid var(--accent-primary);
-    outline-offset: 2px;
+    background-color: var(--bg-inset);
   }
 
   .header-nav-link.active {
-    color: var(--accent-primary);
-    background-color: var(--accent-primary-bg);
+    color: #fff;
+    background: linear-gradient(135deg, var(--accent-tertiary), var(--accent-primary));
+    box-shadow: 0 0 10px var(--accent-glow);
   }
 
-  /* ===== Actions (Theme Toggle + Mobile Menu) ===== */
+  /* ===== Actions ===== */
   .header-actions {
     display: flex;
     align-items: center;
-    gap: var(--space-1);
+    gap: var(--space-2);
     flex-shrink: 0;
   }
 
