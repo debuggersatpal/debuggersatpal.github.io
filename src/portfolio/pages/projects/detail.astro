@@ -1,8 +1,8 @@
 ---
-import VisitorLayout from '../../../layouts/VisitorLayout.astro';
+import InnerLayout from '../../../layouts/InnerLayout.astro';
 ---
 
-<VisitorLayout title="Project Details">
+<InnerLayout title="Project Details">
   <div id="project-detail-container">
     <p id="project-loading" style="color: var(--text-secondary);">Loading project details...</p>
     <p id="project-error" style="display: none; color: red;"></p>
@@ -149,4 +149,4 @@ import VisitorLayout from '../../../layouts/VisitorLayout.astro';
 
     init();
   </script>
-</VisitorLayout>
+</InnerLayout>

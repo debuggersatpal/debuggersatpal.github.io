@@ -5,8 +5,8 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
 <VisitorLayout title="Satpal - Developer">
   <div class="home-header">
     <div class="top-nav">
-      <a href="/projects/" class="nav-link">Projects</a>
-      <a href="/about/" class="nav-link">Experience</a>
+      <a href="/#projects" class="nav-link">Projects</a>
+      <a href="/about/#experience" class="nav-link">Experience</a>
       <a href="/about/" class="nav-link">About</a>
       <a href="/about/#skills" class="nav-link">Skills</a>
       <a href="/contact/" class="nav-link">Contact</a>
@@ -16,7 +16,7 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
     </div>
   </div>
 
-  <section class="home-section">
+  <section id="projects" class="home-section">
     <h2 class="section-title">All Projects & Works</h2>
     <p class="section-subtitle">Browse every project I've worked on.</p>
 
@@ -34,19 +34,12 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
       <p id="projects-error" style="display: none; color: red;"></p>
       <p id="projects-empty" style="display: none; color: var(--text-secondary);">No projects found.</p>
     </div>
-
-    <div class="view-more-container">
-      <a href="/projects/" class="view-more-btn">
-        View More Projects
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-      </a>
-    </div>
   </section>
 
   <section class="home-section" style="margin-top: var(--space-12);">
     <div class="section-header-row">
       <h2 class="section-title" style="margin-bottom: 0;">Work Experience</h2>
-      <a href="/about/" class="view-more-link">
+      <a href="/about/#experience" class="view-more-link">
         View Full Timeline
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
       </a>
@@ -62,7 +55,8 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
 
 <!-- Templates for Vanilla JS DOM hydration -->
 <template id="project-template">
-  <div class="home-project-card group">
+  <div class="home-project-card group" style="position: relative;">
+    <a class="full-card-link" href="#" style="position: absolute; inset: 0; z-index: 1;"></a>
     <div class="card-header">
       <div class="project-icon-wrapper">
         <img class="project-icon" alt="" src="" />
@@ -72,7 +66,7 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
     <h3 class="project-title"></h3>
     <p class="project-description text-pretty"></p>
     
-    <div class="card-footer">
+    <div class="card-footer" style="position: relative; z-index: 2;">
       <a class="demo-link" href="#" target="_blank" rel="noopener">
         Live Demo
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
@@ -452,6 +446,9 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
     projects.forEach(p => {
       const el = projectTemplate.content.cloneNode(true) as DocumentFragment;
       
+      const fullLink = el.querySelector('.full-card-link') as HTMLAnchorElement;
+      if (fullLink) fullLink.href = `/projects/detail/?id=${p.slug}`;
+
       const title = el.querySelector('.project-title');
       if (title) title.textContent = p.title;
 

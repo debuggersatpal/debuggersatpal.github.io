@@ -175,7 +175,80 @@
         "order": 6
       }
     },
-    "details": []
+    "details": [
+      {
+        "slug": "moviebase",
+        "title": "Moviebase",
+        "heroImage": "/media/thumb-moviebase",
+        "overview": "Discover movies, search, save to watchlist and get details.",
+        "problem": "We needed a better way to solve Moviebase challenges.",
+        "solution": "Built a robust app using Next.js, TMDB API.",
+        "outcomes": [
+          "Increased engagement",
+          "Better performance"
+        ]
+      },
+      {
+        "slug": "resubs",
+        "title": "ReSubs",
+        "heroImage": "/media/thumb-resubs",
+        "overview": "Track and manage recurring subscriptions in one place.",
+        "problem": "We needed a better way to solve ReSubs challenges.",
+        "solution": "Built a robust app using Flutter, Firebase.",
+        "outcomes": [
+          "Increased engagement",
+          "Better performance"
+        ]
+      },
+      {
+        "slug": "momental",
+        "title": "Momental",
+        "heroImage": "/media/thumb-momental",
+        "overview": "A meditation and sleep app with custom sounds and tracking.",
+        "problem": "We needed a better way to solve Momental challenges.",
+        "solution": "Built a robust app using Android, Kotlin.",
+        "outcomes": [
+          "Increased engagement",
+          "Better performance"
+        ]
+      },
+      {
+        "slug": "mindtime",
+        "title": "MindTime",
+        "heroImage": "/media/thumb-mindtime",
+        "overview": "A simple and pure meditation timer with insights and tracking.",
+        "problem": "We needed a better way to solve MindTime challenges.",
+        "solution": "Built a robust app using Android, Kotlin.",
+        "outcomes": [
+          "Increased engagement",
+          "Better performance"
+        ]
+      },
+      {
+        "slug": "streamguide",
+        "title": "StreamGuide",
+        "heroImage": "/media/thumb-moviebase",
+        "overview": "Find what to watch across your streaming services.",
+        "problem": "We needed a better way to solve StreamGuide challenges.",
+        "solution": "Built a robust app using TypeScript, TMDB API.",
+        "outcomes": [
+          "Increased engagement",
+          "Better performance"
+        ]
+      },
+      {
+        "slug": "analytics-dashboard",
+        "title": "Analytics Dashboard",
+        "heroImage": "/media/thumb-analytics",
+        "overview": "A modern analytics dashboard for business metrics.",
+        "problem": "We needed a better way to solve Analytics Dashboard challenges.",
+        "solution": "Built a robust app using Next.js, Tailwind.",
+        "outcomes": [
+          "Increased engagement",
+          "Better performance"
+        ]
+      }
+    ]
   },
   "capabilities": {
     "cap_lang": {
