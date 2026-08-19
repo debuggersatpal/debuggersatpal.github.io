@@ -3,9 +3,9 @@ import type { ProjectSummary } from '../../../data/types';
 
 interface Props extends ProjectSummary {}
 
-const { slug, title, category, thumbnail } = Astro.props;
+const { slug, title, category, thumbnail, year, featured } = Astro.props;
 ---
-<a href={`/projects/${slug}`} class="project-card">
+<a href={`/projects/detail/?id=${slug}`} class="project-card">
   <div class="image-wrapper">
     <img data-media-src={thumbnail} alt={title} loading="lazy" />
   </div>

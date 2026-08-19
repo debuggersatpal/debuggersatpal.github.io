@@ -7,9 +7,16 @@
 export type MediaReference = string;
 
 export interface Profile {
+  name: string;
+  role: string;
+  location: string;
+  tagline?: string;
   bio: string;
-  focusAreas: string[];
+  focusAreas: { title: string; description: string }[];
   avatarUrl: MediaReference;
+  resumeUrl?: MediaReference;
+  stats?: { projects: number; experience: number; techStack: number };
+  socials?: { platform: string; url: string }[];
 }
 
 export interface Experience {
@@ -18,6 +25,7 @@ export interface Experience {
   company: string;
   period: string;
   description: string;
+  technologies?: string[];
   order: number;
 }
 
@@ -34,6 +42,11 @@ export interface ProjectSummary {
   title: string;
   category: string;
   thumbnail: MediaReference;
+  icon?: MediaReference; // For Home page cards
+  description: string;
+  technologies: string[];
+  demoUrl?: string;
+  githubUrl?: string;
   order: number;
 }
 
@@ -55,7 +68,7 @@ export interface Capability {
 
 export interface Contact {
   email: string;
-  socials: { platform: string; url: string }[];
+  socials: { platform: string; url: string; handle: string; description: string }[];
 }
 
 /**

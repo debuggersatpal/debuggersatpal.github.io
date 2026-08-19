@@ -1,0 +1,393 @@
+---
+import InnerLayout from '../../../layouts/InnerLayout.astro';
+---
+
+<InnerLayout title="About | Satpal">
+  <section class="about-page">
+    <div class="page-header">
+      <h1 class="page-title">About Me</h1>
+      <p class="page-subtitle">A brief story about me and my experience.</p>
+    </div>
+
+    <!-- Focus Areas -->
+    <div class="section-container" style="margin-top: var(--space-8);">
+      <h2 class="section-heading">Focus Areas</h2>
+      <div id="focus-container" class="focus-grid">
+        <p id="focus-loading" style="color: var(--text-secondary);">Loading focus areas...</p>
+      </div>
+    </div>
+
+    <!-- Experience Timeline -->
+    <div class="section-container" style="margin-top: var(--space-12);">
+      <h2 class="section-heading">Experience</h2>
+      <div id="timeline-container" class="timeline-list">
+        <p id="timeline-loading" style="color: var(--text-secondary);">Loading experience...</p>
+      </div>
+    </div>
+
+    <!-- Skills -->
+    <div class="section-container" style="margin-top: var(--space-12); margin-bottom: var(--space-12);">
+      <h2 class="section-heading">Skills & Technologies</h2>
+      <div id="skills-container" class="skills-grid">
+        <p id="skills-loading" style="color: var(--text-secondary);">Loading skills...</p>
+      </div>
+    </div>
+  </section>
+</InnerLayout>
+
+<!-- Templates for Vanilla JS DOM hydration -->
+<template id="focus-template">
+  <div class="focus-card">
+    <h3 class="focus-title"></h3>
+    <p class="focus-desc"></p>
+  </div>
+</template>
+
+<template id="timeline-template">
+  <div class="timeline-item">
+    <div class="timeline-period-col">
+      <p class="timeline-period"></p>
+      <div class="timeline-line"></div>
+    </div>
+    <div class="timeline-content-col">
+      <h3 class="timeline-role"></h3>
+      <p class="timeline-company"></p>
+      <ul class="timeline-bullets"></ul>
+      <div class="timeline-techs"></div>
+    </div>
+  </div>
+</template>
+
+<template id="skill-group-template">
+  <div class="skill-group">
+    <h3 class="skill-category"></h3>
+    <div class="skill-pills"></div>
+  </div>
+</template>
+
+<style>
+  .about-page {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .page-header {
+    margin-bottom: var(--space-2);
+  }
+
+  .page-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+  
+  .page-subtitle {
+    color: var(--text-secondary);
+    font-size: 1.125rem;
+    margin-top: var(--space-2);
+  }
+
+  .section-heading {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: var(--space-6);
+  }
+
+  /* Focus Areas */
+  .focus-grid {
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 640px) {
+    .focus-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .focus-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    padding: var(--space-6);
+    border-radius: var(--radius-xl);
+  }
+  
+  .focus-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    margin: 0 0 var(--space-2) 0;
+  }
+
+  .focus-desc {
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  /* Timeline */
+  .timeline-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .timeline-item {
+    display: flex;
+    flex-direction: row;
+    gap: var(--space-6);
+    position: relative;
+    padding-bottom: var(--space-8);
+  }
+
+  .timeline-item:last-child {
+    padding-bottom: 0;
+  }
+  .timeline-item:last-child .timeline-line {
+    display: none;
+  }
+
+  .timeline-period-col {
+    flex: 0 0 120px;
+    position: relative;
+    padding-top: var(--space-1);
+  }
+
+  .timeline-period {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    margin: 0;
+  }
+
+  .timeline-line {
+    position: absolute;
+    top: 24px;
+    bottom: -8px;
+    left: 8px; /* rough center alignment depending on layout */
+    width: 2px;
+    background: var(--border-subtle);
+    display: none; /* simple version for mobile, maybe visible on desktop */
+  }
+
+  @media (min-width: 768px) {
+    .timeline-line {
+      display: block;
+      left: auto;
+      right: -12px;
+    }
+    .timeline-period {
+      text-align: right;
+      padding-right: var(--space-6);
+    }
+  }
+
+  .timeline-content-col {
+    flex: 1;
+  }
+
+  .timeline-role {
+    font-size: 1.25rem;
+    font-weight: 800;
+    margin: 0;
+  }
+
+  .timeline-company {
+    font-size: 1rem;
+    color: var(--accent-primary);
+    font-weight: 500;
+    margin-top: var(--space-1);
+  }
+
+  .timeline-bullets {
+    margin: var(--space-4) 0 0 0;
+    padding-left: var(--space-4);
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .timeline-techs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-top: var(--space-4);
+  }
+
+  .timeline-tech-tag {
+    background: var(--bg-inset);
+    border: 1px solid var(--border-subtle);
+    padding: 4px 12px;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+
+  /* Skills */
+  .skills-grid {
+    display: grid;
+    gap: var(--space-8);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 768px) {
+    .skills-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .skill-category {
+    font-size: 1.125rem;
+    font-weight: 700;
+    margin-bottom: var(--space-4);
+    color: var(--text-primary);
+  }
+
+  .skill-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .skill-pill {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    padding: 6px 16px;
+    border-radius: var(--radius-full);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+  }
+</style>
+
+<script>
+  import { VisitorDataService } from '../../../lib/visitor-data';
+  import type { Profile, Experience, Capability } from '../../../data/types';
+
+  const focusContainer = document.getElementById('focus-container');
+  const focusLoading = document.getElementById('focus-loading');
+  const focusTemplate = document.getElementById('focus-template') as HTMLTemplateElement;
+
+  const timelineContainer = document.getElementById('timeline-container');
+  const timelineLoading = document.getElementById('timeline-loading');
+  const timelineTemplate = document.getElementById('timeline-template') as HTMLTemplateElement;
+
+  const skillsContainer = document.getElementById('skills-container');
+  const skillsLoading = document.getElementById('skills-loading');
+  const skillGroupTemplate = document.getElementById('skill-group-template') as HTMLTemplateElement;
+
+  function renderFocus(profile: Profile) {
+    if (!focusContainer || !focusTemplate) return;
+    if (focusLoading) focusLoading.style.display = 'none';
+
+    if (profile.focusAreas && profile.focusAreas.length > 0) {
+      profile.focusAreas.forEach(area => {
+        const el = focusTemplate.content.cloneNode(true) as DocumentFragment;
+        
+        const title = el.querySelector('.focus-title');
+        if (title) title.textContent = area.title;
+
+        const desc = el.querySelector('.focus-desc');
+        if (desc) desc.textContent = area.description;
+
+        focusContainer.appendChild(el);
+      });
+    }
+  }
+
+  function renderTimeline(experience: Experience[]) {
+    if (!timelineContainer || !timelineTemplate) return;
+    if (timelineLoading) timelineLoading.style.display = 'none';
+
+    experience.forEach(e => {
+      const el = timelineTemplate.content.cloneNode(true) as DocumentFragment;
+      
+      const period = el.querySelector('.timeline-period');
+      if (period) period.textContent = e.period;
+
+      const role = el.querySelector('.timeline-role');
+      if (role) role.textContent = e.role;
+
+      const company = el.querySelector('.timeline-company');
+      if (company) company.textContent = e.company;
+
+      const bullets = el.querySelector('.timeline-bullets');
+      if (bullets && e.description) {
+        const lines = e.description.split('\n').filter(l => l.trim().length > 0);
+        if (lines.length > 0) {
+          lines.forEach(line => {
+            const li = document.createElement('li');
+            li.textContent = line.replace(/^- /, '').trim();
+            bullets.appendChild(li);
+          });
+        } else {
+          const li = document.createElement('li');
+          li.textContent = e.description;
+          bullets.appendChild(li);
+        }
+      }
+
+      const techs = el.querySelector('.timeline-techs');
+      if (techs && e.technologies) {
+        e.technologies.forEach(tech => {
+          const span = document.createElement('span');
+          span.className = 'timeline-tech-tag';
+          span.textContent = tech;
+          techs.appendChild(span);
+        });
+      }
+
+      timelineContainer.appendChild(el);
+    });
+  }
+
+  function renderSkills(capabilities: Capability[]) {
+    if (!skillsContainer || !skillGroupTemplate) return;
+    if (skillsLoading) skillsLoading.style.display = 'none';
+
+    capabilities.forEach(cap => {
+      const el = skillGroupTemplate.content.cloneNode(true) as DocumentFragment;
+      
+      const cat = el.querySelector('.skill-category');
+      if (cat) cat.textContent = cap.category;
+
+      const pills = el.querySelector('.skill-pills');
+      if (pills && cap.skills) {
+        cap.skills.forEach(skill => {
+          const span = document.createElement('span');
+          span.className = 'skill-pill';
+          span.textContent = skill;
+          pills.appendChild(span);
+        });
+      }
+
+      skillsContainer.appendChild(el);
+    });
+  }
+
+  async function init() {
+    // 1. Fetch Profile for Focus Areas
+    const pState = await VisitorDataService.getProfile();
+    if (pState.status === 'success') {
+      renderFocus(pState.data);
+    }
+
+    // 2. Fetch Experience
+    const eState = await VisitorDataService.getExperience();
+    if (eState.status === 'success') {
+      renderTimeline(eState.data);
+    }
+
+    // 3. Fetch Capabilities (Skills)
+    const cState = await VisitorDataService.getCapabilities();
+    if (cState.status === 'success') {
+      renderSkills(cState.data);
+    }
+  }
+
+  init();
+</script>

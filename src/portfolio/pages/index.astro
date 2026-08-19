@@ -1,37 +1,424 @@
 ---
 import VisitorLayout from '../../layouts/VisitorLayout.astro';
-import SectionHeading from '../../components/visitor/ui/SectionHeading.astro';
-import ProjectCard from '../../components/visitor/projects/ProjectCard.astro';
-import ExperienceItem from '../../components/visitor/experience/ExperienceItem.astro';
 ---
 
-<VisitorLayout title="Portfolio">
-  <SectionHeading title="Selected Work" />
-  
-  <div id="projects-container" style="display: grid; gap: var(--space-6); grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));">
-    <p id="projects-loading" style="color: var(--text-secondary);">Loading projects...</p>
-    <p id="projects-error" style="display: none; color: red;"></p>
-    <p id="projects-empty" style="display: none; color: var(--text-secondary);">No projects found.</p>
+<VisitorLayout title="Satpal - Developer">
+  <div class="home-header">
+    <div class="top-nav">
+      <a href="/projects/" class="nav-link">Projects</a>
+      <a href="/about/" class="nav-link">Experience</a>
+      <a href="/about/" class="nav-link">About</a>
+      <a href="/about/#skills" class="nav-link">Skills</a>
+      <a href="/contact/" class="nav-link">Contact</a>
+      <div class="theme-toggle-top">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+      </div>
+    </div>
   </div>
 
-  <div style="margin-top: var(--space-12);">
-    <SectionHeading title="Experience" />
-    <div id="experience-container" style="display: flex; flex-direction: column; gap: var(--space-6);">
+  <section class="home-section">
+    <h2 class="section-title">All Projects & Works</h2>
+    <p class="section-subtitle">Browse every project I've worked on.</p>
+
+    <div class="filter-pills" id="home-filters">
+      <button class="filter-pill active">All</button>
+      <button class="filter-pill">Web Apps</button>
+      <button class="filter-pill">Mobile Apps</button>
+      <button class="filter-pill">Tools</button>
+      <button class="filter-pill">AI / ML</button>
+      <button class="filter-pill">Systems</button>
+    </div>
+
+    <div id="projects-container" class="projects-grid">
+      <p id="projects-loading" style="color: var(--text-secondary);">Loading projects...</p>
+      <p id="projects-error" style="display: none; color: red;"></p>
+      <p id="projects-empty" style="display: none; color: var(--text-secondary);">No projects found.</p>
+    </div>
+
+    <div class="view-more-container">
+      <a href="/projects/" class="view-more-btn">
+        View More Projects
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+      </a>
+    </div>
+  </section>
+
+  <section class="home-section" style="margin-top: var(--space-12);">
+    <div class="section-header-row">
+      <h2 class="section-title" style="margin-bottom: 0;">Work Experience</h2>
+      <a href="/about/" class="view-more-link">
+        View Full Timeline
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+      </a>
+    </div>
+
+    <div id="experience-container" class="experience-list">
       <p id="experience-loading" style="color: var(--text-secondary);">Loading experience...</p>
       <p id="experience-error" style="display: none; color: red;"></p>
       <p id="experience-empty" style="display: none; color: var(--text-secondary);">No experience found.</p>
     </div>
-  </div>
+  </section>
 </VisitorLayout>
 
 <!-- Templates for Vanilla JS DOM hydration -->
 <template id="project-template">
-  <ProjectCard slug="" title="" category="" thumbnail="" order={0} />
+  <div class="home-project-card group">
+    <div class="card-header">
+      <div class="project-icon-wrapper">
+        <img class="project-icon" alt="" src="" />
+      </div>
+      <div class="project-tags"></div>
+    </div>
+    <h3 class="project-title"></h3>
+    <p class="project-description text-pretty"></p>
+    
+    <div class="card-footer">
+      <a class="demo-link" href="#" target="_blank" rel="noopener">
+        Live Demo
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+      </a>
+      <a class="github-link" href="#" target="_blank" rel="noopener">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+      </a>
+    </div>
+  </div>
 </template>
 
 <template id="experience-template">
-  <ExperienceItem role="" company="" period="" description="" />
+  <div class="home-exp-item">
+    <div class="exp-left">
+      <h3 class="exp-company"></h3>
+      <p class="exp-role"></p>
+      <p class="exp-period"></p>
+      <p class="exp-location">Berlin, Germany</p>
+    </div>
+    <div class="exp-right">
+      <ul class="exp-bullets"></ul>
+      <div class="exp-techs"></div>
+    </div>
+  </div>
 </template>
+
+<style>
+  .home-header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: var(--space-8);
+  }
+  .top-nav {
+    display: none;
+    align-items: center;
+    gap: var(--space-6);
+  }
+  @media (min-width: 1024px) {
+    .top-nav {
+      display: flex;
+    }
+  }
+  .nav-link {
+    text-decoration: none;
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    transition: color var(--transition-fast);
+  }
+  .nav-link:hover {
+    color: var(--accent-primary);
+  }
+  .theme-toggle-top {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border-subtle);
+    color: var(--accent-primary);
+    cursor: pointer;
+  }
+
+  .home-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .section-title {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+  
+  .section-subtitle {
+    color: var(--text-secondary);
+    font-size: 1.125rem;
+    margin-top: calc(var(--space-2) * -1);
+  }
+
+  .filter-pills {
+    display: flex;
+    gap: var(--space-2);
+    overflow-x: auto;
+    padding-bottom: var(--space-2);
+    margin-top: var(--space-2);
+    scrollbar-width: none; /* Firefox */
+  }
+  .filter-pills::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filter-pill {
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-full);
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all var(--transition-fast);
+  }
+  .filter-pill:hover {
+    color: var(--text-primary);
+  }
+  .filter-pill.active {
+    background: var(--bg-inset);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+  }
+
+  .projects-grid {
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: 1fr;
+    margin-top: var(--space-4);
+  }
+  @media (min-width: 768px) {
+    .projects-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .view-more-container {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--space-6);
+  }
+
+  .view-more-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-6);
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border-subtle);
+    background: transparent;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    transition: all var(--transition-fast);
+  }
+  .view-more-btn:hover {
+    background: var(--bg-inset);
+  }
+
+  .section-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border-subtle);
+    padding-bottom: var(--space-4);
+  }
+
+  .view-more-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.875rem;
+  }
+  .view-more-link:hover {
+    color: var(--text-primary);
+  }
+
+  .experience-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+    margin-top: var(--space-4);
+  }
+
+  /* Home Project Card */
+  .home-project-card {
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-6);
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-base);
+  }
+  .home-project-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-strong);
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    margin-bottom: var(--space-4);
+  }
+
+  .project-icon-wrapper {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  
+  .project-icon {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .project-tag {
+    background: var(--bg-inset);
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-subtle);
+  }
+
+  .project-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0 0 var(--space-2) 0;
+  }
+
+  .project-description {
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    margin-bottom: var(--space-6);
+    flex-grow: 1;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+  }
+
+  .demo-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--accent-primary);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.875rem;
+  }
+
+  .github-link {
+    color: var(--text-secondary);
+    display: inline-flex;
+    transition: color var(--transition-fast);
+  }
+  .github-link:hover {
+    color: var(--text-primary);
+  }
+
+  /* Home Experience Item */
+  .home-exp-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+  @media (min-width: 768px) {
+    .home-exp-item {
+      flex-direction: row;
+      gap: var(--space-8);
+    }
+  }
+
+  .exp-left {
+    flex: 0 0 200px;
+  }
+
+  .exp-company {
+    font-size: 1.125rem;
+    font-weight: 800;
+    margin: 0;
+  }
+  
+  .exp-role {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-top: var(--space-1);
+  }
+
+  .exp-period, .exp-location {
+    font-size: 0.875rem;
+    color: var(--text-tertiary);
+    margin-top: 2px;
+  }
+
+  .exp-right {
+    flex: 1;
+  }
+
+  .exp-bullets {
+    margin: 0;
+    padding-left: var(--space-4);
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .exp-techs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-top: var(--space-4);
+  }
+
+  .exp-tech-tag {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    padding: 2px 10px;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+  }
+</style>
 
 <script>
   import { VisitorDataService } from '../../lib/visitor-data';
@@ -65,23 +452,54 @@ import ExperienceItem from '../../components/visitor/experience/ExperienceItem.a
     projects.forEach(p => {
       const el = projectTemplate.content.cloneNode(true) as DocumentFragment;
       
-      const link = el.querySelector('a');
-      if (link) link.href = `/projects/?id=${p.slug}`;
-      
-      const img = el.querySelector('img');
-      if (img) {
-        img.dataset.mediaSrc = p.thumbnail;
-        img.alt = p.title;
-        VisitorDataService.resolveMediaUrl(p.thumbnail).then(url => {
-          img.src = url;
+      const title = el.querySelector('.project-title');
+      if (title) title.textContent = p.title;
+
+      const desc = el.querySelector('.project-description');
+      if (desc) desc.textContent = p.description || '';
+
+      const icon = el.querySelector('.project-icon') as HTMLImageElement;
+      if (icon) {
+        if (p.icon) {
+          VisitorDataService.resolveMediaUrl(p.icon).then(url => { icon.src = url; });
+        } else if (p.thumbnail) {
+          VisitorDataService.resolveMediaUrl(p.thumbnail).then(url => { icon.src = url; });
+        } else {
+          icon.style.display = 'none'; // Handle broken image fallback
+          const wrapper = el.querySelector('.project-icon-wrapper');
+          if (wrapper) {
+            wrapper.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>';
+          }
+        }
+      }
+
+      const tagsContainer = el.querySelector('.project-tags');
+      if (tagsContainer && p.technologies) {
+        p.technologies.slice(0, 2).forEach(tech => {
+          const span = document.createElement('span');
+          span.className = 'project-tag';
+          span.textContent = tech;
+          tagsContainer.appendChild(span);
         });
       }
 
-      const category = el.querySelector('.category');
-      if (category) category.textContent = p.category;
+      const demo = el.querySelector('.demo-link') as HTMLAnchorElement;
+      if (demo) {
+        if (p.demoUrl) {
+          demo.href = p.demoUrl;
+        } else {
+          demo.style.display = 'none';
+        }
+      }
 
-      const title = el.querySelector('.title');
-      if (title) title.textContent = p.title;
+      const github = el.querySelector('.github-link') as HTMLAnchorElement;
+      if (github) {
+        if (p.githubUrl) {
+          github.href = p.githubUrl;
+        } else {
+          github.style.display = 'none';
+        }
+      }
 
       projectsContainer.appendChild(el);
     });
@@ -101,30 +519,62 @@ import ExperienceItem from '../../components/visitor/experience/ExperienceItem.a
     experience.forEach(e => {
       const el = experienceTemplate.content.cloneNode(true) as DocumentFragment;
       
-      const period = el.querySelector('.period');
-      if (period) period.textContent = e.period;
-
-      const role = el.querySelector('.role');
-      if (role) role.textContent = e.role;
-
-      const company = el.querySelector('.company');
+      const company = el.querySelector('.exp-company');
       if (company) company.textContent = e.company;
 
-      const desc = el.querySelector('.description');
-      if (desc) desc.textContent = e.description;
+      const role = el.querySelector('.exp-role');
+      if (role) role.textContent = e.role;
+
+      const period = el.querySelector('.exp-period');
+      if (period) period.textContent = e.period;
+
+      const bullets = el.querySelector('.exp-bullets');
+      if (bullets && e.description) {
+        // Split by newlines or just show as one bullet if it's a short text
+        const lines = e.description.split('\n').filter(l => l.trim().length > 0);
+        if (lines.length > 0) {
+          lines.forEach(line => {
+            const li = document.createElement('li');
+            li.textContent = line.replace(/^- /, '').trim();
+            bullets.appendChild(li);
+          });
+        } else {
+          const li = document.createElement('li');
+          li.textContent = e.description;
+          bullets.appendChild(li);
+        }
+      }
+
+      const techs = el.querySelector('.exp-techs');
+      if (techs && e.technologies) {
+        e.technologies.forEach(tech => {
+          const span = document.createElement('span');
+          span.className = 'exp-tech-tag';
+          span.textContent = tech;
+          techs.appendChild(span);
+        });
+        // Mock a +2 tag if needed
+        if (e.technologies.length > 3) {
+          const extra = e.technologies.length - 3;
+          const span = document.createElement('span');
+          span.className = 'exp-tech-tag';
+          span.textContent = `+${extra}`;
+          techs.appendChild(span);
+        }
+      }
 
       experienceContainer.appendChild(el);
     });
   }
 
   async function init() {
-    // 1. Fetch & Hydrate Projects
+    // 1. Fetch & Hydrate Projects (limit 4 for home)
     const pState = await VisitorDataService.getProjects((updated) => {
-      renderProjects(updated);
+      renderProjects(updated.slice(0, 4));
     });
 
     if (pState.status === 'success') {
-      renderProjects(pState.data);
+      renderProjects(pState.data.slice(0, 4));
     } else if (pState.status === 'error' && projectsError && projectsLoading) {
       projectsLoading.style.display = 'none';
       projectsError.textContent = pState.message;
@@ -134,13 +584,13 @@ import ExperienceItem from '../../components/visitor/experience/ExperienceItem.a
       projectsEmpty.style.display = 'block';
     }
 
-    // 2. Fetch & Hydrate Experience
+    // 2. Fetch & Hydrate Experience (limit 2 for home)
     const eState = await VisitorDataService.getExperience((updated) => {
-      renderExperience(updated);
+      renderExperience(updated.slice(0, 2));
     });
 
     if (eState.status === 'success') {
-      renderExperience(eState.data);
+      renderExperience(eState.data.slice(0, 2));
     } else if (eState.status === 'error' && experienceError && experienceLoading) {
       experienceLoading.style.display = 'none';
       experienceError.textContent = eState.message;

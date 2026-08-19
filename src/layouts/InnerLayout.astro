@@ -1,6 +1,6 @@
 ---
 import '../styles/global.css';
-import Hero from '../components/visitor/Hero.astro';
+import Sidebar from '../components/visitor/Sidebar.astro';
 import MobileDrawer from '../components/visitor/MobileDrawer.astro';
 
 interface Props {
@@ -22,8 +22,8 @@ const { title, description = "Satpal's portfolio showcasing my web, Android, and
     <title>{title}</title>
   </head>
   <body>
-    <div class="visitor-layout">
-      <Hero />
+    <div class="visitor-layout inner-layout">
+      <Sidebar />
       <main class="main-content">
         <slot />
       </main>
@@ -52,11 +52,11 @@ const { title, description = "Satpal's portfolio showcasing my web, Android, and
     }
     
     .main-content {
-      /* Pushes content right of the fixed Hero */
-      margin-left: var(--hero-width-desktop);
+      /* Pushes content right of the narrower Sidebar */
+      margin-left: 280px; 
       padding: var(--space-8) var(--space-12);
-      width: calc(100% - var(--hero-width-desktop));
-      max-width: none;
+      width: calc(100% - 280px);
+      max-width: none; /* Let it expand to fill viewport as requested */
     }
   }
 </style>
