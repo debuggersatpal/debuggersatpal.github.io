@@ -3,12 +3,12 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
 ---
 <AdminLayout title="Dashboard">
   <h1>Dashboard</h1>
-  <p style="color: var(--text-secondary); margin-top: 1rem;">
+  <p style="color: var(--cms-text); margin-top: 0.5rem; font-size: 1.125rem;">
     Welcome to the Portfolio CMS. Select a module from the sidebar to author content.
   </p>
   
-  <div class="actions" style="margin-top: 3rem; padding: 2rem; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: var(--radius-lg);">
-    <h3>CMS Architecture Active</h3>
-    <p>This CMS natively enforces draft and published isolation. Draft changes made in the sidebar modules will not impact the live visitor portfolio until a trusted edge publishing mechanism is triggered.</p>
+  <div class="cms-form" style="margin-top: 3rem;">
+    <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--cms-text-heading); margin-bottom: 0.5rem;">CMS Architecture Active</h3>
+    <p style="color: var(--cms-text); line-height: 1.6;">This CMS natively enforces draft and published isolation. Draft changes made in the sidebar modules will not impact the live visitor portfolio until a trusted edge publishing mechanism is triggered.</p>
   </div>
 </AdminLayout>
