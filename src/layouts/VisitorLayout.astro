@@ -27,9 +27,9 @@ const { title, description = "Satpal's portfolio showcasing my web, Android, and
   </head>
   <body class="antialiased">
     <a href="#main-content" class="skip-link">Skip to main content</a>
-    <SiteHeader />
     <div class="visitor-layout">
       <Hero />
+      <SiteHeader />
       <main id="main-content" class="main-content">
         <slot />
       </main>
@@ -76,17 +76,26 @@ const { title, description = "Satpal's portfolio showcasing my web, Android, and
     padding: var(--space-4);
   }
 
-  /* Desktop Layout */
-  @media (min-width: 1024px) {
+  /* Tablet Layout */
+  @media (min-width: 768px) {
     .visitor-layout {
-      min-height: calc(100vh - 64px);
+      min-height: 100vh;
       flex-direction: row;
     }
     
     .main-content {
       /* Pushes content right of the fixed Hero */
+      margin-left: var(--hero-width-tablet);
+      padding: calc(72px + var(--space-4)) var(--space-8) var(--space-8);
+      width: calc(100% - var(--hero-width-tablet));
+    }
+  }
+
+  /* Desktop Layout */
+  @media (min-width: 1024px) {
+    .main-content {
       margin-left: var(--hero-width-desktop);
-      padding: var(--space-4) var(--space-12) var(--space-8);
+      padding: calc(72px + var(--space-4)) var(--space-12) var(--space-8);
       width: calc(100% - var(--hero-width-desktop));
       max-width: 1200px; /* Constrain wide desktop */
     }
