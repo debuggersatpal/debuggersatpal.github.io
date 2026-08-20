@@ -16,7 +16,24 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
     <div class="section-container fade-up" style="margin-top: var(--space-8);">
       <h2 class="section-heading">Focus Areas <span class="heading-sparkle">✦</span></h2>
       <div id="focus-container" class="focus-grid">
-        <p id="focus-loading" style="color: var(--text-secondary);">Loading focus areas...</p>
+        <div id="focus-loading" style="display: contents;">
+  <div class="focus-card">
+    <div class="focus-header">
+      <div class="skeleton-box" style="width: 40px; height: 40px; border-radius: var(--radius-md);"></div>
+      <div class="skeleton-box" style="width: 120px; height: 24px; border-radius: var(--radius-sm);"></div>
+    </div>
+    <div class="skeleton-box" style="width: 100%; height: 16px; margin-top: 16px; border-radius: var(--radius-sm);"></div>
+    <div class="skeleton-box" style="width: 80%; height: 16px; margin-top: 8px; border-radius: var(--radius-sm);"></div>
+  </div>
+  <div class="focus-card desktop-only">
+    <div class="focus-header">
+      <div class="skeleton-box" style="width: 40px; height: 40px; border-radius: var(--radius-md);"></div>
+      <div class="skeleton-box" style="width: 120px; height: 24px; border-radius: var(--radius-sm);"></div>
+    </div>
+    <div class="skeleton-box" style="width: 100%; height: 16px; margin-top: 16px; border-radius: var(--radius-sm);"></div>
+    <div class="skeleton-box" style="width: 80%; height: 16px; margin-top: 8px; border-radius: var(--radius-sm);"></div>
+  </div>
+</div>
       </div>
     </div>
 
@@ -24,7 +41,24 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
     <div id="experience" class="section-container fade-up" style="margin-top: var(--space-12);">
       <h2 class="section-heading">Experience <span class="heading-sparkle">✦</span></h2>
       <div id="timeline-container" class="timeline-list">
-        <p id="timeline-loading" style="color: var(--text-secondary);">Loading experience...</p>
+        <div id="timeline-loading" style="display: contents;">
+  <div class="timeline-item">
+    <div class="timeline-period-col">
+      <div class="skeleton-box" style="width: 80px; height: 16px; border-radius: var(--radius-sm);"></div>
+    </div>
+    <div class="timeline-dot-wrapper">
+      <div class="timeline-dot" style="background: var(--bg-inset);"></div>
+      <div class="timeline-line" style="background: var(--border-subtle);"></div>
+    </div>
+    <div class="timeline-content-col">
+      <div class="skeleton-box" style="width: 150px; height: 24px; border-radius: var(--radius-sm); margin-bottom: 4px;"></div>
+      <div class="skeleton-box" style="width: 100px; height: 16px; border-radius: var(--radius-sm); margin-bottom: 16px;"></div>
+      <div class="skeleton-box" style="width: 100%; height: 14px; border-radius: var(--radius-sm); margin-bottom: 8px;"></div>
+      <div class="skeleton-box" style="width: 90%; height: 14px; border-radius: var(--radius-sm); margin-bottom: 8px;"></div>
+      <div class="skeleton-box" style="width: 80%; height: 14px; border-radius: var(--radius-sm);"></div>
+    </div>
+  </div>
+</div>
       </div>
     </div>
 
@@ -32,7 +66,30 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
     <div id="skills" class="section-container fade-up" style="margin-top: var(--space-12); margin-bottom: var(--space-12);">
       <h2 class="section-heading">Skills & Technologies <span class="heading-sparkle">✦</span></h2>
       <div id="skills-container" class="skills-grid">
-        <p id="skills-loading" style="color: var(--text-secondary);">Loading skills...</p>
+        <div id="skills-loading" style="display: contents;">
+  <div class="skill-group-card">
+    <div class="skill-category-header">
+      <div class="skeleton-box" style="width: 40px; height: 40px; border-radius: var(--radius-md);"></div>
+      <div class="skeleton-box" style="width: 100px; height: 24px; border-radius: var(--radius-sm);"></div>
+    </div>
+    <div class="skill-list" style="display: flex; gap: 8px; flex-wrap: wrap;">
+      <div class="skeleton-box" style="width: 80px; height: 28px; border-radius: var(--radius-full);"></div>
+      <div class="skeleton-box" style="width: 100px; height: 28px; border-radius: var(--radius-full);"></div>
+      <div class="skeleton-box" style="width: 60px; height: 28px; border-radius: var(--radius-full);"></div>
+    </div>
+  </div>
+  <div class="skill-group-card desktop-only">
+    <div class="skill-category-header">
+      <div class="skeleton-box" style="width: 40px; height: 40px; border-radius: var(--radius-md);"></div>
+      <div class="skeleton-box" style="width: 100px; height: 24px; border-radius: var(--radius-sm);"></div>
+    </div>
+    <div class="skill-list" style="display: flex; gap: 8px; flex-wrap: wrap;">
+      <div class="skeleton-box" style="width: 70px; height: 28px; border-radius: var(--radius-full);"></div>
+      <div class="skeleton-box" style="width: 90px; height: 28px; border-radius: var(--radius-full);"></div>
+      <div class="skeleton-box" style="width: 85px; height: 28px; border-radius: var(--radius-full);"></div>
+    </div>
+  </div>
+</div>
       </div>
     </div>
   </section>
@@ -54,9 +111,32 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
     </div>
 
     <div id="projects-container" class="projects-grid">
-      <p id="projects-loading" style="color: var(--text-secondary);">Loading projects...</p>
-      <p id="projects-error" style="display: none; color: red;"></p>
-      <p id="projects-empty" style="display: none; color: var(--text-secondary);">No projects found.</p>
+      <div id="projects-loading" style="display: contents;">
+  <div class="project-card">
+    <div class="card-header">
+      <div class="skeleton-box" style="width: 48px; height: 48px; border-radius: var(--radius-md);"></div>
+      <div class="project-tags">
+        <div class="skeleton-box" style="width: 50px; height: 24px; border-radius: var(--radius-full);"></div>
+      </div>
+    </div>
+    <div class="skeleton-box" style="width: 60%; height: 24px; margin-top: 16px; border-radius: var(--radius-sm);"></div>
+    <div class="skeleton-box" style="width: 100%; height: 16px; margin-top: 8px; border-radius: var(--radius-sm);"></div>
+    <div class="skeleton-box" style="width: 80%; height: 16px; margin-top: 8px; border-radius: var(--radius-sm);"></div>
+  </div>
+  <div class="project-card desktop-only">
+    <div class="card-header">
+      <div class="skeleton-box" style="width: 48px; height: 48px; border-radius: var(--radius-md);"></div>
+      <div class="project-tags">
+        <div class="skeleton-box" style="width: 50px; height: 24px; border-radius: var(--radius-full);"></div>
+      </div>
+    </div>
+    <div class="skeleton-box" style="width: 60%; height: 24px; margin-top: 16px; border-radius: var(--radius-sm);"></div>
+    <div class="skeleton-box" style="width: 100%; height: 16px; margin-top: 8px; border-radius: var(--radius-sm);"></div>
+    <div class="skeleton-box" style="width: 80%; height: 16px; margin-top: 8px; border-radius: var(--radius-sm);"></div>
+  </div>
+</div>
+      <div id="projects-error" style="display: none; padding: var(--space-4); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: var(--radius-md); color: rgb(239, 68, 68); background: rgba(239, 68, 68, 0.05);"></div>
+      <div id="projects-empty" style="display: none; padding: var(--space-8); text-align: center; border: 1px dashed var(--border-subtle); border-radius: var(--radius-md); color: var(--text-primary);">No projects found.</div>
     </div>
   </section>
   </div>
@@ -70,7 +150,35 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
     </div>
 
     <div id="contact-container" class="contact-content fade-up">
-      <p id="contact-loading" style="color: var(--text-secondary);">Loading contact information...</p>
+      <div id="contact-loading" style="display: contents;">
+  <div style="margin-bottom: var(--space-6);">
+    <div class="skeleton-box" style="width: 100px; height: 24px; border-radius: var(--radius-sm); margin-bottom: var(--space-3);"></div>
+    <div class="email-card" style="display: flex; align-items: center; justify-content: space-between;">
+      <div style="display: flex; gap: var(--space-4); align-items: center;">
+        <div class="skeleton-box" style="width: 48px; height: 48px; border-radius: var(--radius-md);"></div>
+        <div style="display: flex; flex-direction: column;">
+          <div class="skeleton-box" style="width: 60px; height: 16px; border-radius: var(--radius-sm); margin-bottom: 8px;"></div>
+          <div class="skeleton-box" style="width: 150px; height: 20px; border-radius: var(--radius-sm);"></div>
+        </div>
+      </div>
+      <div class="skeleton-box" style="width: 80px; height: 36px; border-radius: var(--radius-md);"></div>
+    </div>
+  </div>
+  <div style="margin-top: var(--space-6);">
+    <div class="skeleton-box" style="width: 100px; height: 24px; border-radius: var(--radius-sm); margin-bottom: var(--space-3);"></div>
+    <div class="socials-grid">
+      <div class="social-card" style="display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; gap: var(--space-4); align-items: center;">
+          <div class="skeleton-box" style="width: 48px; height: 48px; border-radius: var(--radius-md);"></div>
+          <div style="display: flex; flex-direction: column;">
+            <div class="skeleton-box" style="width: 80px; height: 16px; border-radius: var(--radius-sm); margin-bottom: 8px;"></div>
+            <div class="skeleton-box" style="width: 100px; height: 14px; border-radius: var(--radius-sm);"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
       
       <div id="email-section" style="display: none; margin-bottom: var(--space-6);">
         <h2 class="section-heading" style="margin-bottom: var(--space-3); font-size: 1.125rem;">Email</h2>
@@ -160,7 +268,7 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
       
       <div class="card-header">
         <div class="project-icon-wrapper">
-          <img class="project-icon" alt="" />
+          <img class="project-icon skeleton-box" alt="" width="48" height="48" loading="lazy" decoding="async" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" />
         </div>
         <div class="project-tags"></div>
       </div>
@@ -447,8 +555,21 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
   .skill-group-card {
     background: var(--bg-surface);
     border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-lg);
-    padding: var(--space-4) var(--space-6);
+    border-radius: var(--radius-xl);
+    padding: var(--space-6);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .skill-group-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--card-accent, transparent), transparent);
+    opacity: 0.5;
   }
 
   .skill-category-header {
@@ -459,6 +580,9 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
   }
 
   .skill-category-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-md);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -562,12 +686,32 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
     gap: var(--space-4);
     transition: all var(--transition-base);
     height: 100%;
+    position: relative;
+    overflow: hidden;
+    --card-accent: var(--text-tertiary);
+  }
+
+  .project-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--card-accent, transparent), transparent);
+    opacity: 0.5;
+    transition: opacity var(--transition-base), background var(--transition-base);
   }
 
   .project-card:hover {
     border-color: var(--border-strong);
     box-shadow: var(--shadow-md);
     transform: translateY(-2px);
+    --card-accent: var(--accent-primary);
+  }
+
+  .project-card:hover::before {
+    opacity: 1;
   }
 
   .card-header {
@@ -579,7 +723,7 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
   .project-icon-wrapper {
     width: 48px;
     height: 48px;
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-md);
     background: var(--bg-inset);
     display: flex;
     align-items: center;
@@ -695,10 +839,32 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
     border-radius: var(--radius-xl);
     transition: all var(--transition-base);
     max-width: 480px;
+    position: relative;
+    overflow: hidden;
+    --card-accent: var(--text-tertiary);
   }
+
+  .email-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--card-accent, transparent), transparent);
+    opacity: 0.5;
+    transition: opacity var(--transition-base), background var(--transition-base);
+  }
+
   .email-card:hover {
-    border-color: var(--accent-primary);
-    box-shadow: 0 0 15px var(--accent-glow);
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+    --card-accent: var(--accent-primary);
+  }
+
+  .email-card:hover::before {
+    opacity: 1;
   }
 
   .email-info {
@@ -771,16 +937,37 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
     justify-content: space-between;
     background: var(--bg-surface);
     border: 1px solid var(--border-subtle);
-    padding: var(--space-4);
+    padding: var(--space-4) var(--space-6);
     border-radius: var(--radius-xl);
     text-decoration: none;
     color: inherit;
     transition: all var(--transition-base);
+    position: relative;
+    overflow: hidden;
+    --card-accent: var(--text-tertiary);
   }
+
+  :global(.social-card::before) {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--card-accent, transparent), transparent);
+    opacity: 0.5;
+    transition: opacity var(--transition-base), background var(--transition-base);
+  }
+
   :global(.social-card:hover) {
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-md);
     transform: translateY(-2px);
-    box-shadow: 0 0 15px var(--accent-glow);
-    border-color: var(--accent-primary);
+    --card-accent: var(--accent-primary);
+  }
+
+  :global(.social-card:hover::before) {
+    opacity: 1;
   }
 
   :global(.social-card-content) {
@@ -800,7 +987,7 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
     flex-shrink: 0;
     width: 48px;
     height: 48px;
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-md);
     background: var(--bg-inset);
     display: flex;
     align-items: center;
@@ -888,39 +1075,41 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
   import { PublicDataService as VisitorDataService } from '../../lib/public-fetch';
   import type { Profile, Experience, Capability, ProjectSummary, Contact } from '../../data/types';
 
-  document.addEventListener('astro:page-load', () => {
+  function initIndexPage(doc: Document | Element = document) {
     // --- ABOUT DOM ---
-    const focusContainer = document.getElementById('focus-container');
-    const focusLoading = document.getElementById('focus-loading');
-    const focusTemplate = document.getElementById('focus-template') as HTMLTemplateElement;
+    const focusContainer = doc.querySelector('#focus-container');
+    const focusLoading = doc.querySelector('#focus-loading');
+    const focusTemplate = doc.querySelector('#focus-template') as HTMLTemplateElement;
   
-    const timelineContainer = document.getElementById('timeline-container');
-    const timelineLoading = document.getElementById('timeline-loading');
-    const timelineTemplate = document.getElementById('timeline-template') as HTMLTemplateElement;
+    const timelineContainer = doc.querySelector('#timeline-container');
+    const timelineLoading = doc.querySelector('#timeline-loading');
+    const timelineTemplate = doc.querySelector('#timeline-template') as HTMLTemplateElement;
   
-    const skillsContainer = document.getElementById('skills-container');
-    const skillsLoading = document.getElementById('skills-loading');
-    const skillGroupTemplate = document.getElementById('skill-group-template') as HTMLTemplateElement;
+    const skillsContainer = doc.querySelector('#skills-container');
+    const skillsLoading = doc.querySelector('#skills-loading');
+    const skillGroupTemplate = doc.querySelector('#skill-group-template') as HTMLTemplateElement;
 
     // --- PROJECTS DOM ---
-    const projectsContainer = document.getElementById('projects-container');
-    const projectsLoading = document.getElementById('projects-loading');
-    const projectsError = document.getElementById('projects-error');
-    const projectsEmpty = document.getElementById('projects-empty');
-    const projectTemplate = document.getElementById('project-template') as HTMLTemplateElement;
+    const projectsContainer = doc.querySelector('#projects-container');
+    const projectsLoading = doc.querySelector('#projects-loading');
+    const projectsError = doc.querySelector('#projects-error');
+    const projectsEmpty = doc.querySelector('#projects-empty');
+    const projectTemplate = doc.querySelector('#project-template') as HTMLTemplateElement;
 
     // --- CONTACT DOM ---
-    const emailSection = document.getElementById('email-section');
-    const contactEmail = document.getElementById('contact-email');
-    const socialsSection = document.getElementById('socials-section');
-    const socialsGrid = document.getElementById('socials-grid');
-    const contactLoading = document.getElementById('contact-loading');
-    const copyBtn = document.getElementById('copy-email-btn');
+    const emailSection = doc.querySelector('#email-section');
+    const contactEmail = doc.querySelector('#contact-email');
+    const socialsSection = doc.querySelector('#socials-section');
+    const socialsGrid = doc.querySelector('#socials-grid');
+    const contactLoading = doc.querySelector('#contact-loading');
+    const copyBtn = doc.querySelector('#copy-email-btn');
 
     // --- ABOUT RENDER FUNCTIONS ---
     function renderFocus(profile: Profile) {
       if (!focusContainer || !focusTemplate) return;
       if (focusLoading) focusLoading.style.display = 'none';
+      focusContainer.innerHTML = '';
+
   
       if (profile.focusAreas && profile.focusAreas.length > 0) {
         profile.focusAreas.forEach((area, i) => {
@@ -1010,6 +1199,8 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
     function renderSkills(capabilities: Capability[]) {
       if (!skillsContainer || !skillGroupTemplate) return;
       if (skillsLoading) skillsLoading.style.display = 'none';
+      skillsContainer.innerHTML = '';
+
   
       capabilities.forEach(cap => {
         const el = skillGroupTemplate.content.cloneNode(true) as DocumentFragment;
@@ -1019,22 +1210,28 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
           let svg = '';
           let colorVar = 'var(--accent-primary)';
           if (cap.category.includes('Language')) {
-            svg = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>`;
+            svg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>`;
           } else if (cap.category.includes('Front')) {
-            svg = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>`;
+            svg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>`;
             colorVar = 'var(--accent-tertiary)';
           } else if (cap.category.includes('Back')) {
-            svg = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>`;
+            svg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>`;
             colorVar = 'var(--accent-secondary)';
           } else if (cap.category.includes('Tool')) {
-            svg = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>`;
-            colorVar = 'var(--accent-primary)';
+            svg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>`;
+            colorVar = '#F59E0B';
           } else {
-            svg = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`;
+            svg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`;
             colorVar = 'var(--accent-tertiary)';
           }
           iconBox.innerHTML = svg;
           (iconBox as HTMLElement).style.color = colorVar;
+          (iconBox as HTMLElement).style.backgroundColor = `color-mix(in srgb, ${colorVar} 15%, transparent)`;
+          
+          const card = el.querySelector('.skill-group-card') as HTMLElement;
+          if (card) {
+            card.style.setProperty('--card-accent', colorVar);
+          }
         }
 
         const cat = el.querySelector('.skill-category');
@@ -1109,9 +1306,9 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
         const icon = el.querySelector('.project-icon') as HTMLImageElement;
         if (icon) {
           if (p.icon) {
-            VisitorDataService.resolveMediaUrl(p.icon).then(url => { icon.src = url; });
+            VisitorDataService.resolveMediaUrl(p.icon).then(url => { icon.src = url; icon.classList.remove("skeleton-box"); });
           } else if (p.thumbnail) {
-            VisitorDataService.resolveMediaUrl(p.thumbnail).then(url => { icon.src = url; });
+            VisitorDataService.resolveMediaUrl(p.thumbnail).then(url => { icon.src = url; icon.classList.remove("skeleton-box"); });
           } else {
             icon.style.display = 'none';
             const wrapper = el.querySelector('.project-icon-wrapper');
@@ -1223,8 +1420,9 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
     }
 
     // --- INIT ---
-    async function init() {
-      const scrollTopBtn = document.getElementById('scroll-top-btn');
+
+    function init() {
+      const scrollTopBtn = doc.querySelector('#scroll-top-btn');
       if (scrollTopBtn) {
         window.addEventListener('scroll', () => {
           if (window.scrollY > 300) {
@@ -1238,46 +1436,65 @@ import VisitorLayout from '../../layouts/VisitorLayout.astro';
         });
       }
 
-      // Fetch Profile for Focus Areas
-      const pState = await VisitorDataService.getProfile();
-      if (pState.status === 'success') {
-        renderFocus(pState.data);
-      }
-  
-      // Fetch Experience
-      const eState = await VisitorDataService.getExperience();
-      if (eState.status === 'success') {
-        renderTimeline(eState.data);
-      }
-  
-      // Fetch Capabilities (Skills)
-      const cState = await VisitorDataService.getCapabilities();
-      if (cState.status === 'success') {
-        renderSkills(cState.data);
-      }
-
-      // Fetch Projects
-      const projState = await VisitorDataService.getProjects((updated) => {
-        renderProjects(updated);
+      const pCached = VisitorDataService.getCachedProfile();
+      if (pCached && pCached.status === 'success') renderFocus(pCached.data);
+      VisitorDataService.getProfile().then(pState => {
+        if (pState.status === 'success') renderFocus(pState.data);
       });
-      if (projState.status === 'success') {
-        renderProjects(projState.data);
-      } else if (projState.status === 'error' && projectsError && projectsLoading) {
+  
+      const eCached = VisitorDataService.getCachedExperience();
+      if (eCached && eCached.status === 'success') renderTimeline(eCached.data);
+      VisitorDataService.getExperience().then(eState => {
+        if (eState.status === 'success') renderTimeline(eState.data);
+      });
+  
+      const cCached = VisitorDataService.getCachedCapabilities();
+      if (cCached && cCached.status === 'success') renderSkills(cCached.data);
+      VisitorDataService.getCapabilities().then(cState => {
+        if (cState.status === 'success') renderSkills(cState.data);
+      });
+
+      const projCached = VisitorDataService.getCachedProjects();
+      if (projCached && projCached.status === 'success') renderProjects(projCached.data);
+      else if (projCached && projCached.status === 'error' && projectsError && projectsLoading) {
         projectsLoading.style.display = 'none';
-        projectsError.textContent = projState.message;
+        projectsError.textContent = projCached.message || 'Error';
         projectsError.style.display = 'block';
-      } else if (projState.status === 'empty' && projectsEmpty && projectsLoading) {
+      } else if (projCached && projCached.status === 'empty' && projectsEmpty && projectsLoading) {
         projectsLoading.style.display = 'none';
         projectsEmpty.style.display = 'block';
       }
+      
+      VisitorDataService.getProjects((updated) => {
+        renderProjects(updated);
+      }).then(projState => {
+        if (projState.status === 'success') renderProjects(projState.data);
+        else if (projState.status === 'error' && projectsError && projectsLoading) {
+          projectsLoading.style.display = 'none';
+          projectsError.textContent = projState.message || 'Error';
+          projectsError.style.display = 'block';
+        } else if (projState.status === 'empty' && projectsEmpty && projectsLoading) {
+          projectsLoading.style.display = 'none';
+          projectsEmpty.style.display = 'block';
+        }
+      });
 
-      // Fetch Contact
-      const contactState = await VisitorDataService.getContact();
-      if (contactState.status === 'success') {
-        renderContact(contactState.data);
-      }
+      const contactCached = VisitorDataService.getCachedContact();
+      if (contactCached && contactCached.status === 'success') renderContact(contactCached.data);
+      VisitorDataService.getContact().then(contactState => {
+        if (contactState.status === 'success') renderContact(contactState.data);
+      });
     }
 
+
     init();
+  }
+
+  initIndexPage();
+  document.addEventListener('astro:after-swap', () => initIndexPage());
+  document.addEventListener('astro:page-load', () => {
+    // Re-run intersection observers if needed, since astro:page-load might be better for observers
+    // But initIndexPage handles data fetching, so we just let layout handle observers
   });
 </script>
+

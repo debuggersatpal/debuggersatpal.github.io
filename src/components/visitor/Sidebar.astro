@@ -4,57 +4,68 @@
   <div class="sidebar-content fade-up">
     <div id="sidebar-profile" style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: var(--space-2);">
       <div class="avatar-container">
-        <img id="sidebar-avatar" alt="Avatar" style="width: 80px; height: 80px; border-radius: var(--radius-full); object-fit: cover; display: block; background-color: var(--bg-inset);" />
+        <img id="sidebar-avatar" alt="Avatar" width="80" height="80" fetchpriority="high" decoding="sync"
+          class="skeleton-box"
+          src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" style="width: 80px; height: 80px; border-radius: var(--radius-full); object-fit: cover; display: block; background-color: var(--bg-inset);" />
         <div class="status-dot"></div>
       </div>
       
-      <h2 id="sidebar-name" style="font-size: 1.5rem; font-weight: 800; line-height: 1.1; margin-top: var(--space-2); letter-spacing: -0.02em;">SATPAL</h2>
-      <p id="sidebar-role" style="color: var(--accent-primary); font-weight: 500; font-size: 0.875rem;">Developer</p>
+      <h2 id="sidebar-name" style="font-size: var(--text-2xl); font-family: var(--font-display); font-weight: 800; line-height: var(--leading-tight); margin-top: var(--space-2); letter-spacing: var(--tracking-tight);"><span class="skeleton-box" style="display: inline-block; width: 80%; height: 1em; border-radius: var(--radius-sm);"></span></h2>
+      <p id="sidebar-role" style="color: var(--accent-primary); font-weight: 600; font-size: var(--text-sm);"><span class="skeleton-box" style="display: inline-block; width: 60%; height: 1em; border-radius: var(--radius-sm);"></span></p>
     </div>
 
     <div class="sidebar-footer desktop-only">
-      <div style="display: flex; align-items: center; gap: var(--space-1); color: var(--text-secondary); font-size: 0.875rem; margin-bottom: var(--space-4);">
+      <div style="display: flex; align-items: center; gap: var(--space-1); color: var(--text-secondary); font-size: var(--text-sm); margin-bottom: var(--space-4);">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-        <span id="sidebar-location">India</span>
+        <span id="sidebar-location"><span class="skeleton-box" style="display: inline-block; width: 60px; height: 1em; border-radius: var(--radius-sm); vertical-align: middle;"></span></span>
       </div>
-      <p id="sidebar-tagline" style="color: var(--text-secondary); line-height: 1.6; font-size: 0.875rem;"></p>
+      <p id="sidebar-tagline" style="color: var(--text-secondary); line-height: var(--leading-normal); font-size: var(--text-sm); width: 100%;">
+        <span class="skeleton-box" style="display: block; width: 100%; height: 14px; margin-bottom: 4px;"></span>
+        <span class="skeleton-box" style="display: block; width: 80%; height: 14px;"></span>
+      </p>
     </div>
   </div>
 </aside>
 
 <script>
   import { PublicDataService as VisitorDataService } from '../../lib/public-fetch';
+  import type { Profile } from '../../data/types';
 
-  document.addEventListener('astro:page-load', () => {
+  function renderSidebarProfile(data: Profile, doc: Document | Element) {
+    const avatar = doc.querySelector('#sidebar-avatar') as HTMLImageElement;
+    const name = doc.querySelector('#sidebar-name');
+    const role = doc.querySelector('#sidebar-role');
+    const locationEl = doc.querySelector('#sidebar-location');
+    const tagline = doc.querySelector('#sidebar-tagline');
     
-    const avatar = document.getElementById('sidebar-avatar') as HTMLImageElement;
-    const name = document.getElementById('sidebar-name');
-    const role = document.getElementById('sidebar-role');
-    const locationEl = document.getElementById('sidebar-location');
-    const tagline = document.getElementById('sidebar-tagline');
-  
-    async function initSidebar() {
-      const pState = await VisitorDataService.getProfile();
-      if (pState.status === 'success') {
-        const data = pState.data;
-        
-        if (avatar && data.avatarUrl) {
-          VisitorDataService.resolveMediaUrl(data.avatarUrl).then(url => {
-            avatar.src = url;
-            avatar.style.display = 'block';
-          });
-        }
-        
-        if (name) name.textContent = data.name || 'Developer';
-        if (role) role.textContent = data.role || '';
-        if (locationEl) locationEl.textContent = data.location || '';
-        if (tagline) tagline.textContent = data.tagline || '';
-      }
+    if (avatar && data.avatarUrl) {
+      VisitorDataService.resolveMediaUrl(data.avatarUrl).then(url => {
+        avatar.src = url;
+        avatar.classList.remove('skeleton-box');
+      });
     }
-  
-    initSidebar();
-  
-  });
+    
+    if (name) name.textContent = data.name || '';
+    if (role) role.textContent = data.role || '';
+    if (locationEl) locationEl.textContent = data.location || '';
+    if (tagline) tagline.textContent = data.tagline || '';
+  }
+
+  function initSidebar(doc = document) {
+    const cached = VisitorDataService.getCachedProfile();
+    if (cached && cached.status === 'success') {
+      renderSidebarProfile(cached.data, doc);
+    }
+    
+    VisitorDataService.getProfile().then(pState => {
+      if (pState.status === 'success') {
+        renderSidebarProfile(pState.data, doc);
+      }
+    });
+  }
+
+  document.addEventListener('astro:page-load', () => initSidebar(document));
+  document.addEventListener('astro:after-swap', () => initSidebar(document));
 </script>
 
 <style>

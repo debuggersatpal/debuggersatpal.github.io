@@ -40,3 +40,47 @@
 @media (min-width: 1024px) {
   /* desktop overrides */
 }
+
+/* Skeleton Loading Utilities */
+.skeleton-box {
+  background-color: var(--bg-inset);
+  border-radius: var(--radius-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-box::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  animation: skeleton-pulse 1.5s infinite ease-in-out;
+}
+
+html.dark .skeleton-box::after {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.05),
+    transparent
+  );
+}
+
+@keyframes skeleton-pulse {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-box::after {
+    animation: none;
+    transform: none;
+    background: transparent;
+  }
+}

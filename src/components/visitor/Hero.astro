@@ -9,48 +9,60 @@
       <!-- Top Section: Identity -->
       <div class="identity-section" style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: var(--space-3);">
         <div class="avatar-wrapper" style="margin-bottom: var(--space-2);">
-          <img id="hero-avatar" alt="Avatar" style="width: 160px; height: 160px; border-radius: var(--radius-full); object-fit: cover; display: block; background-color: var(--bg-inset);" />
+          <img id="hero-avatar" alt="" class="skeleton-box" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" style="width: 160px; height: 160px; border-radius: var(--radius-full); object-fit: cover; display: block; background-color: var(--bg-inset);" />
           <div class="status-dot"></div>
         </div>
         
-        <h1 id="hero-name" style="font-size: 2.25rem; font-weight: 800; line-height: 1.1; letter-spacing: -0.02em;">SATPAL</h1>
+        <h1 id="hero-name" style="font-size: 2.25rem; font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; min-height: 2.25rem;"><span class="skeleton-box" style="display: inline-block; width: 250px; height: 2.25rem; border-radius: var(--radius-sm);"></span></h1>
         
         <div style="display: flex; align-items: center; gap: var(--space-1); color: var(--text-secondary); font-size: 0.875rem;">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-          <span id="hero-location">India</span>
+          <span id="hero-location"><span class="skeleton-box" style="display: inline-block; width: 60px; height: 1em; border-radius: var(--radius-sm); vertical-align: middle;"></span></span>
         </div>
         
-        <p id="hero-role" style="color: var(--accent-primary); font-weight: 500; font-size: 1rem;">Developer</p>
+        <p id="hero-role" style="color: var(--accent-primary); font-weight: 500; font-size: 1rem; min-height: 1rem;"><span class="skeleton-box" style="display: inline-block; width: 120px; height: 1rem; border-radius: var(--radius-sm);"></span></p>
         
-        <p id="hero-tagline" style="color: var(--text-secondary); line-height: 1.6; margin-top: var(--space-2); font-size: 0.9375rem; text-wrap: balance;"></p>
+        <p id="hero-tagline" style="color: var(--text-secondary); line-height: 1.6; margin-top: var(--space-2); font-size: 0.9375rem; text-wrap: balance;">
+          <span class="skeleton-box" style="display: inline-block; width: 100%; height: 16px; margin-bottom: 4px; border-radius: var(--radius-sm);"></span>
+          <span class="skeleton-box" style="display: inline-block; width: 80%; height: 16px; border-radius: var(--radius-sm);"></span>
+        </p>
         
         <!-- Socials -->
-        <div id="hero-socials" style="display: flex; gap: var(--space-4); margin-top: var(--space-4);"></div>
+        <div id="hero-socials" style="display: flex; gap: var(--space-4); margin-top: var(--space-4);">
+          <span class="skeleton-box" style="display: inline-block; width: 24px; height: 24px; border-radius: 50%;"></span>
+          <span class="skeleton-box" style="display: inline-block; width: 24px; height: 24px; border-radius: 50%;"></span>
+          <span class="skeleton-box" style="display: inline-block; width: 24px; height: 24px; border-radius: 50%;"></span>
+        </div>
       </div>
       
       <!-- Middle Section: About Me -->
       <div class="about-section desktop-only" style="display: flex; flex-direction: column; gap: var(--space-3);">
         <h3 style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-primary);">About Me</h3>
-        <p id="hero-bio" style="color: var(--text-secondary); line-height: 1.6; font-size: 0.9375rem;"></p>
+        <p id="hero-bio" style="color: var(--text-secondary); line-height: 1.6; font-size: 0.9375rem;">
+          <span class="skeleton-box" style="display: block; width: 100%; height: 16px; margin-bottom: 4px; border-radius: var(--radius-sm);"></span>
+          <span class="skeleton-box" style="display: block; width: 100%; height: 16px; margin-bottom: 4px; border-radius: var(--radius-sm);"></span>
+          <span class="skeleton-box" style="display: block; width: 90%; height: 16px; border-radius: var(--radius-sm);"></span>
+        </p>
         
         <a id="hero-resume" href="#" target="_blank" class="resume-btn" style="display: none;">
           Download Resume
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
         </a>
+        <!-- <div id="hero-resume-skeleton" class="skeleton-box" style="width: 140px; height: 36px; border-radius: var(--radius-md);"></div> -->
       </div>
       
       <!-- Stats Section -->
       <div id="hero-stats" class="stats-grid desktop-only" style="grid-template-columns: repeat(3, 1fr); gap: var(--space-2); padding-top: var(--space-4); border-top: 1px solid var(--border-subtle); text-align: center;">
         <div class="stat-item">
-          <div id="stat-projects" class="stat-value" style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary);"></div>
+          <div id="stat-projects" class="stat-value" style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary);"><span class="skeleton-box" style="display: inline-block; width: 30px; height: 1em; border-radius: var(--radius-sm);"></span></div>
           <div class="stat-label" style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 4px;">Projects</div>
         </div>
         <div class="stat-item">
-          <div id="stat-experience" class="stat-value" style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary);"></div>
+          <div id="stat-experience" class="stat-value" style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary);"><span class="skeleton-box" style="display: inline-block; width: 30px; height: 1em; border-radius: var(--radius-sm);"></span></div>
           <div class="stat-label" style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 4px;">Years Exp.</div>
         </div>
         <div class="stat-item">
-          <div id="stat-tech" class="stat-value" style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary);"></div>
+          <div id="stat-tech" class="stat-value" style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary);"><span class="skeleton-box" style="display: inline-block; width: 30px; height: 1em; border-radius: var(--radius-sm);"></span></div>
           <div class="stat-label" style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 4px;">Tech Stack</div>
         </div>
       </div>
@@ -68,98 +80,94 @@
   import { PublicDataService as VisitorDataService } from '../../lib/public-fetch';
   import type { Profile } from '../../data/types';
 
-  document.addEventListener('astro:page-load', () => {
-    
-    const error = document.getElementById('hero-error');
-    
-    const avatar = document.getElementById('hero-avatar') as HTMLImageElement;
-    const name = document.getElementById('hero-name');
-    const locationEl = document.getElementById('hero-location');
-    const role = document.getElementById('hero-role');
-    const tagline = document.getElementById('hero-tagline');
-    const bio = document.getElementById('hero-bio');
-    const socials = document.getElementById('hero-socials');
-    const resume = document.getElementById('hero-resume') as HTMLAnchorElement;
-    
-    const statsContainer = document.getElementById('hero-stats');
-    const statProjects = document.getElementById('stat-projects');
+  function getSocialIcon(platform: string) {
+    if (platform.toLowerCase() === 'github') return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>';
+    if (platform.toLowerCase() === 'twitter' || platform.toLowerCase() === 'x') return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path></svg>';
+    if (platform.toLowerCase() === 'linkedin') return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>';
+    return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>';
+  }
+
+  function renderHeroProfile(data: Profile, doc: Document | Element) {
+    const error = doc.querySelector('#hero-error') as HTMLElement;
+    const avatar = doc.querySelector('#hero-avatar') as HTMLImageElement;
+    const name = doc.querySelector('#hero-name');
+    const locationEl = doc.querySelector('#hero-location');
+    const role = doc.querySelector('#hero-role');
+    const tagline = doc.querySelector('#hero-tagline');
+    const bio = doc.querySelector('#hero-bio');
+    const socials = doc.querySelector('#hero-socials');
+    const resume = doc.querySelector('#hero-resume') as HTMLAnchorElement;
+    const resumeSkeleton = doc.querySelector('#hero-resume-skeleton') as HTMLElement;
+    const statsContainer = doc.querySelector('#hero-stats') as HTMLElement;
+    const statProjects = doc.querySelector('#stat-projects');
     const statExp = document.getElementById('stat-experience');
     const statTech = document.getElementById('stat-tech');
-  
-    function getSocialIcon(platform: string) {
-      if (platform.toLowerCase() === 'github') return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>';
-      if (platform.toLowerCase() === 'twitter' || platform.toLowerCase() === 'x') return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path></svg>';
-      if (platform.toLowerCase() === 'linkedin') return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>';
-      return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>';
-    }
-  
-    function renderProfile(data: Profile) {
-      if (error) error.style.display = 'none';
-      if (avatar && data.avatarUrl) {
-        VisitorDataService.resolveMediaUrl(data.avatarUrl).then(url => {
-          avatar.src = url;
-          avatar.style.display = 'block';
-        });
-      }
-  
-      if (name) name.textContent = data.name || 'Developer';
-      if (locationEl) locationEl.textContent = data.location || '';
-      if (role) role.textContent = data.role || '';
-      if (tagline) tagline.textContent = data.tagline || '';
-      
-      if (bio) {
-        bio.textContent = data.bio || '';
-      }
-  
-      if (resume && data.resumeUrl) {
-        resume.style.display = 'flex';
-        VisitorDataService.resolveMediaUrl(data.resumeUrl).then(url => {
-          resume.href = url;
-        });
-      }
-  
-      if (socials && data.socials) {
-        socials.innerHTML = '';
-        data.socials.forEach(social => {
-          const a = document.createElement('a');
-          a.href = social.url;
-          a.target = '_blank';
-          a.rel = 'noopener noreferrer';
-          a.style.color = 'var(--text-secondary)';
-          a.style.transition = 'color var(--transition-fast)';
-          a.innerHTML = getSocialIcon(social.platform);
-          a.onmouseenter = () => a.style.color = 'var(--text-primary)';
-          a.onmouseleave = () => a.style.color = 'var(--text-secondary)';
-          socials.appendChild(a);
-        });
-      }
-  
-      if (statsContainer && data.stats) {
-        if (statProjects) statProjects.textContent = `${data.stats.projects}+`;
-        if (statExp) statExp.textContent = `${data.stats.experience}+`;
-        if (statTech) statTech.textContent = `${data.stats.techStack}+`;
-      }
-    }
-  
-    async function initHero() {
-      const pState = await VisitorDataService.getProfile((updated) => {
-        renderProfile(updated);
+
+    if (error) error.style.display = 'none';
+    if (avatar && data.avatarUrl) {
+      VisitorDataService.resolveMediaUrl(data.avatarUrl).then(url => {
+        avatar.src = url;
+        avatar.classList.remove('skeleton-box');
       });
-  
-      if (pState.status === 'success') {
-        renderProfile(pState.data);
-      } else if (pState.status === 'error' && error) {
-        error.textContent = pState.message;
-        error.style.display = 'block';
-      } else if (pState.status === 'empty' && error) {
-        error.textContent = 'Profile data not available.';
-        error.style.display = 'block';
-      }
     }
-  
-    initHero();
-  
-  });
+
+    if (name) name.textContent = data.name || '';
+    if (locationEl) locationEl.textContent = data.location || '';
+    if (role) role.textContent = data.role || '';
+    if (tagline) tagline.textContent = data.tagline || '';
+    if (bio) bio.textContent = data.bio || '';
+
+    if (resumeSkeleton) resumeSkeleton.style.display = 'none';
+    if (resume && data.resumeUrl) {
+      resume.style.display = 'inline-flex';
+      VisitorDataService.resolveMediaUrl(data.resumeUrl).then(url => {
+        resume.href = url;
+      });
+    }
+
+    if (socials && data.socials) {
+      socials.innerHTML = '';
+      data.socials.forEach(social => {
+        const a = document.createElement('a');
+        a.href = social.url;
+        a.className = 'social-link';
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        a.innerHTML = getSocialIcon(social.platform);
+        a.setAttribute('aria-label', social.platform);
+        socials.appendChild(a);
+      });
+    }
+
+    if (data.stats && statsContainer) {
+      statsContainer.style.display = 'grid';
+      if (statProjects) statProjects.textContent = `${data.stats.projects}+`;
+      if (statExp) statExp.textContent = `${data.stats.experience}+`;
+      if (statTech) statTech.textContent = `${data.stats.techStack}+`;
+    }
+  }
+
+  function initHero(doc = document) {
+    const cached = VisitorDataService.getCachedProfile();
+    if (cached && cached.status === 'success') {
+      renderHeroProfile(cached.data, doc);
+    }
+
+    VisitorDataService.getProfile().then(pState => {
+      if (pState.status === 'success') {
+        renderHeroProfile(pState.data, doc);
+      } else if (pState.status === 'error') {
+        const error = doc.querySelector('#hero-error') as HTMLElement;
+        if (error) {
+          error.textContent = 'Profile data not available.';
+          error.style.display = 'block';
+        }
+      }
+    });
+  }
+
+  document.addEventListener('astro:page-load', () => initHero(document));
+  document.addEventListener('astro:after-swap', () => initHero(document));
 </script>
 
 <style>

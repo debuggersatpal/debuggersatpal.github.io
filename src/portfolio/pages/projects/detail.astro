@@ -4,17 +4,38 @@ import InnerLayout from '../../../layouts/InnerLayout.astro';
 
 <InnerLayout title="Project Details">
   <div id="project-detail-container">
-    <p id="project-loading" style="color: var(--text-secondary);">Loading project details...</p>
-    <p id="project-error" style="display: none; color: red;"></p>
+    <div id="project-loading" style="display: contents;">
+      <article class="project-detail">
+        <div class="skeleton-box" style="width: 60%; height: 40px; margin-bottom: var(--space-6);"></div>
+        
+        <div style="display: flex; flex-direction: column; gap: var(--space-3); margin-top: var(--space-6);">
+          <div class="skeleton-box" style="width: 100%; height: 16px;"></div>
+          <div class="skeleton-box" style="width: 100%; height: 16px;"></div>
+          <div class="skeleton-box" style="width: 90%; height: 16px;"></div>
+          <div class="skeleton-box" style="width: 95%; height: 16px;"></div>
+          <div class="skeleton-box" style="width: 80%; height: 16px;"></div>
+        </div>
+
+        <div style="margin-top: var(--space-8);">
+          <div class="skeleton-box" style="width: 100px; height: 24px; margin-bottom: var(--space-4);"></div>
+          <div style="display: flex; gap: var(--space-2);">
+            <div class="skeleton-box" style="width: 80px; height: 32px; border-radius: var(--radius-full);"></div>
+            <div class="skeleton-box" style="width: 100px; height: 32px; border-radius: var(--radius-full);"></div>
+            <div class="skeleton-box" style="width: 90px; height: 32px; border-radius: var(--radius-full);"></div>
+          </div>
+        </div>
+      </article>
+    </div>
+    <div id="project-error" style="display: none; padding: var(--space-4); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: var(--radius-md); color: rgb(239, 68, 68); background: rgba(239, 68, 68, 0.05);"></div>
   </div>
 
   <template id="project-detail-template">
     <article class="project-detail">
       <h1 class="title"></h1>
-      <div class="content" style="margin-top: var(--space-6); line-height: 1.6;"></div>
+      <div class="content" style="margin-top: var(--space-6); line-height: var(--leading-normal);"></div>
       
       <div style="margin-top: var(--space-8);">
-        <h3 style="font-size: 1rem; color: var(--text-secondary);">Tech Stack</h3>
+        <h3 style="font-size: var(--text-base); color: var(--text-secondary);">Tech Stack</h3>
         <ul class="tech-stack" style="display: flex; gap: var(--space-2); list-style: none; padding: 0; flex-wrap: wrap;"></ul>
       </div>
 
@@ -22,16 +43,16 @@ import InnerLayout from '../../../layouts/InnerLayout.astro';
     </article>
   </template>
 
-  <script>
+    <script>
     import { PublicDataService as VisitorDataService } from '../../../lib/public-fetch';
 
-  document.addEventListener('astro:page-load', () => {
+  function initDetailPage(doc: Document | Element = document) {
 
 
-    const container = document.getElementById('project-detail-container');
-    const loading = document.getElementById('project-loading');
-    const error = document.getElementById('project-error');
-    const template = document.getElementById('project-detail-template') as HTMLTemplateElement;
+    const container = doc.querySelector('#project-detail-container');
+    const loading = doc.querySelector('#project-loading');
+    const error = doc.querySelector('#project-error');
+    const template = doc.querySelector('#project-detail-template') as HTMLTemplateElement;
 
     function renderDetail(data: any, projectTitle?: string) {
       if (!container || !template) return;
@@ -58,6 +79,19 @@ import InnerLayout from '../../../layouts/InnerLayout.astro';
           import('dompurify').then(({ default: DOMPurify }) => {
             const html = marked.parse(data.content || '') as string;
             content.innerHTML = DOMPurify.sanitize(html);
+            content.querySelectorAll("img").forEach(img => {
+              img.setAttribute("loading", "lazy");
+              img.setAttribute("decoding", "async");
+              img.classList.add("skeleton-box");
+              img.style.minHeight = "200px";
+              img.style.display = "block";
+              img.style.width = "100%";
+              img.style.backgroundColor = "var(--bg-inset)";
+              img.onload = () => {
+                img.classList.remove("skeleton-box");
+                img.style.minHeight = "auto";
+              };
+            });
           });
         });
       }
@@ -70,7 +104,7 @@ import InnerLayout from '../../../layouts/InnerLayout.astro';
           li.style.background = 'var(--bg-surface)';
           li.style.padding = 'var(--space-1) var(--space-3)';
           li.style.borderRadius = 'var(--radius-full)';
-          li.style.fontSize = '0.875rem';
+          li.style.fontSize = 'var(--text-sm)';
           li.style.border = '1px solid var(--border-subtle)';
           techStack.appendChild(li);
         });
@@ -112,46 +146,64 @@ import InnerLayout from '../../../layouts/InnerLayout.astro';
       container.appendChild(el);
     }
 
-    async function init() {
-      const params = new URLSearchParams(window.location.search);
-      const slug = params.get('id');
 
-      if (!slug) {
-        if (loading) loading.style.display = 'none';
-        if (error) {
-          error.textContent = 'Project slug not provided in URL.';
-          error.style.display = 'block';
-        }
-        return;
-      }
 
-      // Fetch summary from public client (leverages Stale-While-Revalidate caching)
-      const summaryState = await VisitorDataService.getProjects();
+    function init() {
+      const slug = container?.dataset.slug;
+      if (!slug) return;
+
       let projectTitle = '';
-      if (summaryState.status === 'success') {
-        const matchingSummary = summaryState.data.find(s => s.slug === slug);
-        if (matchingSummary) projectTitle = matchingSummary.title;
+      const summaryState = VisitorDataService.getCachedProjects();
+      if (summaryState && summaryState.status === 'success') {
+         const proj = summaryState.data.find(p => p.slug === slug);
+         if (proj) projectTitle = proj.title;
       }
-
-      const pState = await VisitorDataService.getProjectDetail(slug, (updated) => {
-        renderDetail(updated, projectTitle);
+      
+      VisitorDataService.getProjects().then(st => {
+         if (st.status === 'success') {
+            const proj = st.data.find(p => p.slug === slug);
+            if (proj && proj.title !== projectTitle) {
+               projectTitle = proj.title;
+               const titleEl = doc.querySelector('.title');
+               if (titleEl) titleEl.textContent = projectTitle;
+            }
+         }
       });
 
-      if (pState.status === 'success') {
-        renderDetail(pState.data, projectTitle);
-      } else if (pState.status === 'error' && error && loading) {
-        loading.style.display = 'none';
-        error.textContent = pState.message;
-        error.style.display = 'block';
-      } else if (pState.status === 'empty' && error && loading) {
-        loading.style.display = 'none';
-        error.textContent = 'Project not found.';
-        error.style.display = 'block';
+      const pCached = VisitorDataService.getCachedProjectDetail(slug);
+      if (pCached && pCached.status === 'success') {
+         renderDetail(pCached.data, projectTitle);
+      } else if (pCached && pCached.status === 'error' && error && loading) {
+         loading.style.display = 'none';
+         error.textContent = pCached.message || 'Error loading project.';
+         error.style.display = 'block';
+      } else if (pCached && pCached.status === 'empty' && error && loading) {
+         loading.style.display = 'none';
+         error.textContent = 'Project not found.';
+         error.style.display = 'block';
       }
+      
+      VisitorDataService.getProjectDetail(slug, (updated) => {
+        renderDetail(updated, projectTitle);
+      }).then(pState => {
+        if (pState.status === 'success') renderDetail(pState.data, projectTitle);
+        else if (pState.status === 'error' && error && loading) {
+          loading.style.display = 'none';
+          error.textContent = pState.message || 'Error loading project.';
+          error.style.display = 'block';
+        } else if (pState.status === 'empty' && error && loading) {
+          loading.style.display = 'none';
+          error.textContent = 'Project not found.';
+          error.style.display = 'block';
+        }
+      });
     }
 
-    init();
-  
-  });
+
+
+  }
+
+  initDetailPage();
+  document.addEventListener('astro:after-swap', () => initDetailPage());
 </script>
 </InnerLayout>
