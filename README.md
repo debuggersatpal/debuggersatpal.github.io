@@ -20,7 +20,7 @@ Turning ideas into **clean**, **functional**, and **beautiful digital experience
 - 🌐 [Portfolio Website](https://debuggersatpal.github.io)
 - 💼 [LinkedIn](https://linkedin.com/in/debuggersatpal)
 - 🐙 [GitHub](https://github.com/debuggersatpal)
-- ✉️ Reach me at **debuggersatpal@gmail.com**
+- ✉️ Reach me at **helow.satpal@gmail.com**
 
 ---
 
